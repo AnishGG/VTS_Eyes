@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/home/ravsimar/VTSApp/library/build/intermediates/res/merged/release/layout/amu_info_window.xml",
+        "source": "/home/ravsimar/VTSApp/library/res/layout/amu_info_window.xml"
+    },
+    {
+        "merged": "/home/ravsimar/VTSApp/library/build/intermediates/res/merged/release/layout/amu_text_bubble.xml",
+        "source": "/home/ravsimar/VTSApp/library/res/layout/amu_text_bubble.xml"
+    },
+    {
+        "merged": "/home/ravsimar/VTSApp/library/build/intermediates/res/merged/release/layout/amu_webview.xml",
+        "source": "/home/ravsimar/VTSApp/library/res/layout/amu_webview.xml"
+    }
+]

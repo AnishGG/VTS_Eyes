@@ -1,9 +1,4 @@
 <resources>
-    <string name="app_name">Basic login</string>
-    <string name="login_text">Login Page</string>
-    <string name="username_text">User Name</string>
-    <string name="password_text">Password</string>
-    <string name="button_login_text">Login</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="screen_page_text">Welcome  to the second page</string>
+    <string name="app_name">VTS App</string>
+    <string name="title_activity_maps">VTS App</string>
 </resources>
