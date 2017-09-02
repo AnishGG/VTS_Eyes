@@ -34,6 +34,7 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.DataOutput;
@@ -54,20 +55,15 @@ import static android.Manifest.permission.READ_CONTACTS;
 import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen that offers login via email, password and tenant ID.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>
 {
     String status = "FAILURE";
+    //The variable status determines whether the login is successful or not.
+
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -76,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mTenantIdView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -89,6 +86,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
+        mTenantIdView = (EditText) findViewById(R.id.tenantId);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
@@ -169,7 +167,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
+     * Attempts to sign in the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
@@ -182,10 +180,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        mTenantIdView.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String tenantId = mTenantIdView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -203,6 +203,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(tenantId))
+        {
+            mTenantIdView.setError("This field is required");
+            focusView = mTenantIdView;
             cancel = true;
         }
         else if (!isEmailValid(email))
@@ -223,7 +229,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password, tenantId);
             mAuthTask.execute((Void) null);
 
         }
@@ -355,11 +361,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private final String mTenantId;
 
-        UserLoginTask(String email, String password)
+        UserLoginTask(String email, String password, String tenantId)
         {
             mEmail = email;
             mPassword = password;
+            mTenantId = tenantId;
         }
 
         @Override
@@ -376,8 +384,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 jsonObject.put("email", mEmail);
                 jsonObject.put("menu", jsonArray);
                 jsonObject.put("password", mPassword);
-                jsonObject.put("tenantId", mPassword);
-                Log.d("myTag0","Testing");
+                jsonObject.put("tenantId", mTenantId);
+                //Log.d("myTag0","Testing");
                 URL url = new URL("http://eyedentifyapps.com:8080/login/");
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
