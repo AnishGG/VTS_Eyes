@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <merger version="3"><dataSet config="main"><source path="/home/keshav/ssad10/src/VTSApp/library/src/main/assets"/><source path="/home/keshav/ssad10/src/VTSApp/library/build/generated/assets/shaders/release"/></dataSet><dataSet config="release"><source path="/home/keshav/ssad10/src/VTSApp/library/src/release/assets"/></dataSet></merger>
+=======
+<merger version="3"><dataSet config="main"><source path="/home/ravsimar/ssad10/src/VTSApp/library/src/main/assets"/><source path="/home/ravsimar/ssad10/src/VTSApp/library/build/generated/assets/shaders/release"/></dataSet><dataSet config="release"><source path="/home/ravsimar/ssad10/src/VTSApp/library/src/release/assets"/></dataSet></merger>
+>>>>>>> 624b6744318e8ff1fc6eb0c9298abba5debcfcea
