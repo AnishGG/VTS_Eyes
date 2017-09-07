@@ -26,7 +26,8 @@ dependencies {
     })
     compile project(':library')
     compile 'com.android.support:appcompat-v7:26.+'
-    compile 'com.google.android.gms:play-services-maps:11.0.4'
+    compile 'com.google.android.gms:play-services-maps:+'
+    compile 'com.google.android.gms:play-services-location:+'
     compile 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
 }
