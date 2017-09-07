@@ -1,29 +1,5 @@
 [
     {
-        "merged": "/home/ravsimar/VTSApp/library/build/intermediates/res/merged/debug/layout/amu_text_bubble.xml",
-        "source": "/home/ravsimar/VTSApp/library/res/layout/amu_text_bubble.xml"
-    },
-    {
-        "merged": "/home/ravsimar/VTSApp/library/build/intermediates/res/merged/debug/layout/amu_info_window.xml",
-        "source": "/home/ravsimar/VTSApp/library/res/layout/amu_info_window.xml"
-    },
-    {
-        "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/layout/amu_text_bubble.xml",
-        "source": "/home/keshav/ssad10/src/VTSApp/library/res/layout/amu_text_bubble.xml"
-    },
-    {
-        "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/layout/amu_info_window.xml",
-        "source": "/home/keshav/ssad10/src/VTSApp/library/res/layout/amu_info_window.xml"
-    },
-    {
-        "merged": "/home/ravsimar/VTSApp/library/build/intermediates/res/merged/debug/layout/amu_webview.xml",
-        "source": "/home/ravsimar/VTSApp/library/res/layout/amu_webview.xml"
-    },
-    {
-<<<<<<< HEAD
-        "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/layout/amu_webview.xml",
-        "source": "/home/keshav/ssad10/src/VTSApp/library/res/layout/amu_webview.xml"
-=======
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/layout/amu_info_window.xml",
         "source": "/home/ravsimar/ssad10/src/VTSApp/library/res/layout/amu_info_window.xml"
     },
@@ -34,6 +10,5 @@
     {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/layout/amu_webview.xml",
         "source": "/home/ravsimar/ssad10/src/VTSApp/library/res/layout/amu_webview.xml"
->>>>>>> 624b6744318e8ff1fc6eb0c9298abba5debcfcea
     }
 ]

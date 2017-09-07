@@ -102,6 +102,23 @@ public class MapsActivity extends AppCompatActivity
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     Marker mCurrLocationMarker;
+    private ClusterManager<Vehicle> mClusterManager;
+    private void addVehicles()
+    {
+
+        // Set some lat/lng coordinates to start with.
+        double lat = 17.385044;
+        double lng = 78.486671;
+
+        // Add ten cluster items in close proximity, for purposes of this example.
+        for (int i = 0; i < 10; i++) {
+            double offset = i / 60d;
+            lat = lat + offset;
+            lng = lng + offset;
+            Vehicle offsetItem = new Vehicle(lat, lng);
+            mClusterManager.addItem(offsetItem);
+        }
+    }
 
     @Override
     public void onProviderDisabled(String str) {}
@@ -157,6 +174,12 @@ public class MapsActivity extends AppCompatActivity
             buildGoogleApiClient();
             mGoogleMap.setMyLocationEnabled(true);
         }
+        mClusterManager = new ClusterManager<Vehicle>(this,googleMap);
+
+        googleMap.setOnCameraIdleListener(mClusterManager);
+        googleMap.setOnMarkerClickListener(mClusterManager);
+
+        addVehicles();
     }
 
     protected synchronized void buildGoogleApiClient() {
