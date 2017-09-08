@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -222,9 +223,12 @@ public class LoginActivity extends AppCompatActivity
     }
 
 
-    private void launchMap()
+
+    private void launchDrawer()
     {
-        Intent intent = new Intent(this, MapsActivity.class);
+        Intent intent = new Intent(this, DrawerActivity.class);
+        intent.putExtra("token",token);
+        intent.putExtra("menu",menu);
         startActivity(intent);
     }
     /**
@@ -285,7 +289,15 @@ public class LoginActivity extends AppCompatActivity
                 token = resp.get("token").toString();
                 errorCode = resp.get("errorCode").toString();
                 errorMessage = resp.get("errorMessage").toString();
-                //JSONArray menu = resp.get("menu");
+                String temp = resp.get("menu").toString();
+                JSONArray menuArray = new JSONArray(temp);
+                menu = new String[menuArray.length()];
+                for (int i=0;i<menuArray.length();i++)
+                {
+                    menu[i] = menuArray.getString(i);
+                    //Log.d("YoYO",menu[i]);
+                }
+
                 //menu.to
                 //Thread.sleep(2000);
             }
@@ -320,7 +332,8 @@ public class LoginActivity extends AppCompatActivity
             {
                 if(status.equals("SUCCESS"))
                 {
-                    launchMap();
+                    launchDrawer();
+                    //launchMap();
                 }
                 else if(status.equals("FAILURE"))
                 {
