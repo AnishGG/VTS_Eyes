@@ -2,7 +2,8 @@
     <string name="app_name">VTS App</string>
     <string name="title_activity_maps">VTS App</string>
     <string name="title_activity_login">Sign in</string>
-
+    <!-- Strings related to controllers -->
+    <string name="login_controller">http://eyedentifyapps.com:8080/login/</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password </string>
