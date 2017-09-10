@@ -1,5 +1,13 @@
 [
     {
+        "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/layout/amu_text_bubble.xml",
+        "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/res/layout/amu_text_bubble.xml"
+    },
+    {
+        "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/layout/amu_info_window.xml",
+        "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/res/layout/amu_info_window.xml"
+    },
+    {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/layout/amu_text_bubble.xml",
         "source": "/home/ravsimar/ssad10/src/VTSApp/library/res/layout/amu_text_bubble.xml"
     },
@@ -10,5 +18,9 @@
     {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/layout/amu_info_window.xml",
         "source": "/home/ravsimar/ssad10/src/VTSApp/library/res/layout/amu_info_window.xml"
+    },
+    {
+        "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/layout/amu_webview.xml",
+        "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/res/layout/amu_webview.xml"
     }
 ]
