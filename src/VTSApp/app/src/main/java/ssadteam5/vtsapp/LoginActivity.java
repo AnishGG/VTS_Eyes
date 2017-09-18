@@ -31,6 +31,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.auth0.android.jwt.Claim;
+import com.auth0.android.jwt.JWT;
 /**
  * A login screen that offers login via email, password and tenant ID.
  */
@@ -43,6 +45,7 @@ public class LoginActivity extends AppCompatActivity
     private String token;
     private String errorCode;
     private String errorMessage;
+    private String organisationId;
     private String[] menu;
 
     //The variable status determines whether the login is successful or not.
@@ -229,6 +232,7 @@ public class LoginActivity extends AppCompatActivity
         Intent intent = new Intent(this, DrawerActivity.class);
         intent.putExtra("token",token);
         intent.putExtra("menu",menu);
+        intent.putExtra("organisationId",organisationId);
         startActivity(intent);
     }
     /**
@@ -298,6 +302,9 @@ public class LoginActivity extends AppCompatActivity
                     //Log.d("YoYO",menu[i]);
                 }
 
+                JWT jwt = new JWT(token);
+                Claim claim = jwt.getClaim("organisationId");
+                organisationId = claim.asString();
                 //menu.to
                 //Thread.sleep(2000);
             }

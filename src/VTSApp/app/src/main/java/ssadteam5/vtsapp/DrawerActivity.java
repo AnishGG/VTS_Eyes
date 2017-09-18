@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -57,6 +59,11 @@ public class DrawerActivity extends AppCompatActivity
         token = getIntent().getExtras().getString("token");
         menu = getIntent().getExtras().getStringArray("menu");
 
+        Fragment fragment = null;
+        fragment = new DeviceList();
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        tx.replace(R.id.content_frame, fragment);
+        tx.commit();
         /**for (int i=0;i<menu.length;i++)
         {
             Log.d("ldo",menu[i]);
@@ -110,7 +117,7 @@ public class DrawerActivity extends AppCompatActivity
     {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        //Fragment fragment = null;
      /**   if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
