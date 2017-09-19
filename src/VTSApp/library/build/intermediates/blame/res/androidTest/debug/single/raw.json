@@ -20,6 +20,14 @@
         "source": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_cdata.kml"
     },
     {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_multiple_placemarks.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_multiple_placemarks.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_document_nest.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_document_nest.kml"
+    },
+    {
         "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_document_nest.kml",
         "source": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_document_nest.kml"
     },
@@ -40,6 +48,10 @@
         "source": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_poly_style_boolean_numeric.kml"
     },
     {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_nested_folders.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_nested_folders.kml"
+    },
+    {
         "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_poly_style_boolean_numeric.kml",
         "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_poly_style_boolean_numeric.kml"
     },
@@ -52,8 +64,16 @@
         "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_basic_folder.kml"
     },
     {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_cdata.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_cdata.kml"
+    },
+    {
         "merged": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_ground_overlay.kml",
         "source": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_ground_overlay.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_unknwown_folder.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_unknwown_folder.kml"
     },
     {
         "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_draw_order_ground_overlay.kml",
@@ -72,8 +92,16 @@
         "source": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_visibility_ground_overlay.kml"
     },
     {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_extended_data.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_extended_data.kml"
+    },
+    {
         "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_unknwown_folder.kml",
         "source": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_unknwown_folder.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_draw_order_ground_overlay.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_draw_order_ground_overlay.kml"
     },
     {
         "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_multiple_placemarks.kml",
@@ -92,8 +120,20 @@
         "source": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_nested_multigeometry.kml"
     },
     {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_inline_style.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_inline_style.kml"
+    },
+    {
         "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_default_balloon.kml",
         "source": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_default_balloon.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_basic_folder.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_basic_folder.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_ground_overlay_color.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_ground_overlay_color.kml"
     },
     {
         "merged": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_unsupported.kml",
@@ -102,6 +142,10 @@
     {
         "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_ground_overlay.kml",
         "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_ground_overlay.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_ballon_gx_prefix.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_ballon_gx_prefix.kml"
     },
     {
         "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_extended_data.kml",
@@ -116,6 +160,10 @@
         "source": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_nested_folders.kml"
     },
     {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_visibility_ground_overlay.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_visibility_ground_overlay.kml"
+    },
+    {
         "merged": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_ground_overlay_color.kml",
         "source": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_ground_overlay_color.kml"
     },
@@ -126,6 +174,10 @@
     {
         "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_nested_folders.kml",
         "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_nested_folders.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_multigeometry_placemarks.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_multigeometry_placemarks.kml"
     },
     {
         "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_unknwown_folder.kml",
@@ -184,8 +236,24 @@
         "source": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_multigeometry_placemarks.kml"
     },
     {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_default_balloon.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_default_balloon.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_ground_overlay.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_ground_overlay.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_unsupported.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_unsupported.kml"
+    },
+    {
         "merged": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_multiple_placemarks.kml",
         "source": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_multiple_placemarks.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_nested_multigeometry.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_nested_multigeometry.kml"
     },
     {
         "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_poly_style_boolean_alpha.kml",
@@ -204,6 +272,10 @@
         "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_multigeometry_placemarks.kml"
     },
     {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_basic_placemark.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_basic_placemark.kml"
+    },
+    {
         "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_cdata.kml",
         "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_cdata.kml"
     },
@@ -212,12 +284,20 @@
         "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_visibility_ground_overlay.kml"
     },
     {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_poly_style_boolean_numeric.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_poly_style_boolean_numeric.kml"
+    },
+    {
         "merged": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_basic_folder.kml",
         "source": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_basic_folder.kml"
     },
     {
         "merged": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_cdata.kml",
         "source": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_cdata.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_poly_style_boolean_alpha.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/raw/amu_poly_style_boolean_alpha.kml"
     },
     {
         "merged": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/raw/amu_inline_style.kml",

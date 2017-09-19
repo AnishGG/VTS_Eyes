@@ -58,7 +58,7 @@ public class DrawerActivity extends AppCompatActivity
 
         token = getIntent().getExtras().getString("token");
         menu = getIntent().getExtras().getStringArray("menu");
-
+/*
         Fragment fragment = null;
         Bundle bundle = new Bundle();
         bundle.putString("token",token);
@@ -67,6 +67,7 @@ public class DrawerActivity extends AppCompatActivity
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.content_frame, fragment);
         tx.commit();
+*/
         /**for (int i=0;i<menu.length;i++)
         {
             Log.d("ldo",menu[i]);
@@ -120,7 +121,7 @@ public class DrawerActivity extends AppCompatActivity
     {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        //Fragment fragment = null;
+        Fragment fragment = null;
      /**   if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
@@ -135,6 +136,18 @@ public class DrawerActivity extends AppCompatActivity
 
         }
 */
+        if(menu[id].equals("Devices")){
+            Bundle bundle = new Bundle();
+            bundle.putString("token",token);
+            fragment = new DeviceList();
+            fragment.setArguments(bundle);
+            FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+            tx.replace(R.id.content_frame, fragment);
+            tx.commit();
+        }
+        else if(menu[id].equals("Dashboard")){
+            Log.d("Nice", "activity launched");
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
