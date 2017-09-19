@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/src/main/shaders"/></dataSet><dataSet config="release"><source path="/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/src/release/shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/home/keshav/ssad10/src/VTSApp/library/src/main/shaders"/></dataSet><dataSet config="release"><source path="/home/keshav/ssad10/src/VTSApp/library/src/release/shaders"/></dataSet></merger>
