@@ -60,7 +60,10 @@ public class DrawerActivity extends AppCompatActivity
         menu = getIntent().getExtras().getStringArray("menu");
 
         Fragment fragment = null;
+        Bundle bundle = new Bundle();
+        bundle.putString("token",token);
         fragment = new DeviceList();
+        fragment.setArguments(bundle);
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.content_frame, fragment);
         tx.commit();
