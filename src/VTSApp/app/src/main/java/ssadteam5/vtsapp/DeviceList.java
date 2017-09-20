@@ -13,6 +13,9 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.auth0.android.jwt.Claim;
+import com.auth0.android.jwt.JWT;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,19 +30,38 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
+
 public class DeviceList extends Fragment
 {
     View view;
     private String token;
     private DeviceFetchTask mFetchTask;
     private ArrayList<HashMap<String, String>> deviceDet = new ArrayList<>();
+
+    private OkHttpClient client;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         view = inflater.inflate(R.layout.fragment_device_list, container, false);
         token = getArguments().getString("token");
-//        token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJFeWVkZW50aWZ5Iiwib3JnYW5pc2F0aW9uSWQiOiI1OTY0YTIxMWMxZjA4MTQ5MGU1MWVlNTQiLCJjcmVhdGVkIjoxNTA1ODE3Njg5NDU4LCJyb2xlcyI6WyJTVVBFUl9BRE1JTiIsIlNVUEVSX0FETUlOIl0sIm9yZ2FuaXNhdGlvbiI6ImV5ZWRlbnRpZnkiLCJpZCI6IjU5NjRhMjExYzFmMDgxNDkwZTUxZWU1OCIsImlhdCI6MTUwNTgxNzY4OX0.uyYSCcBRfjBjJwMPyXYVV6t0aLpieYeWIZOiB8DsNZVDq_IgB5Gv-cyUUEkKsoe7l2K6bZtepx4VqJ2fNBh8Mw";
+
+        JWT jwt = new JWT(token);
+        Claim claim = jwt.getClaim("organisationId");
+        String organisationId = claim.asString();
+        client = new OkHttpClient();
+        Request request = new Request.Builder().url("http://eyedentifyapps.com:8080/socket/device/message"+organisationId+"/websocket/").build();
+        EchoWebSocketListener listener = new EchoWebSocketListener();
+        WebSocket ws = client.newWebSocket(request, listener);
+
+        client.dispatcher().executorService().shutdown();
         mFetchTask = new DeviceFetchTask(token);
         mFetchTask.execute((Void) null);
         return view;
@@ -50,8 +72,43 @@ public class DeviceList extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        //you can set the title for your toolbar here for different fragments different titles
-        getActivity().setTitle("Fragment 1");
+        getActivity().setTitle("Devices");
+    }
+    private final class EchoWebSocketListener extends WebSocketListener
+    {
+        private static final int NORMAL_CLOSURE_STATUS = 1000;
+
+        @Override
+        public void onOpen(WebSocket webSocket, Response response)
+        {
+            Log.d("Opening:", response.toString());
+
+        }
+
+        @Override
+        public void onMessage(WebSocket webSocket, String text)
+        {
+            Log.d("Receiving : ",text);
+        }
+
+        @Override
+        public void onMessage(WebSocket webSocket, ByteString bytes)
+        {
+            Log.d("Receiving bytes : ",bytes.hex());
+        }
+
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason)
+        {
+            webSocket.close(NORMAL_CLOSURE_STATUS, null);
+            Log.d("Closing : ", code + " / " + reason);
+        }
+
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, Response response)
+        {
+            Log.d("Error : ",t.getMessage());
+        }
     }
     public class DeviceFetchTask extends AsyncTask<Void, Void, Boolean>
     {
@@ -86,7 +143,8 @@ public class DeviceList extends Fragment
                 Log.d("resp",response);
                 JSONObject obj=new JSONObject(response);
                 JSONArray arr=obj.getJSONArray("deviceDTOS");
-                for(int i=0;i<arr.length();i++){
+                for(int i=0;i<arr.length();i++)
+                {
                     JSONObject ob=arr.getJSONObject(i);
                     HashMap<String, String> map = new HashMap<>();
                     map.put("account",ob.getString("account"));
