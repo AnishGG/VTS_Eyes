@@ -8,32 +8,32 @@
         "source": "/home/ravsimar/te/ssad10/src/VTSApp/library/res/raw/amu_unsupported.kml"
     },
     {
-        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_cdata.kml",
-        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/res/raw/amu_cdata.kml"
-    },
-    {
         "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_extended_data.kml",
         "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/res/raw/amu_extended_data.kml"
     },
     {
-        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_document_nest.kml",
-        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/res/raw/amu_document_nest.kml"
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_cdata.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/res/raw/amu_cdata.kml"
     },
     {
-        "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_ground_overlay_color.kml",
-        "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/res/raw/amu_ground_overlay_color.kml"
-    },
-    {
-        "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_multigeometry_placemarks.kml",
-        "source": "/home/keshav/ssad10/src/VTSApp/library/res/raw/amu_multigeometry_placemarks.kml"
+        "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_basic_placemark.kml",
+        "source": "/home/keshav/ssad10/src/VTSApp/library/res/raw/amu_basic_placemark.kml"
     },
     {
         "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_ground_overlay_color.kml",
         "source": "/home/keshav/ssad10/src/VTSApp/library/res/raw/amu_ground_overlay_color.kml"
     },
     {
-        "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_basic_placemark.kml",
-        "source": "/home/keshav/ssad10/src/VTSApp/library/res/raw/amu_basic_placemark.kml"
+        "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_multigeometry_placemarks.kml",
+        "source": "/home/keshav/ssad10/src/VTSApp/library/res/raw/amu_multigeometry_placemarks.kml"
+    },
+    {
+        "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_ground_overlay_color.kml",
+        "source": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/res/raw/amu_ground_overlay_color.kml"
+    },
+    {
+        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_document_nest.kml",
+        "source": "/home/anish/Desktop/ssad10/src/VTSApp/library/res/raw/amu_document_nest.kml"
     },
     {
         "merged": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/raw/amu_visibility_ground_overlay.kml",
