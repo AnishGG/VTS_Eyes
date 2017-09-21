@@ -1,18 +1,6 @@
 [
     {
-        "merged": "/home/anish/Desktop/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable-ldpi-v4/common_ic_googleplayservices.png",
-        "source": "/home/anish/.android/build-cache/57598ed5a7cabea793b1108e51d954e805117ab9/output/res/drawable-ldpi-v4/common_ic_googleplayservices.png"
-    },
-    {
-        "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable-ldpi-v4/common_ic_googleplayservices.png",
-        "source": "/home/daksh/.android/build-cache/63d89ee40b266cfb4d72338208e165c2d3b08194/output/res/drawable-ldpi-v4/common_ic_googleplayservices.png"
-    },
-    {
-        "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable-ldpi-v4/common_ic_googleplayservices.png",
-        "source": "/home/keshav/.android/build-cache/3d8c5c0d3f72a7618fa01fa783f190c517c4617c/output/res/drawable-ldpi-v4/common_ic_googleplayservices.png"
-    },
-    {
-        "merged": "/home/ravsimar/te/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable-ldpi-v4/common_ic_googleplayservices.png",
+        "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable-ldpi-v4/common_ic_googleplayservices.png",
         "source": "/home/ravsimar/.android/build-cache/5c7eb718165aae5599db459530c46af49b6e630e/output/res/drawable-ldpi-v4/common_ic_googleplayservices.png"
     }
 ]

@@ -36,6 +36,8 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
+import ua.naiksoftware.stomp.Stomp;
+import ua.naiksoftware.stomp.client.StompClient;
 
 public class DeviceList extends Fragment
 {
@@ -44,8 +46,7 @@ public class DeviceList extends Fragment
     private DeviceFetchTask mFetchTask;
     private ArrayList<HashMap<String, String>> deviceDet = new ArrayList<>();
 
-    private OkHttpClient client;
-
+    private StompClient mStompClient;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -56,12 +57,13 @@ public class DeviceList extends Fragment
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");
         String organisationId = claim.asString();
-        client = new OkHttpClient();
-        Request request = new Request.Builder().url("http://eyedentifyapps.com:8080/socket/device/message"+organisationId+"/websocket/").build();
-        EchoWebSocketListener listener = new EchoWebSocketListener();
-        WebSocket ws = client.newWebSocket(request, listener);
+        mStompClient = Stomp.over(WebSocket.class, "http://eyedentifyapps.com:8080/socket/websocket/");
+        mStompClient.connect();
 
-        client.dispatcher().executorService().shutdown();
+        mStompClient.topic("/device/message" + organisationId).subscribe(topicMessage -> {
+            Log.d("Recieved", topicMessage.getPayload());
+        });
+
         mFetchTask = new DeviceFetchTask(token);
         mFetchTask.execute((Void) null);
         return view;
@@ -74,42 +76,7 @@ public class DeviceList extends Fragment
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Devices");
     }
-    private final class EchoWebSocketListener extends WebSocketListener
-    {
-        private static final int NORMAL_CLOSURE_STATUS = 1000;
 
-        @Override
-        public void onOpen(WebSocket webSocket, Response response)
-        {
-            Log.d("Opening:", response.toString());
-
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, String text)
-        {
-            Log.d("Receiving : ",text);
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes)
-        {
-            Log.d("Receiving bytes : ",bytes.hex());
-        }
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason)
-        {
-            webSocket.close(NORMAL_CLOSURE_STATUS, null);
-            Log.d("Closing : ", code + " / " + reason);
-        }
-
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response)
-        {
-            Log.d("Error : ",t.getMessage());
-        }
-    }
     public class DeviceFetchTask extends AsyncTask<Void, Void, Boolean>
     {
         private final String mToken;

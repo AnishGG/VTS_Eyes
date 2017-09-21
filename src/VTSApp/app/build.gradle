@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'me.tatarka.retrolambda'
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
@@ -33,5 +33,6 @@ dependencies {
     compile 'com.auth0.android:jwtdecode:1.1.1'
     compile 'com.android.support:support-v4:26.+'
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile 'com.github.NaikSoftware:StompProtocolAndroid:1.4.2'
     testCompile 'junit:junit:4.12'
 }
