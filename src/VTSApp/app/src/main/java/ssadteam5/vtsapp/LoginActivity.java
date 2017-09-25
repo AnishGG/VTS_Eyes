@@ -45,9 +45,9 @@ public class LoginActivity extends AppCompatActivity
     private String token;
     private String errorCode;
     private String errorMessage;
-    private String organisationId;
     private String[] menu;
-
+    private String email;
+    private String tenant;
     //The variable status determines whether the login is successful or not.
 
     /**
@@ -118,9 +118,10 @@ public class LoginActivity extends AppCompatActivity
         mTenantIdView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
         String tenantId = mTenantIdView.getText().toString();
+        tenant = tenantId;
 
         boolean cancel = false;
         View focusView = null;
@@ -232,7 +233,8 @@ public class LoginActivity extends AppCompatActivity
         Intent intent = new Intent(this, DrawerActivity.class);
         intent.putExtra("token",token);
         intent.putExtra("menu",menu);
-        intent.putExtra("organisationId",organisationId);
+        intent.putExtra("email",email);
+        intent.putExtra("tenant",tenant);
         startActivity(intent);
     }
     /**
@@ -302,9 +304,7 @@ public class LoginActivity extends AppCompatActivity
                     //Log.d("YoYO",menu[i]);
                 }
 
-                JWT jwt = new JWT(token);
-                Claim claim = jwt.getClaim("organisationId");
-                organisationId = claim.asString();
+
                 //menu.to
                 //Thread.sleep(2000);
             }

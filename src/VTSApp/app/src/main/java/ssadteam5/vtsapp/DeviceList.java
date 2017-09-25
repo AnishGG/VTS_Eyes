@@ -53,30 +53,16 @@ public class DeviceList extends Fragment
     {
         view = inflater.inflate(R.layout.fragment_device_list, container, false);
         token = getArguments().getString("token");
-
-        JWT jwt = new JWT(token);
-        Claim claim = jwt.getClaim("organisationId");
-        String organisationId = claim.asString();
-        mStompClient = Stomp.over(WebSocket.class, "http://eyedentifyapps.com:8080/socket/websocket/");
-        mStompClient.connect();
-
-        mStompClient.topic("/device/message" + organisationId).subscribe(topicMessage -> {
-            Log.d("Recieved", topicMessage.getPayload());
-        });
-
         mFetchTask = new DeviceFetchTask(token);
         mFetchTask.execute((Void) null);
         return view;
     }
-
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Devices");
     }
-
     public class DeviceFetchTask extends AsyncTask<Void, Void, Boolean>
     {
         private final String mToken;
@@ -120,8 +106,6 @@ public class DeviceList extends Fragment
                     map.put("description",ob.getString("description"));
                     deviceDet.add(map);
                 }
-
-
             }
 
             catch (MalformedURLException e)

@@ -6,14 +6,19 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.auth0.android.jwt.Claim;
+import com.auth0.android.jwt.JWT;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,73 +33,21 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-//public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
-//{
-//
-//    private GoogleMap mMap;
-//    private ClusterManager<Vehicle> mClusterManager;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState)
-//    {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_maps);
-//        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
-//    }
-//
-//
-//    /**
-//     * Manipulates the map once available.
-//     * This callback is triggered when the map is ready to be used.
-//     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-//     * we just add a marker near Sydney, Australia.
-//     * If Google Play services is not installed on the device, the user will be prompted to install
-//     * it inside the SupportMapFragment. This method will only be triggered once the user has
-//     * installed Google Play services and returned to the app.
-//     */
-//    @Override
-//    public void onMapReady(GoogleMap googleMap)
-//    {
-//        mMap = googleMap;
-//
-//        // Add a marker in Sydney and move the camera
-//        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        double lat = 51.5145160;
-//        double lng = -0.1270060;
-//        LatLng x = new LatLng(lat, lng);
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(x));
-//        mClusterManager = new ClusterManager<Vehicle>(this,mMap);
-//
-//        mMap.setOnCameraIdleListener(mClusterManager);
-//        mMap.setOnMarkerClickListener(mClusterManager);
-//
-//        addVehicles();
-//    }
-//    private void addVehicles()
-//    {
-//
-//        // Set some lat/lng coordinates to start with.
-//        double lat = 51.5145160;
-//        double lng = -0.1270060;
-//
-//        // Add ten cluster items in close proximity, for purposes of this example.
-//        for (int i = 0; i < 10; i++) {
-//            double offset = i / 60d;
-//            lat = lat + offset;
-//            lng = lng + offset;
-//            Vehicle offsetItem = new Vehicle(lat, lng);
-//            mClusterManager.addItem(offsetItem);
-//        }
-//    }
-//}
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
+
+import okhttp3.WebSocket;
+import ua.naiksoftware.stomp.Stomp;
+import ua.naiksoftware.stomp.client.StompClient;
+
+
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener
+{
 
     GoogleMap mGoogleMap;
     SupportMapFragment mapFrag;
@@ -102,7 +55,10 @@ public class MapsActivity extends AppCompatActivity
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     Marker mCurrLocationMarker;
+    StompClient mStompClient;
+    private String token;
     private ClusterManager<Vehicle> mClusterManager;
+
     private void addVehicles()
     {
 
@@ -119,7 +75,12 @@ public class MapsActivity extends AppCompatActivity
             mClusterManager.addItem(offsetItem);
         }
     }
-
+    private void addDevice(String deviceName, Double lat, Double lon)
+    {
+        Vehicle item = new Vehicle(lat,lon);
+        mClusterManager.addItem(item);
+//        mClusterManager.removeItem();
+    }
     @Override
     public void onProviderDisabled(String str) {}
 
@@ -139,6 +100,40 @@ public class MapsActivity extends AppCompatActivity
 
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
+
+        token = getIntent().getExtras().getString("token");
+        JWT jwt = new JWT(token);
+        Claim claim = jwt.getClaim("organisationId");
+        String organisationId = claim.asString();
+
+        mStompClient = Stomp.over(WebSocket.class,getString(R.string.websocket));
+        mStompClient.connect();
+
+        mStompClient.topic("/device/message" + organisationId).subscribe(topicMessage -> {
+            JSONObject payload = new JSONObject(topicMessage.getPayload());
+            String deviceName = payload.get("DeviceId").toString();
+            Double lat = Double.parseDouble(payload.get("Latitude").toString());
+            Double lon = Double.parseDouble(payload.get("Longitude").toString());
+            Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable(){
+                         public void run(){
+                             try {
+
+                                 Marker amarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(deviceName));
+                                 amarker.setTag(deviceName);
+                             }
+                             catch (Exception e)
+                             {
+                                 e.printStackTrace();
+                             }}
+                // your UI code here
+            });
+//            addDevice(deviceName,lat,lon);
+//            Log.d("name",deviceName);
+//            Log.d("name",lat);
+            Log.d("Recieved", topicMessage.getPayload());
+        });
+
     }
 
     @Override
@@ -155,7 +150,7 @@ public class MapsActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap)
     {
         mGoogleMap=googleMap;
-        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -174,15 +169,16 @@ public class MapsActivity extends AppCompatActivity
             buildGoogleApiClient();
             mGoogleMap.setMyLocationEnabled(true);
         }
-        mClusterManager = new ClusterManager<Vehicle>(this,googleMap);
+//        mClusterManager = new ClusterManager<Vehicle>(this,googleMap);
+//        mClusterManager.setAlgorithm();
+//        googleMap.setOnCameraIdleListener(mClusterManager);
+//        googleMap.setOnMarkerClickListener(mClusterManager);
 
-        googleMap.setOnCameraIdleListener(mClusterManager);
-        googleMap.setOnMarkerClickListener(mClusterManager);
-
-        addVehicles();
+        //addVehicles();
     }
 
-    protected synchronized void buildGoogleApiClient() {
+    protected synchronized void buildGoogleApiClient()
+    {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)

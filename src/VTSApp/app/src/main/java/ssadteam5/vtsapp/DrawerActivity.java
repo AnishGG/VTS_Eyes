@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.TextViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,12 +17,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
     private String token;
     private String[] menu;
+    private String email;
+    private String tenant;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -46,8 +51,17 @@ public class DrawerActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        email = getIntent().getExtras().getString("email");
+        tenant = getIntent().getExtras().getString("tenant");
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu navMenu = navigationView.getMenu();
+        View hview = navigationView.getHeaderView(0);
+        TextView navtenant = (TextView) hview.findViewById(R.id.tenantName);
+        TextView navemail = (TextView) hview.findViewById(R.id.emailname);
+
+        navtenant.setText(tenant);
+        navemail.setText(email);
         menu = getIntent().getExtras().getStringArray("menu");
         for (int i=0;i<menu.length;i++)
         {
@@ -58,26 +72,13 @@ public class DrawerActivity extends AppCompatActivity
 
         token = getIntent().getExtras().getString("token");
         menu = getIntent().getExtras().getStringArray("menu");
-/*
-        Fragment fragment = null;
-        Bundle bundle = new Bundle();
-        bundle.putString("token",token);
-        fragment = new DeviceList();
-        fragment.setArguments(bundle);
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.content_frame, fragment);
-        tx.commit();
-*/
-        /**for (int i=0;i<menu.length;i++)
-        {
-            Log.d("ldo",menu[i]);
-        }
-        Log.d("token",data);
-         */
+
+        deviceFragment();
     }
     private void launchMap()
     {
         Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("token",token);
         startActivity(intent);
     }
     @Override
@@ -114,14 +115,24 @@ public class DrawerActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
+    private void deviceFragment()
+    {
+        Fragment fragment = null;
+        Bundle bundle = new Bundle();
+        bundle.putString("token",token);
+        fragment = new DeviceList();
+        fragment.setArguments(bundle);
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        tx.replace(R.id.content_frame, fragment);
+        tx.commit();
+        return ;
+    }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
     {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment fragment = null;
      /**   if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
@@ -137,13 +148,8 @@ public class DrawerActivity extends AppCompatActivity
         }
 */
         if(menu[id].equals("Devices")){
-            Bundle bundle = new Bundle();
-            bundle.putString("token",token);
-            fragment = new DeviceList();
-            fragment.setArguments(bundle);
-            FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-            tx.replace(R.id.content_frame, fragment);
-            tx.commit();
+            deviceFragment();
+
         }
         else if(menu[id].equals("Dashboard")){
             Log.d("Nice", "activity launched");
