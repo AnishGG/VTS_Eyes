@@ -1,10 +1,18 @@
 [
     {
+        "merged": "/home/anish/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/color/common_google_signin_btn_text_light.xml",
+        "source": "/home/anish/.android/build-cache/57598ed5a7cabea793b1108e51d954e805117ab9/output/res/color/common_google_signin_btn_text_light.xml"
+    },
+    {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/color/common_google_signin_btn_text_dark.xml",
         "source": "/home/ravsimar/.android/build-cache/5c7eb718165aae5599db459530c46af49b6e630e/output/res/color/common_google_signin_btn_text_dark.xml"
     },
     {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/color/common_google_signin_btn_text_light.xml",
         "source": "/home/ravsimar/.android/build-cache/5c7eb718165aae5599db459530c46af49b6e630e/output/res/color/common_google_signin_btn_text_light.xml"
+    },
+    {
+        "merged": "/home/anish/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/color/common_google_signin_btn_text_dark.xml",
+        "source": "/home/anish/.android/build-cache/57598ed5a7cabea793b1108e51d954e805117ab9/output/res/color/common_google_signin_btn_text_dark.xml"
     }
 ]

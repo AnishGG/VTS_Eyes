@@ -127,11 +127,13 @@ public class DeviceList extends Fragment
         @Override
         protected void onPostExecute(final Boolean success)
         {
-            ListAdapter adapter = new SimpleAdapter(getContext(), deviceDet, R.layout.list_item,
-                    new String[] { "account", "name","description"  },
-                    new int[] { R.id.account,R.id.name, R.id.description });
-            ListView listView=(ListView) view.findViewById(R.id.listview);
-            listView.setAdapter(adapter);
+            if(getActivity() != null) {
+                ListAdapter adapter = new SimpleAdapter(getContext(), deviceDet, R.layout.list_item,
+                        new String[]{"account", "name", "description"},
+                        new int[]{R.id.account, R.id.name, R.id.description});
+                ListView listView = (ListView) view.findViewById(R.id.listview);
+                listView.setAdapter(adapter);
+            }
         }
 
         @Override

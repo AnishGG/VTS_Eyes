@@ -31,49 +31,50 @@ public class DrawerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drawer);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        if(savedInstanceState == null) {
+            setContentView(R.layout.activity_drawer);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                launchMap();
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    launchMap();
+                }
+            });
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
+            email = getIntent().getExtras().getString("email");
+            tenant = getIntent().getExtras().getString("tenant");
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            Menu navMenu = navigationView.getMenu();
+            View hview = navigationView.getHeaderView(0);
+            TextView navtenant = (TextView) hview.findViewById(R.id.tenantName);
+            TextView navemail = (TextView) hview.findViewById(R.id.emailname);
+
+            navtenant.setText(tenant);
+            navemail.setText(email);
+            menu = getIntent().getExtras().getStringArray("menu");
+            for (int i = 0; i < menu.length; i++) {
+                navMenu.add(Menu.NONE, i, i, menu[i]);
             }
-        });
+            navigationView.setNavigationItemSelectedListener(this);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            token = getIntent().getExtras().getString("token");
+            menu = getIntent().getExtras().getStringArray("menu");
 
-        email = getIntent().getExtras().getString("email");
-        tenant = getIntent().getExtras().getString("tenant");
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Menu navMenu = navigationView.getMenu();
-        View hview = navigationView.getHeaderView(0);
-        TextView navtenant = (TextView) hview.findViewById(R.id.tenantName);
-        TextView navemail = (TextView) hview.findViewById(R.id.emailname);
-
-        navtenant.setText(tenant);
-        navemail.setText(email);
-        menu = getIntent().getExtras().getStringArray("menu");
-        for (int i=0;i<menu.length;i++)
-        {
-            navMenu.add(Menu.NONE,i,i,menu[i]);
-        }
-        navigationView.setNavigationItemSelectedListener(this);
-
-
-        token = getIntent().getExtras().getString("token");
-        menu = getIntent().getExtras().getStringArray("menu");
-
-        deviceFragment();
+            deviceFragment();
+//        }
+//        else{
+//            Log.d("else mei gya", "wow");
+//            deviceFragment();
+//        }
     }
     private void launchMap()
     {
