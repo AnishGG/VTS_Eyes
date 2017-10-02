@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 
@@ -62,11 +63,18 @@ public class LoginActivity extends AppCompatActivity
     private View mProgressView;
     private View mLoginFormView;
 
+    public static final String PREFS_NAME = "LoginPrefs";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        if (settings.getString("logged", "").toString().equals("logged")) {
+            Intent intent = new Intent(LoginActivity.this, DrawerActivity.class);
+            startActivity(intent);
+        }
         // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
 
@@ -164,6 +172,10 @@ public class LoginActivity extends AppCompatActivity
         {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("logged", "logged");
+            editor.commit();
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password, tenantId);
             mAuthTask.execute((Void) null);
