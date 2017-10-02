@@ -35,7 +35,9 @@ import com.google.android.gms.location.LocationServices;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
@@ -56,6 +58,7 @@ public class MapsActivity extends AppCompatActivity
     Location mLastLocation;
     Marker mCurrLocationMarker;
     StompClient mStompClient;
+    ArrayList<Marker> markerList = new ArrayList<Marker>();
     private String token;
     private ClusterManager<Vehicle> mClusterManager;
 
@@ -81,6 +84,10 @@ public class MapsActivity extends AppCompatActivity
         mClusterManager.addItem(item);
 //        mClusterManager.removeItem();
     }
+    private void fetchDeviceList()
+    {
+
+    }
     @Override
     public void onProviderDisabled(String str) {}
 
@@ -105,27 +112,48 @@ public class MapsActivity extends AppCompatActivity
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");
         String organisationId = claim.asString();
-
         mStompClient = Stomp.over(WebSocket.class,getString(R.string.websocket));
         mStompClient.connect();
 
         mStompClient.topic("/device/message" + organisationId).subscribe(topicMessage -> {
             JSONObject payload = new JSONObject(topicMessage.getPayload());
-            String deviceName = payload.get("DeviceId").toString();
+            final String deviceName = payload.get("DeviceId").toString();
             Double lat = Double.parseDouble(payload.get("Latitude").toString());
             Double lon = Double.parseDouble(payload.get("Longitude").toString());
             Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable(){
-                         public void run(){
-                             try {
+            handler.post(new Runnable()
+            {
+                public void run()
+                {
+                    try
+                    {
+                        boolean New = true;
+                        for(int i=0;i<markerList.size();i++)
+                        {
+                            Log.d("test",deviceName);
+                            Log.d("test",markerList.get(i).getTag().toString());
 
-                                 Marker amarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(deviceName));
-                                 amarker.setTag(deviceName);
-                             }
-                             catch (Exception e)
-                             {
-                                 e.printStackTrace();
-                             }}
+                            if(deviceName.equals(markerList.get(i).getTag().toString()))
+                            {
+                                Log.d("test","inside if");
+                                markerList.get(i).setPosition(new LatLng(lat,lon));
+                                New = false;
+                            }
+                        }
+                        if(New)
+                        {
+                            Marker amarker = mGoogleMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(lat, lon))
+                                    .title(deviceName));
+                            amarker.setTag(deviceName);
+                            markerList.add(amarker);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
                 // your UI code here
             });
 //            addDevice(deviceName,lat,lon);
@@ -196,7 +224,7 @@ public class MapsActivity extends AppCompatActivity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-           // LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest , this);
+            // LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest , this);
         }
     }
 
