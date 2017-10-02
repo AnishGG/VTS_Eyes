@@ -70,11 +70,6 @@ public class LoginActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        if (settings.getString("logged", "").toString().equals("logged")) {
-            Intent intent = new Intent(LoginActivity.this, DrawerActivity.class);
-            startActivity(intent);
-        }
         // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
 

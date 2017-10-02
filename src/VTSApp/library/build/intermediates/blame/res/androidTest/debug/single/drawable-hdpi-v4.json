@@ -24,12 +24,12 @@
         "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable-hdpi-v4/common_google_signin_btn_text_light_focused.9.png"
     },
     {
-        "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/common_google_signin_btn_icon_dark_disabled.9.png",
-        "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable-hdpi-v4/common_google_signin_btn_icon_dark_disabled.9.png"
-    },
-    {
         "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/common_full_open_on_phone.png",
         "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable-hdpi-v4/common_full_open_on_phone.png"
+    },
+    {
+        "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/common_google_signin_btn_icon_dark_disabled.9.png",
+        "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable-hdpi-v4/common_google_signin_btn_icon_dark_disabled.9.png"
     },
     {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/common_google_signin_btn_text_light_disabled.9.png",
