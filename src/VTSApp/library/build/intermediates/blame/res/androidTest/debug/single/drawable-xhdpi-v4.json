@@ -12,20 +12,20 @@
         "source": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/drawable-xhdpi-v4/amu_bubble_shadow.9.png"
     },
     {
-        "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/common_google_signin_btn_text_dark_disabled.9.png",
-        "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable-xhdpi-v4/common_google_signin_btn_text_dark_disabled.9.png"
-    },
-    {
         "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/common_google_signin_btn_text_dark_focused.9.png",
         "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable-xhdpi-v4/common_google_signin_btn_text_dark_focused.9.png"
     },
     {
-        "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/amu_bubble_shadow.9.png",
-        "source": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/drawable-xhdpi-v4/amu_bubble_shadow.9.png"
+        "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/common_google_signin_btn_text_dark_disabled.9.png",
+        "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable-xhdpi-v4/common_google_signin_btn_text_dark_disabled.9.png"
     },
     {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/common_google_signin_btn_text_dark_normal.9.png",
         "source": "/home/ravsimar/.android/build-cache/5c7eb718165aae5599db459530c46af49b6e630e/output/res/drawable-xhdpi-v4/common_google_signin_btn_text_dark_normal.9.png"
+    },
+    {
+        "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/amu_bubble_shadow.9.png",
+        "source": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/drawable-xhdpi-v4/amu_bubble_shadow.9.png"
     },
     {
         "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/common_google_signin_btn_icon_light_pressed.9.png",

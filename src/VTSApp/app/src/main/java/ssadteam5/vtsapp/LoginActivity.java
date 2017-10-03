@@ -31,9 +31,12 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Set;
 
 import com.auth0.android.jwt.Claim;
 import com.auth0.android.jwt.JWT;
+import com.google.gson.Gson;
+
 /**
  * A login screen that offers login via email, password and tenant ID.
  */
@@ -42,6 +45,7 @@ public class LoginActivity extends AppCompatActivity
     /**
      *  These variables store the login response
      */
+    private String json;
     private String status;
     private String token;
     private String errorCode;
@@ -63,6 +67,8 @@ public class LoginActivity extends AppCompatActivity
     private View mProgressView;
     private View mLoginFormView;
 
+    UserSessionManager session;     // To store the user session
+
     public static final String PREFS_NAME = "LoginPrefs";
 
     @Override
@@ -70,6 +76,7 @@ public class LoginActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        session = new UserSessionManager(getApplicationContext());
         // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
 
@@ -174,7 +181,6 @@ public class LoginActivity extends AppCompatActivity
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password, tenantId);
             mAuthTask.execute((Void) null);
-
         }
     }
 
@@ -310,7 +316,7 @@ public class LoginActivity extends AppCompatActivity
                     menu[i] = menuArray.getString(i);
                     //Log.d("YoYO",menu[i]);
                 }
-
+                session.createUserLoginSession("Anish Gulati", email, tenant, temp, token);
 
                 //menu.to
                 //Thread.sleep(2000);
@@ -347,6 +353,7 @@ public class LoginActivity extends AppCompatActivity
                 if(status.equals("SUCCESS"))
                 {
                     launchDrawer();
+                    finish();
                     //launchMap();
                 }
                 else if(status.equals("FAILURE"))
@@ -383,6 +390,11 @@ public class LoginActivity extends AppCompatActivity
             mAuthTask = null;
             showProgress(false);
         }
+    }
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        LoginActivity.this.finishAfterTransition();
     }
 }
 

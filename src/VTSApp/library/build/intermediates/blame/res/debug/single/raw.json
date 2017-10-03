@@ -8,12 +8,12 @@
         "source": "/home/ravsimar/temp/ssad10/src/VTSApp/library/res/raw/amu_nested_multigeometry.kml"
     },
     {
-        "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/raw/amu_draw_order_ground_overlay.kml",
-        "source": "/home/ravsimar/ssad10/src/VTSApp/library/res/raw/amu_draw_order_ground_overlay.kml"
-    },
-    {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/raw/amu_multigeometry_placemarks.kml",
         "source": "/home/ravsimar/ssad10/src/VTSApp/library/res/raw/amu_multigeometry_placemarks.kml"
+    },
+    {
+        "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/raw/amu_draw_order_ground_overlay.kml",
+        "source": "/home/ravsimar/ssad10/src/VTSApp/library/res/raw/amu_draw_order_ground_overlay.kml"
     },
     {
         "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/raw/amu_document_nest.kml",

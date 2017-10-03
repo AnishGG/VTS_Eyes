@@ -20,6 +20,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.List;
+
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -28,6 +36,7 @@ public class DrawerActivity extends AppCompatActivity
     private String email;
     private String tenant;
 
+    UserSessionManager session;
     public static final String PREFS_NAME = "LoginPrefs";
 
     @Override
@@ -36,6 +45,18 @@ public class DrawerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 //        if(savedInstanceState == null) {
             setContentView(R.layout.activity_drawer);
+        // First this activity will be opened and if user is logged in, then it is okay, else login activity will be displayed
+        session = new UserSessionManager(getApplicationContext());
+        // Check user login (this is the important point)
+        // If User is not logged in , This will redirect user to LoginActivity
+        // and finish current activity from activity stack.
+        if(session.checkLogin()){
+            Log.d("loginAgain", "again");
+            android.os.Process.killProcess(android.os.Process.myPid());
+            finish();
+        }
+        Log.d("AlreadyLoggedIn", "loggedin");
+
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
@@ -52,8 +73,12 @@ public class DrawerActivity extends AppCompatActivity
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.setDrawerListener(toggle);
             toggle.syncState();
-            email = getIntent().getExtras().getString("email");
-            tenant = getIntent().getExtras().getString("tenant");
+            Log.d("read", "read in this");
+            email = session.getUserDetails().get(UserSessionManager.KEY_EMAIL);
+            tenant = session.getUserDetails().get(UserSessionManager.KEY_TENANT);
+            Log.d("reached here", email + " " + tenant);
+//            email = getIntent().getExtras().getString("email");
+//            tenant = getIntent().getExtras().getString("tenant");
 
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             Menu navMenu = navigationView.getMenu();
@@ -63,14 +88,31 @@ public class DrawerActivity extends AppCompatActivity
 
             navtenant.setText(tenant);
             navemail.setText(email);
-            menu = getIntent().getExtras().getStringArray("menu");
+            String jsonMenu = session.getUserDetails().get(UserSessionManager.KEY_MENU);
+            try {
+                JSONArray menuArray = new JSONArray(jsonMenu);
+                menu = new String[menuArray.length()];
+                for (int i=0;i<menuArray.length();i++)
+                {
+                    menu[i] = menuArray.getString(i);
+                }
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+
+//            menu = getIntent().getExtras().getStringArray("menu");
             for (int i = 0; i < menu.length; i++) {
                 navMenu.add(Menu.NONE, i, i, menu[i]);
             }
             navigationView.setNavigationItemSelectedListener(this);
 
-            token = getIntent().getExtras().getString("token");
-            menu = getIntent().getExtras().getStringArray("menu");
+            token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
+            Log.d("reached at last of the page", "ended");
+//            token = getIntent().getExtras().getString("token");
+//            menu = getIntent().getExtras().getStringArray("menu");
 
             deviceFragment();
 //        }
@@ -122,7 +164,8 @@ public class DrawerActivity extends AppCompatActivity
             SharedPreferences.Editor editor = settings.edit();
             editor.remove("logged");
             editor.commit();
-            finish();
+            session.logoutUser();
+            finishAfterTransition();
         }
 
         return super.onOptionsItemSelected(item);

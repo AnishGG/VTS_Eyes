@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/src/main/jniLibs"/></dataSet><dataSet config="release"><source path="/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/src/release/jniLibs"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/home/anish/ssad10/src/VTSApp/library/src/main/jniLibs"/></dataSet><dataSet config="release"><source path="/home/anish/ssad10/src/VTSApp/library/src/release/jniLibs"/></dataSet></merger>
