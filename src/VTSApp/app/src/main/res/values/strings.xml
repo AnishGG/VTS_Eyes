@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">VTS App</string>
     <string name="title_activity_maps">VTS App</string>
-    <string name="title_activity_login">Eyedentify App</string>
+    <string name="title_activity_login">Login Activity</string>
     <!-- Strings related to controllers -->
     <string name="login_controller">http://eyedentifyapps.com:8080/login/</string>
     <string name="websocket">http://eyedentifyapps.com:8080/socket/websocket/</string>
@@ -15,7 +15,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="title_activity_drawer">DrawerActivity</string>
+    <string name="title_activity_drawer">Eyedentify App</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

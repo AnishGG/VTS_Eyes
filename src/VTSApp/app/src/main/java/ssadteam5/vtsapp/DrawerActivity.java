@@ -52,69 +52,68 @@ public class DrawerActivity extends AppCompatActivity
         // and finish current activity from activity stack.
         if(session.checkLogin()){
             Log.d("loginAgain", "again");
-            android.os.Process.killProcess(android.os.Process.myPid());
+            //android.os.Process.killProcess(android.os.Process.myPid());
             finish();
         }
+        else{
         Log.d("AlreadyLoggedIn", "loggedin");
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    launchMap();
-                }
-            });
-
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
-            Log.d("read", "read in this");
-            email = session.getUserDetails().get(UserSessionManager.KEY_EMAIL);
-            tenant = session.getUserDetails().get(UserSessionManager.KEY_TENANT);
-            Log.d("reached here", email + " " + tenant);
+            Log.d("one", "one");
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchMap();
+            }
+        });
+        Log.d("two", "two");
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+        Log.d("read", "read in this");
+        email = session.getUserDetails().get(UserSessionManager.KEY_EMAIL);
+        tenant = session.getUserDetails().get(UserSessionManager.KEY_TENANT);
+        Log.d("reached here", email + " " + tenant);
 //            email = getIntent().getExtras().getString("email");
 //            tenant = getIntent().getExtras().getString("tenant");
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            Menu navMenu = navigationView.getMenu();
-            View hview = navigationView.getHeaderView(0);
-            TextView navtenant = (TextView) hview.findViewById(R.id.tenantName);
-            TextView navemail = (TextView) hview.findViewById(R.id.emailname);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu navMenu = navigationView.getMenu();
+        View hview = navigationView.getHeaderView(0);
+        TextView navtenant = (TextView) hview.findViewById(R.id.tenantName);
+        TextView navemail = (TextView) hview.findViewById(R.id.emailname);
 
-            navtenant.setText(tenant);
-            navemail.setText(email);
-            String jsonMenu = session.getUserDetails().get(UserSessionManager.KEY_MENU);
-            try {
-                JSONArray menuArray = new JSONArray(jsonMenu);
-                menu = new String[menuArray.length()];
-                for (int i=0;i<menuArray.length();i++)
-                {
-                    menu[i] = menuArray.getString(i);
-                }
+        navtenant.setText(tenant);
+        navemail.setText(email);
+        String jsonMenu = session.getUserDetails().get(UserSessionManager.KEY_MENU);
+        try {
+            JSONArray menuArray = new JSONArray(jsonMenu);
+            menu = new String[menuArray.length()];
+            for (int i = 0; i < menuArray.length(); i++) {
+                menu[i] = menuArray.getString(i);
             }
-            catch (JSONException e)
-            {
-                e.printStackTrace();
-            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
 //            menu = getIntent().getExtras().getStringArray("menu");
-            for (int i = 0; i < menu.length; i++) {
-                navMenu.add(Menu.NONE, i, i, menu[i]);
-            }
-            navigationView.setNavigationItemSelectedListener(this);
+        for (int i = 0; i < menu.length; i++) {
+            navMenu.add(Menu.NONE, i, i, menu[i]);
+        }
+        navigationView.setNavigationItemSelectedListener(this);
 
-            token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
-            Log.d("reached at last of the page", "ended");
+        token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
+        Log.d("reached at last of the page", "ended");
 //            token = getIntent().getExtras().getString("token");
 //            menu = getIntent().getExtras().getStringArray("menu");
 
-            deviceFragment();
+        deviceFragment();
+    }
 //        }
 //        else{
 //            Log.d("else mei gya", "wow");
