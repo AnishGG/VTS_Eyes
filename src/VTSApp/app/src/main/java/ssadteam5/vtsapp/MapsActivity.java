@@ -140,13 +140,14 @@ public class MapsActivity extends AppCompatActivity
 
                             if(deviceName.equals(markerList.get(i).getTag().toString()))
                             {
+                                Polyline polyline2 = mGoogleMap.addPolyline(new PolylineOptions()
+                                        .clickable(true)
+                                        .add(new LatLng(lat, lon),
+                                                new LatLng(markerList.get(i).getPosition().latitude, markerList.get(i).getPosition().longitude)/*markerList.get(i).getPosition()*/
+                                                ));
                                 Log.d("test","inside if");
                                 markerList.get(i).setPosition(new LatLng(lat,lon));
                                 New = false;
-                                Polyline polyline2 = mGoogleMap.addPolyline(new PolylineOptions()
-                                .clickable(true)
-                                .add(   markerList.get(i).getPosition(),
-                                        new LatLng(lat, lon)));
                                 polyline2.setTag("A");
                                 stylePolyline(polyline2);
                                 //mGoogleMap.setOnPolylineClickListener(this);
@@ -257,7 +258,7 @@ public class MapsActivity extends AppCompatActivity
 //        googleMap.setOnMarkerClickListener(mClusterManager);
 
         //addVehicles();
-        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
+        Polyline polyline1 = mGoogleMap.addPolyline(new PolylineOptions()
                 .clickable(true)
                 .add(
                         new LatLng(-35.016, 143.321),
