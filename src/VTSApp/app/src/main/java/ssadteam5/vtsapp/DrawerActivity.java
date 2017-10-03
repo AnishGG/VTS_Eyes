@@ -84,8 +84,8 @@ public class DrawerActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu navMenu = navigationView.getMenu();
         View hview = navigationView.getHeaderView(0);
-        TextView navtenant = (TextView) hview.findViewById(R.id.tenantName);
-        TextView navemail = (TextView) hview.findViewById(R.id.emailname);
+        TextView navtenant = hview.findViewById(R.id.tenantName);
+        TextView navemail = hview.findViewById(R.id.emailname);
 
         navtenant.setText(tenant);
         navemail.setText(email);

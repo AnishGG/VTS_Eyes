@@ -82,7 +82,8 @@ public class UserSessionManager {
      * If false it will redirect user to login page
      * Else do anything
      * */
-    public boolean checkLogin(){
+    public boolean checkLogin()
+    {
         // Check login status
         if(!this.isUserLoggedIn()){
 

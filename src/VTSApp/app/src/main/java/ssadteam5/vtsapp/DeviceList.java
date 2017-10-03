@@ -4,14 +4,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.auth0.android.jwt.Claim;
 import com.auth0.android.jwt.JWT;
@@ -47,6 +50,7 @@ public class DeviceList extends Fragment
     private ArrayList<HashMap<String, String>> deviceDet = new ArrayList<>();
 
     private StompClient mStompClient;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -66,7 +70,6 @@ public class DeviceList extends Fragment
     public class DeviceFetchTask extends AsyncTask<Void, Void, Boolean>
     {
         private final String mToken;
-
         DeviceFetchTask(String token)
         {
             mToken = token;
@@ -74,10 +77,8 @@ public class DeviceList extends Fragment
         @Override
         protected Boolean doInBackground(Void... params)
         {
-
             HttpURLConnection conn;
             try {
-
                 String response = "";
                 URL url = new URL("http://eyedentifyapps.com:8080/api/auth/device/all/");
                 conn = (HttpURLConnection) url.openConnection();
@@ -101,9 +102,11 @@ public class DeviceList extends Fragment
                     JSONObject ob=arr.getJSONObject(i);
                     HashMap<String, String> map = new HashMap<>();
                     map.put("account",ob.getString("account"));
-                    Log.d("account",ob.getString("account"));
                     map.put("name",ob.getString("name"));
                     map.put("description",ob.getString("description"));
+                    map.put("driverDetails",ob.getString("driverDetailsDO"));
+                    map.put("vehicleDetails",ob.getString("vehicleDetailsDO"));
+//                    Log.d("test",ob.getString("vehicleDetailsDO"));
                     deviceDet.add(map);
                 }
             }
@@ -127,12 +130,33 @@ public class DeviceList extends Fragment
         @Override
         protected void onPostExecute(final Boolean success)
         {
-            if(getActivity() != null) {
+            if(getActivity() != null)
+            {
                 ListAdapter adapter = new SimpleAdapter(getContext(), deviceDet, R.layout.list_item,
                         new String[]{"account", "name", "description"},
                         new int[]{R.id.account, R.id.name, R.id.description});
-                ListView listView = (ListView) view.findViewById(R.id.listview);
+                ListView listView = view.findViewById(R.id.listview);
                 listView.setAdapter(adapter);
+
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+                {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                    {
+//                        Object o = listView.getItemAtPosition(position);
+                        String details = parent.getAdapter().getItem(position).toString();
+                        Log.d("pos", ""+position);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("details",details);
+
+                        DeviceDetailsFragment dialog = new DeviceDetailsFragment();
+                        dialog.setArguments(bundle);
+                        dialog.show(getFragmentManager(),"dialog");
+                        Log.d("clicked","works");
+                    }
+                });
+
+
             }
         }
 
