@@ -1,7 +1,19 @@
 [
     {
+        "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/layout/amu_webview.xml",
+        "source": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/layout/amu_webview.xml"
+    },
+    {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/layout/amu_text_bubble.xml",
         "source": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/layout/amu_text_bubble.xml"
+    },
+    {
+        "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/layout/amu_info_window.xml",
+        "source": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/layout/amu_info_window.xml"
+    },
+    {
+        "merged": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/layout/amu_text_bubble.xml",
+        "source": "/home/keshav/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/layout/amu_text_bubble.xml"
     },
     {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/layout/amu_info_window.xml",

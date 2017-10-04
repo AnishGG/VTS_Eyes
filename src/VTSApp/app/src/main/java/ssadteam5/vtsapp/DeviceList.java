@@ -144,11 +144,12 @@ public class DeviceList extends Fragment
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
                     {
 //                        Object o = listView.getItemAtPosition(position);
-                        String details = parent.getAdapter().getItem(position).toString();
+                        HashMap<String,String> details = (HashMap<String, String>) parent.getAdapter().getItem(position);
+                        String det=parent.getAdapter().getItem(position).toString();
                         Log.d("pos", ""+position);
                         Bundle bundle = new Bundle();
-                        bundle.putString("details",details);
-
+                        bundle.putSerializable("details",details);
+                        bundle.putString("det",det);
                         DeviceDetailsFragment dialog = new DeviceDetailsFragment();
                         dialog.setArguments(bundle);
                         dialog.show(getFragmentManager(),"dialog");
