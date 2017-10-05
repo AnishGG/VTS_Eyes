@@ -1,37 +1,22 @@
 package ssadteam5.vtsapp;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 
-import static android.util.Log.d;
 
 public class DeviceDetailsFragment extends DialogFragment
 {
@@ -50,63 +35,47 @@ public class DeviceDetailsFragment extends DialogFragment
         String vehicledetails = details.get("vehicleDetails");
         String driverdetails = details.get("driverDetails");
         Log.d("det",det);
-        LinearLayout ll=  view.findViewById(R.id.linlay);
-        try
-        {
-
-            Log.d("blaaa",vehicledetails);
-            JSONObject jsonObject=new JSONObject(vehicledetails);
-
-            Iterator<?> keys= jsonObject.keys();
-            while(keys.hasNext()){
-                String key=(String)keys.next();
-                Log.d("key",key);
-                TextView tv= new TextView(getActivity());
-                tv.setPadding(50,0,0,0);
-                tv.setText(key+" : "+jsonObject.get(key).toString());
-
-                Log.d("log",jsonObject.get(key).toString());
-                ll.addView(tv);
-            }
-            TextView tv= new TextView(getActivity());
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            tv.setPadding(75,0,0,0);
-            tv.setText("Driver details");
-            tv.setTypeface(null, Typeface.BOLD);
-            ll.addView(tv);
-            JSONObject json = new JSONObject(driverdetails);
-            Iterator<?> Keys= json.keys();
-            while(Keys.hasNext()){
-                String key=(String) Keys.next();
-                TextView tV = new TextView(getActivity());
-                tV.setPadding(50,0,0,0);
-                tV.setText(key+" : "+json.get(key).toString());
-
-                ll.addView(tV);
-            }
-
+        TableLayout tl=  view.findViewById(R.id.tl);
+        tl.setPadding(75,50,0,0);
+        try {
+            JSONObject json = new JSONObject(vehicledetails);
+            tl.addView(row("Vehicle name", json.getString("vehicleName")));
+            tl.addView(row("Device ID",json.getString("device")));
+            tl.addView(row("Vehicle Reg No.",json.getString("vehicleNumber")));
+            tl.addView(row("Vehicle Type",json.getString("vehicleType")));
+            tl.addView(row("Purchase Year",json.getString("purchaseYear")));
+            tl.addView(row("Previous Service",json.getString("serviceOn")));
+            tl.addView(row("Next Service",json.getString("nextServiceOn")));
+            tl.addView(row("Notes",json.getString("notes")));
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Device Details");
+        builder.setTitle("VEHICLE INFO");
         builder.setView(view);
         //builder.setMessage(vehicledetails);
         builder.setNeutralButton("Track",null );
 
-//                .setPositiveButton(R.string.fire, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        // FIRE ZE MISSILES!
-//                    }
-//                })
-//                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        // User cancelled the dialog
-//                    }
-//                });
-//        // Create the AlertDialog object and return it
+
         return builder.create();
     }
+    private TableRow row(String a, String b){
+        GradientDrawable gd=new GradientDrawable();
+        gd.setStroke(2, Color.BLACK);
+        TableRow tr= new TableRow(getActivity());
+        TextView tv1= new TextView(getActivity());
+        tv1.setTypeface(null,Typeface.BOLD);
+        tv1.setText(a+": ");
+        tr.addView(tv1);
+        TextView tv2 = new TextView(getActivity());
+        tv2.setText(b);
+        tr.addView(tv2);
+        tr.setPadding(50,20,100,20);
+        tr.setBackgroundDrawable(gd);
+        return tr;
+    }
+
 }
