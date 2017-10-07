@@ -37,7 +37,7 @@ public class DeviceDetailsFragment extends DialogFragment {
 //        String driverdetails = details.get("driverDetails");
         Log.d("det", det);
         TableLayout tl = view.findViewById(R.id.tl);
-        tl.setPadding(75, 50, 0, 0);
+//        tl.setPadding(75, 50, 0, 0);
         try {
             JSONObject json = new JSONObject(vehicledetails);
             tl.addView(row("Vehicle name", json.getString("vehicleName")));
@@ -57,7 +57,7 @@ public class DeviceDetailsFragment extends DialogFragment {
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("VEHICLE INFO");
+        builder.setTitle("Vehicle Details");
         builder.setView(view);
         //builder.setMessage(vehicledetails);
         builder.setNeutralButton("Track", null);
