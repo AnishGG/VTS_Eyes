@@ -30,7 +30,7 @@ import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-public class Track_vehicle extends AppCompatActivity implements OnMapReadyCallback
+public class TrackVehicleActivity extends AppCompatActivity implements OnMapReadyCallback
 {
     UserSessionManager session;
     GoogleMap mGoogleMap;

@@ -1,6 +1,5 @@
 package ssadteam5.vtsapp;
 
-import android.app.AlarmManager;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.text.Spannable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +64,7 @@ public class DeviceDetailsFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int id){
                 try {
                     Log.d("this is the activity", getActivity().getLocalClassName());
-                    Intent intent = new Intent(getActivity(), Track_vehicle.class);
+                    Intent intent = new Intent(getActivity(), TrackVehicleActivity.class);
                     JSONObject json = new JSONObject(vehicledetails);
                     intent.putExtra("vehicle_id", json.getString("device"));
                     intent.putExtra("vehicle_name", json.getString("vehicleName"));

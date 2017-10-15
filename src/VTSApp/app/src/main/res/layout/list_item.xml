@@ -7,12 +7,13 @@
         android:id="@+id/icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/ic_menu_gallery" />
+        android:src="@drawable/ic_card_vehicle" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="2dp"
         android:layout_toRightOf="@+id/icon"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
