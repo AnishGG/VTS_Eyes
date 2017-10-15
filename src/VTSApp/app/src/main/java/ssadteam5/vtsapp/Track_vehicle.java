@@ -5,11 +5,12 @@ import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+
 import com.auth0.android.jwt.Claim;
 import com.auth0.android.jwt.JWT;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,31 +22,40 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
 import org.json.JSONObject;
 import java.util.ArrayList;
 import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback
+public class Track_vehicle extends AppCompatActivity implements OnMapReadyCallback
 {
+    UserSessionManager session;
     GoogleMap mGoogleMap;
     SupportMapFragment mapFrag;
     StompClient mStompClient;
-    ArrayList<Marker> markerList = new ArrayList<Marker>();
+//    ArrayList<Marker> markerList = new ArrayList<Marker>();
     private String token;
+    private String vehicle_id;
+    private String vehicle_name; // only needed to display name on top of the activity
+    private Marker marker = null;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        getSupportActionBar().setTitle("Map");
-        mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        setContentView(R.layout.activity_track_vehicle);
+        mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
+        session = new UserSessionManager(getApplicationContext());
         mapFrag.getMapAsync(this);
+        Log.d("reached in here", "hello");
 
-        token = getIntent().getExtras().getString("token");
+        token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN); //fetching from the UserSessionManager
+        vehicle_id = getIntent().getExtras().getString("vehicle_id");
+        vehicle_name = getIntent().getExtras().getString("vehicle_name");
+        getSupportActionBar().setTitle(vehicle_name);
+
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");
         String organisationId = claim.asString();
@@ -56,38 +66,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             JSONObject payload = new JSONObject(topicMessage.getPayload());
             try
             {
-                final String deviceName = payload.get("DeviceId").toString();
+                final String deviceId = payload.get("DeviceId").toString();
                 Double lat = Double.parseDouble(payload.get("Latitude").toString());
-                Double lon = Double.parseDouble(payload.get("Longitude").toString());
+                final Double lon = Double.parseDouble(payload.get("Longitude").toString());
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable()
                 {
                     public void run()
                     {
                         boolean New = true;
-                        for (int i = 0; i < markerList.size(); i++)
-                        {
-                            Log.d("test", deviceName);
-                            Log.d("test", markerList.get(i).getTag().toString());
-                            if (deviceName.equals(markerList.get(i).getTag().toString()))
-                            {
-                                /*mGoogleMap.addCircle(new CircleOptions()
-                                            .center(markerList.get(i).getPosition())
-                                            .radius(0)
-                                            .strokeColor(Color.RED)
-                                            .fillColor(Color.BLUE));
-                                */
-                                animateMarker(markerList.get(i),new LatLng(lat,lon));
+                        if(marker != null) {
+                            if (deviceId.equals(marker.getTag().toString())) {
+                                animateMarker(marker, new LatLng(lat, lon));
+                                mGoogleMap.addCircle(new CircleOptions()
+                                        .center(marker.getPosition())
+                                        .radius(1)
+                                        .strokeColor(Color.RED)
+                                        .fillColor(Color.BLUE));
+                                marker.setPosition(new LatLng(lat, lon));
                                 New = false;
                             }
                         }
                         if (New)
                         {
-                            Marker amarker = mGoogleMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(lat, lon ))
-                                    .title(deviceName));
-                            amarker.setTag(deviceName);
-                            markerList.add(amarker);
+                            if(vehicle_id.equals(deviceId)) {
+                                marker = mGoogleMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(lat, lon))
+                                        .title(deviceId));
+                                marker.setTag(deviceId);
+                            }
                         }
                     }
                 });
@@ -98,6 +105,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
@@ -112,7 +120,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public boolean onMarkerClick(final Marker marker)
             {
-                Log.d("test","marker clicked");
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),18));
                 marker.showInfoWindow();
                 return true;
@@ -146,12 +153,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 else
                 {
                     marker.setVisible(true);
-                    mGoogleMap.addPolyline(new PolylineOptions()
-                            .clickable(true)
-                            .add(oldPos,marker.getPosition()));
+                    mGoogleMap.addCircle(new CircleOptions()
+                            .center(oldPos)
+                            .radius(2)
+                            .strokeColor(Color.RED)
+                            .fillColor(Color.BLUE));
                 }
             }
         });
     }
+
 }
+
 

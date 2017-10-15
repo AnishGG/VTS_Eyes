@@ -2,6 +2,8 @@ package ssadteam5.vtsapp;
 
 import android.app.AlarmManager;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -33,7 +35,7 @@ public class DeviceDetailsFragment extends DialogFragment {
         View view = l.inflate(R.layout.fragment_device_details, null);
         HashMap<String, String> details = (HashMap<String, String>) getArguments().getSerializable("details");
         String det = getArguments().getString("det");
-        String vehicledetails = details.get("vehicleDetails");
+        final String vehicledetails = details.get("vehicleDetails");
 //        String driverdetails = details.get("driverDetails");
         Log.d("det", det);
         TableLayout tl = view.findViewById(R.id.tl);
@@ -60,7 +62,22 @@ public class DeviceDetailsFragment extends DialogFragment {
         builder.setTitle("Vehicle Details");
         builder.setView(view);
         //builder.setMessage(vehicledetails);
-        builder.setNeutralButton("Track", null);
+        builder.setPositiveButton("Track", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+                try {
+                    Log.d("this is the activity", getActivity().getLocalClassName());
+                    Intent intent = new Intent(getActivity(), Track_vehicle.class);
+                    JSONObject json = new JSONObject(vehicledetails);
+                    intent.putExtra("vehicle_id", json.getString("device"));
+                    intent.putExtra("vehicle_name", json.getString("vehicleName"));
+                    startActivity(intent);
+                }
+                catch(Exception e){
+                    Log.d("exception", "here");
+                    e.printStackTrace();
+                }
+            }
+        });
 
 
         return builder.create();
