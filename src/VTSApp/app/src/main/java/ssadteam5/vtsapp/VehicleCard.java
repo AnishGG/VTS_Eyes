@@ -3,20 +3,32 @@ package ssadteam5.vtsapp;
 
 public class VehicleCard
 {
-    private String Name;
+    private String name;
+    private String id;
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
 
     public String getName()
     {
-        return Name;
+        return name;
     }
 
     public void setName(String name)
     {
-        Name = name;
+        this.name = name;
     }
 
     public VehicleCard(String name)
     {
-        Name = name;
+        this.name = name;
     }
 }

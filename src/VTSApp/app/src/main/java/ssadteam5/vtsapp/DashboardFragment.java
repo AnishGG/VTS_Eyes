@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -54,6 +55,16 @@ public class DashboardFragment extends Fragment
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(vehicleCardAdapter);
+//        recyclerView.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                int itemPosition = recyclerView.getChildLayoutPosition(view);
+////                String item = vehicleCardList.get(itemPosition);
+//                Log.d("click","click on " + vehicleCardList.get(itemPosition));
+//            }
+//        });
         createSummaryTable();
         vehicleCardAdapter.notifyDataSetChanged();
 

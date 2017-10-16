@@ -147,5 +147,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        mStompClient.disconnect();
+    }
 }
 

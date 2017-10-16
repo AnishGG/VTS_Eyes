@@ -181,7 +181,12 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         else
             super.onBackPressed();
     }
-
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        mStompClient.disconnect();
+    }
 }
 
 
