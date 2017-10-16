@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:orientation="vertical" android:layout_width="match_parent"
-android:layout_height="match_parent">
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="48dp"
+    sothree:umanoShadowHeight="4dp">
 
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,4 +17,12 @@ android:layout_height="match_parent">
     tools:context=".TrackVehicleActivity"
     android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
-</LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="left|top"
+        android:id="@+id/panel_text"
+        android:text="The Awesome Sliding Up Panel"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"/>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

@@ -71,12 +71,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Log.d("test", markerList.get(i).getTag().toString());
                             if (deviceName.equals(markerList.get(i).getTag().toString()))
                             {
-                                /*mGoogleMap.addCircle(new CircleOptions()
-                                            .center(markerList.get(i).getPosition())
-                                            .radius(0)
-                                            .strokeColor(Color.RED)
-                                            .fillColor(Color.BLUE));
-                                */
                                 animateMarker(markerList.get(i),new LatLng(lat,lon));
                                 New = false;
                             }

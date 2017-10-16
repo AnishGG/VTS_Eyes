@@ -5,11 +5,13 @@ import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.TextView;
 
 import com.auth0.android.jwt.Claim;
 import com.auth0.android.jwt.JWT;
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -32,11 +35,11 @@ import ua.naiksoftware.stomp.client.StompClient;
 
 public class TrackVehicleActivity extends AppCompatActivity implements OnMapReadyCallback
 {
+    private SlidingUpPanelLayout mLayout;
     UserSessionManager session;
     GoogleMap mGoogleMap;
     SupportMapFragment mapFrag;
     StompClient mStompClient;
-//    ArrayList<Marker> markerList = new ArrayList<Marker>();
     private String token;
     private String vehicle_id;
     private String vehicle_name; // only needed to display name on top of the activity
@@ -46,6 +49,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_vehicle);
+        init();
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
         session = new UserSessionManager(getApplicationContext());
         mapFrag.getMapAsync(this);
@@ -55,6 +59,9 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         vehicle_id = getIntent().getExtras().getString("vehicle_id");
         vehicle_name = getIntent().getExtras().getString("vehicle_name");
         getSupportActionBar().setTitle(vehicle_name);
+        // Setting sliding panel text
+        TextView mytextview = (TextView) findViewById(R.id.panel_text);
+        mytextview.setText("More Information");
 
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");
@@ -161,6 +168,18 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                 }
             }
         });
+    }
+    public void init(){
+        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (mLayout != null && (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }
+        else
+            super.onBackPressed();
     }
 
 }
