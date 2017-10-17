@@ -1,14 +1,17 @@
 package ssadteam5.vtsapp;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
@@ -50,6 +53,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_vehicle);
         init();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
         session = new UserSessionManager(getApplicationContext());
         mapFrag.getMapAsync(this);
@@ -186,6 +190,20 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     {
         super.onDestroy();
         mStompClient.disconnect();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent parentIntent = NavUtils.getParentActivityIntent(this);
+                parentIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(parentIntent);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

@@ -32,7 +32,9 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps"
+            android:parentActivityName=".DrawerActivity">
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"></activity>
@@ -47,7 +49,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TrackVehicleActivity"></activity>
+        <activity
+            android:name=".TrackVehicleActivity"
+            android:parentActivityName=".DrawerActivity">
+        </activity>
     </application>
 
 </manifest>
