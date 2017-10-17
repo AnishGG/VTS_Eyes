@@ -1,0 +1,98 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/sd"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:text="@string/select_dates"
+                android:textAlignment="center"
+                android:layout_marginStart="20dp"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/veh"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:text="@string/vehicle"
+                android:textAlignment="center"
+                android:layout_weight="1"/>
+            <!--android:layout_below="@+id/sd"/>-->
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_marginEnd="25dp"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:text="@string/start_date"
+                android:textAlignment="center"
+                android:layout_weight="1"/>
+            <!--android:layout_below="@+id/veh"/>-->
+            <!--<DatePicker-->
+            <!--android:id="@+id/date_picker"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:calendarViewShown="true"-->
+            <!--android:spinnersShown="true"-->
+            <!--android:layout_weight="3"/>-->
+
+            <!--<FrameLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<Button-->
+            <!--android:id="@+id/date_time_not_set"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Cancel"-->
+            <!--android:layout_gravity="start"/>-->
+
+            <!--<Button-->
+            <!--android:id="@+id/date_time_set"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Set"-->
+            <!--android:layout_gravity="end"/>-->
+
+            <!--</FrameLayout>-->
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:text="@string/end_date"
+                android:textAlignment="center"
+                android:layout_weight="1"/>
+
+        </TableRow>
+    </TableLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -182,6 +182,19 @@ public class DrawerActivity extends AppCompatActivity
         tx.commit();
         return ;
     }
+    private void reportsFragment()
+    {
+        Fragment fragment = new ReportsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("token",token);
+        fragment.setArguments(bundle);
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        tx.replace(R.id.content_frame, fragment);
+//        Log.d("after commit", "ok");
+//        tx.addToBackStack(null);
+        tx.commit();
+        return ;
+    }
     private void dashboardFragment()
     {
         Fragment fragment = null;
@@ -221,6 +234,12 @@ public class DrawerActivity extends AppCompatActivity
         else if(menu[id].equals("Dashboard"))
         {
             dashboardFragment();
+        }
+        else if(menu[id].equals("Reports")){
+//            Log.d("here", "reports launched");
+            DeviceList r = new DeviceList();
+            Log.d("here", "reportsLaunched");
+            reportsFragment();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
