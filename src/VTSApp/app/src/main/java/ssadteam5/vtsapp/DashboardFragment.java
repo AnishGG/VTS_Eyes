@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -32,6 +33,7 @@ public class DashboardFragment extends Fragment
     public VehicleCardAdapter vehicleCardAdapter;
     public List<VehicleCard> vehicleCardList;
     private DeviceFetchTask mFetchTask;
+    private TableLayout tableLayout;
     UserData userData;
 
 
@@ -43,25 +45,12 @@ public class DashboardFragment extends Fragment
         token = getArguments().getString("token");
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         vehicleCardList = new ArrayList<>();
-//        vehicleCardList.add(new VehicleCard("name"));
-//        vehicleCardList.add(new VehicleCard("name1"));
-//        vehicleCardList.add(new VehicleCard("name2"));
         vehicleCardAdapter = new VehicleCardAdapter(getContext(),vehicleCardList);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(vehicleCardAdapter);
         userData = new UserData(getActivity().getApplicationContext());
-//        recyclerView.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View view)
-//            {
-//                int itemPosition = recyclerView.getChildLayoutPosition(view);
-////                String item = vehicleCardList.get(itemPosition);
-//                Log.d("click","click on " + vehicleCardList.get(itemPosition));
-//            }
-//        });
         createSummaryTable();
         vehicleCardAdapter.notifyDataSetChanged();
 
@@ -72,9 +61,8 @@ public class DashboardFragment extends Fragment
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        // This method performs the actual data-refresh operation.
-                        // The method calls setRefreshing(false) when it's finished.
                         userData.destroyResponse();
+                        vehicleCardList.clear();
                         mFetchTask = new DeviceFetchTask();
                         mFetchTask.execute((Void) null);
                     }
@@ -92,7 +80,7 @@ public class DashboardFragment extends Fragment
 
     private void createSummaryTable()
     {
-        TableLayout tableLayout = view.findViewById(R.id.summary);
+        tableLayout = view.findViewById(R.id.summary);
         TextView heading = new TextView(getActivity());
         heading.setText("Summary");
         heading.setTextAppearance(getActivity(), R.style.TextAppearance_AppCompat_Large);
@@ -151,16 +139,10 @@ public class DashboardFragment extends Fragment
         {
             if(getActivity() != null)
             {
-                Log.d("token","inside post exec");
+                TableRow row = (TableRow) tableLayout.getChildAt(1);
+                TextView textView = (TextView)row.getChildAt(1);
+                textView.setText(""+vehicleCardAdapter.getItemCount());
                 vehicleCardAdapter.notifyDataSetChanged();
-//                Handler handler = new Handler(Looper.getMainLooper());
-//                handler.post(new Runnable()
-//                {
-//                    public void run()
-//                    {
-//                        vehicleCardAdapter.notifyDataSetChanged();
-//                    }
-//                });
                 swipeLayout.setRefreshing(false);
             }
         }

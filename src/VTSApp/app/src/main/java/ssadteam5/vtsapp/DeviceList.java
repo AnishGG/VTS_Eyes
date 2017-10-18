@@ -44,6 +44,7 @@ public class DeviceList extends Fragment
                 public void onRefresh() {
                     // This method performs the actual data-refresh operation.
                     // The method calls setRefreshing(false) when it's finished.
+                    deviceDet.clear();
                     userData.destroyResponse();
                     mFetchTask = new DeviceFetchTask();
                     mFetchTask.execute((Void) null);

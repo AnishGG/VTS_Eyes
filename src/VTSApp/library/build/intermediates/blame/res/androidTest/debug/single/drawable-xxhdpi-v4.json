@@ -4,12 +4,12 @@
         "source": "/home/daksh/.android/build-cache/63d89ee40b266cfb4d72338208e165c2d3b08194/output/res/drawable-xxhdpi-v4/common_google_signin_btn_text_dark_disabled.9.png"
     },
     {
-        "merged": "/home/daksh/StudioProjects/ssad/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/amu_bubble_mask.9.png",
-        "source": "/home/daksh/StudioProjects/ssad/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/amu_bubble_mask.9.png"
-    },
-    {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/amu_bubble_shadow.9.png",
         "source": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/amu_bubble_shadow.9.png"
+    },
+    {
+        "merged": "/home/daksh/StudioProjects/ssad/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/amu_bubble_mask.9.png",
+        "source": "/home/daksh/StudioProjects/ssad/ssad10/src/VTSApp/library/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/amu_bubble_mask.9.png"
     },
     {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/common_google_signin_btn_text_dark_disabled.9.png",
