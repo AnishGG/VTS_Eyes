@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.TextViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,13 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.util.List;
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -51,16 +44,12 @@ public class DrawerActivity extends AppCompatActivity
         // If User is not logged in , This will redirect user to LoginActivity
         // and finish current activity from activity stack.
         if(session.checkLogin()){
-            Log.d("loginAgain", "again");
-            //android.os.Process.killProcess(android.os.Process.myPid());
             finish();
         }
         else{
-            Log.d("AlreadyLoggedIn", "loggedin");
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
-            Log.d("one", "one");
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -68,18 +57,13 @@ public class DrawerActivity extends AppCompatActivity
                     launchMap();
                 }
             });
-            Log.d("two", "two");
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.setDrawerListener(toggle);
             toggle.syncState();
-            Log.d("read", "read in this");
             email = session.getUserDetails().get(UserSessionManager.KEY_EMAIL);
             tenant = session.getUserDetails().get(UserSessionManager.KEY_TENANT);
-            Log.d("reached here", email + " " + tenant);
-//            email = getIntent().getExtras().getString("email");
-//            tenant = getIntent().getExtras().getString("tenant");
 
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             Menu navMenu = navigationView.getMenu();
@@ -101,25 +85,14 @@ public class DrawerActivity extends AppCompatActivity
             }
 
 
-//            menu = getIntent().getExtras().getStringArray("menu");
             for (int i = 0; i < menu.length; i++) {
                 navMenu.add(Menu.NONE, i, i, menu[i]);
             }
             navigationView.setNavigationItemSelectedListener(this);
 
             token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
-            Log.d("reached at last of the page", "ended");
-//            token = getIntent().getExtras().getString("token");
-//            menu = getIntent().getExtras().getStringArray("menu");
-
-//        deviceFragment();
             dashboardFragment();
         }
-//        }
-//        else{
-//            Log.d("else mei gya", "wow");
-//            deviceFragment();
-//        }
     }
     private void launchMap()
     {

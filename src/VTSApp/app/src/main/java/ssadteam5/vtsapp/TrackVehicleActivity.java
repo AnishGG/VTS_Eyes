@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v4.app.NavUtils;
-import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,11 +26,9 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONObject;
-import java.util.ArrayList;
 import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
@@ -65,7 +62,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         getSupportActionBar().setTitle(vehicle_name);
         // Setting sliding panel text
         TextView mytextview = (TextView) findViewById(R.id.panel_text);
-        mytextview.setText("More Information");
+        mytextview.setText("Device ID: " + vehicle_name);
 
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");

@@ -1,8 +1,6 @@
 package ssadteam5.vtsapp;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,17 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +32,7 @@ public class ReportsFragment extends Fragment {
     Context cont;
     List<String> list = new ArrayList<String>();
     private String[] vehicle_list;
+    UserData userData;
 
 
 
@@ -66,7 +57,7 @@ public class ReportsFragment extends Fragment {
         mFetchTask = new FetchDevNo(token);
 //        new FetchDevNo(cont, token, view).execute();
         mFetchTask.execute((Void) null);
-
+        userData = new UserData(getActivity().getApplicationContext());
 
         return view;
     }
@@ -92,43 +83,24 @@ public class ReportsFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            HttpURLConnection conn;
             try {
-                String response = "";
-                URL url = new URL("http://eyedentifyapps.com:8080/api/auth/device/all/");
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Accept", "*/*");
-                conn.setRequestProperty("Authorization", "Bearer " + mToken);
-                InputStream in = conn.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(in);
-                int inputStreamData = inputStreamReader.read();
-                while (inputStreamData != -1) {
-                    char current = (char) inputStreamData;
-                    inputStreamData = inputStreamReader.read();
-                    response += current;
-                }
-                Log.d("resp2",response);
+                if(!userData.isDataFetched())
+                    userData.fetchData();
+                String response = userData.getResponse().get(UserData.KEY_RESPONSE);
                 JSONObject obj=new JSONObject(response);
                 JSONArray arr=obj.getJSONArray("deviceDTOS");
-                Log.d("hellodakshsize", ""+arr.length());
                 for(int i=0;i<arr.length();i++){
 //                    spinner.setOnItemSelectedListener(this);
                     try {
                         JSONObject ob = arr.getJSONObject(i);
                         JSONObject hello = new JSONObject(ob.getString("vehicleDetailsDO"));
                         String number = hello.getString("vehicleNumber");
-                        Log.d("dakshhello", number);
                         list.add(number);
                     }
                     catch(Exception e){
                         e.printStackTrace();
                     }
                 }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }

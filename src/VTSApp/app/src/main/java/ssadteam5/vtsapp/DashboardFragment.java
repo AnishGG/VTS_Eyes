@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,28 +16,23 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardFragment extends Fragment
 {
     View view;
+    SwipeRefreshLayout swipeLayout;
     private String token;
     public RecyclerView recyclerView;
     public VehicleCardAdapter vehicleCardAdapter;
     public List<VehicleCard> vehicleCardList;
     private DeviceFetchTask mFetchTask;
+    UserData userData;
 
 
     @Nullable
@@ -55,6 +51,7 @@ public class DashboardFragment extends Fragment
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(vehicleCardAdapter);
+        userData = new UserData(getActivity().getApplicationContext());
 //        recyclerView.setOnClickListener(new View.OnClickListener()
 //        {
 //            @Override
@@ -68,8 +65,21 @@ public class DashboardFragment extends Fragment
         createSummaryTable();
         vehicleCardAdapter.notifyDataSetChanged();
 
-        mFetchTask = new DeviceFetchTask(token);
+        mFetchTask = new DeviceFetchTask();
         mFetchTask.execute((Void) null);
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshDashboard);
+        swipeLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+                        userData.destroyResponse();
+                        mFetchTask = new DeviceFetchTask();
+                        mFetchTask.execute((Void) null);
+                    }
+                }
+        );
         return view;
     }
 
@@ -109,32 +119,17 @@ public class DashboardFragment extends Fragment
     }
     public class DeviceFetchTask extends AsyncTask<Void, Void, Boolean>
     {
-        private final String mToken;
-        DeviceFetchTask(String token)
-        {
-            mToken = token;
+        DeviceFetchTask() {
         }
         @Override
         protected Boolean doInBackground(Void... params)
         {
-            HttpURLConnection conn;
             try {
-                String response = "";
-                URL url = new URL("http://eyedentifyapps.com:8080/api/auth/device/all/");
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Accept","*/*");
-                conn.setRequestProperty("Authorization","Bearer " + mToken);
-                InputStream in = conn.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(in);
-                int inputStreamData = inputStreamReader.read();
-                while (inputStreamData != -1)
-                {
-                    char current = (char) inputStreamData;
-                    inputStreamData = inputStreamReader.read();
-                    response += current;
+                if(!userData.isDataFetched()) {
+                    userData.fetchData();
+                    Log.d("MyNameisVTS", "isthatso");
                 }
-                Log.d("resp",response);
+                String response = userData.getResponse().get(UserData.KEY_RESPONSE);
                 JSONObject obj=new JSONObject(response);
                 JSONArray arr=obj.getJSONArray("deviceDTOS");
                 for(int i=0;i<arr.length();i++)
@@ -143,23 +138,12 @@ public class DashboardFragment extends Fragment
                     VehicleCard vehicleCard = new VehicleCard(ob.getString("name"));
                     vehicleCardList.add(vehicleCard);
                     Log.d("token","inside for");
-//                    vehicleCardAdapter.notifyDataSetChanged();
                 }
-            }
-
-            catch (MalformedURLException e)
-            {
-                e.printStackTrace();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
-
             return true;
         }
         @Override
@@ -177,6 +161,7 @@ public class DashboardFragment extends Fragment
 //                        vehicleCardAdapter.notifyDataSetChanged();
 //                    }
 //                });
+                swipeLayout.setRefreshing(false);
             }
         }
 

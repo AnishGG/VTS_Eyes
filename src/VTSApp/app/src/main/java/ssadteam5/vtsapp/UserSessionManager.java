@@ -4,7 +4,6 @@ package ssadteam5.vtsapp;
  * Created by anish on 3/10/17.
  */
 
-        import java.util.ArrayList;
         import java.util.HashMap;
 
         import android.content.Context;
@@ -14,6 +13,8 @@ package ssadteam5.vtsapp;
 
 public class UserSessionManager {
 
+    // To clear the userData on logout
+    UserData userData;
     // Shared Preferences reference
     SharedPreferences pref;
 
@@ -139,6 +140,9 @@ public class UserSessionManager {
         // Clearing all user data from Shared Preferences
         editor.clear();
         editor.commit();
+        // Clearing all user responses of UserData Class
+        userData = new UserData(_context);
+        userData.destroyResponse();
 
         // After logout redirect user to Login Activity
         Intent i = new Intent(_context, LoginActivity.class);
