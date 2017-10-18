@@ -29,5 +29,7 @@
     <string name="vehicle">Vehicle</string>
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
+    <string name="change_date">Change Date</string>
+    <string name="get_reports">Get Reports</string>
 
 </resources>
