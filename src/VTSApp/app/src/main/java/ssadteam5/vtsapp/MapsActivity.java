@@ -1,6 +1,7 @@
 package ssadteam5.vtsapp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -35,6 +37,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     SupportMapFragment mapFrag;
     StompClient mStompClient;
     ArrayList<Marker> markerList = new ArrayList<Marker>();
+    UserSessionManager session;
     private String token;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,7 +49,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
 
-        token = getIntent().getExtras().getString("token");
+        session = new UserSessionManager(getApplicationContext());
+        token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
+
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");
         String organisationId = claim.asString();
@@ -73,6 +78,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (deviceName.equals(markerList.get(i).getTag().toString()))
                             {
                                 animateMarker(markerList.get(i),new LatLng(lat,lon));
+
                                 New = false;
                             }
                         }
@@ -107,7 +113,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public boolean onMarkerClick(final Marker marker)
             {
-                Log.d("test","marker clicked");
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),18));
                 marker.showInfoWindow();
                 return true;
@@ -141,9 +146,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 else
                 {
                     marker.setVisible(true);
-                    mGoogleMap.addPolyline(new PolylineOptions()
-                            .clickable(true)
-                            .add(oldPos,marker.getPosition()));
+                    mGoogleMap.addCircle(new CircleOptions()
+                            .center(oldPos)
+                            .radius(2)
+                            .strokeColor(Color.RED)
+                            .fillColor(Color.BLUE));
                 }
             }
         });
@@ -156,7 +163,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:

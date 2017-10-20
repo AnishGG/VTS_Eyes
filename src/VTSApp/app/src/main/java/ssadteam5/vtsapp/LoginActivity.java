@@ -22,6 +22,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,15 +43,13 @@ public class LoginActivity extends AppCompatActivity
     /**
      *  These variables store the login response
      */
-    private String json;
-    private String status;
+    private String status;    //The variable status determines whether the login is successful or not.
     private String token;
     private String errorCode;
     private String errorMessage;
     private String[] menu;
     private String email;
     private String tenant;
-    //The variable status determines whether the login is successful or not.
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -75,6 +74,7 @@ public class LoginActivity extends AppCompatActivity
         setContentView(R.layout.activity_login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         session = new UserSessionManager(getApplicationContext());
+
         // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
 
@@ -107,8 +107,6 @@ public class LoginActivity extends AppCompatActivity
         mProgressView = findViewById(R.id.login_progress);
     }
 
-
-
     /**
      * Attempts to sign in the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -116,7 +114,8 @@ public class LoginActivity extends AppCompatActivity
      */
     private void attemptLogin()
     {
-        if (mAuthTask != null) {
+        if (mAuthTask != null)
+        {
             return;
         }
 
@@ -172,13 +171,21 @@ public class LoginActivity extends AppCompatActivity
         {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString("logged", "logged");
-            editor.commit();
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password, tenantId);
-            mAuthTask.execute((Void) null);
+//            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+//            SharedPreferences.Editor editor = settings.edit();
+//            editor.putString("logged", "logged");
+//            editor.commit();
+            if(isOnline())
+            {
+                showProgress(true);
+                mAuthTask = new UserLoginTask(email, password, tenantId);
+                mAuthTask.execute((Void) null);
+            }
+            else
+            {
+                Toast toast = Toast.makeText(this, getString(R.string.no_network_connection), Toast.LENGTH_LONG);
+                toast.show();
+            }
         }
     }
 
@@ -238,14 +245,9 @@ public class LoginActivity extends AppCompatActivity
     }
 
 
-
     private void launchDrawer()
     {
         Intent intent = new Intent(this, DrawerActivity.class);
-        intent.putExtra("token",token);
-        intent.putExtra("menu",menu);
-        intent.putExtra("email",email);
-        intent.putExtra("tenant",tenant);
         startActivity(intent);
     }
     /**
@@ -306,18 +308,15 @@ public class LoginActivity extends AppCompatActivity
                 token = resp.get("token").toString();
                 errorCode = resp.get("errorCode").toString();
                 errorMessage = resp.get("errorMessage").toString();
-                String temp = resp.get("menu").toString();
-                JSONArray menuArray = new JSONArray(temp);
+                String tmenu = resp.get("menu").toString();
+                JSONArray menuArray = new JSONArray(tmenu);
                 menu = new String[menuArray.length()];
                 for (int i=0;i<menuArray.length();i++)
                 {
                     menu[i] = menuArray.getString(i);
-                    //Log.d("YoYO",menu[i]);
                 }
-                session.createUserLoginSession("Anish Gulati", email, tenant, temp, token);
-
-                //menu.to
-                //Thread.sleep(2000);
+                session.createUserLoginSession(email, tenant, tmenu, token);
+                Thread.sleep(1000);
             }
 
             catch (MalformedURLException e)
@@ -336,7 +335,6 @@ public class LoginActivity extends AppCompatActivity
             {
                 e.printStackTrace();
             }
-
             return true;
         }
 
@@ -352,7 +350,6 @@ public class LoginActivity extends AppCompatActivity
                 {
                     launchDrawer();
                     finish();
-                    //launchMap();
                 }
                 else if(status.equals("FAILURE"))
                 {
@@ -372,13 +369,11 @@ public class LoginActivity extends AppCompatActivity
                         mTenantIdView.requestFocus();
                     }
                 }
-
-                //finish();
             }
             else
             {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_incorrect_login), Toast.LENGTH_LONG);
+                toast.show();
             }
         }
 
@@ -390,13 +385,16 @@ public class LoginActivity extends AppCompatActivity
         }
     }
     @Override
-    public void onBackPressed(){
+    public void onBackPressed()
+    {
         super.onBackPressed();
         LoginActivity.this.finishAfterTransition();
     }
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 finish();
@@ -406,9 +404,9 @@ public class LoginActivity extends AppCompatActivity
     }
 
     // To check the internet services
-    public boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
+    public boolean isOnline()
+    {
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
     }

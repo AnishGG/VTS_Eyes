@@ -36,17 +36,18 @@ public class DrawerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-//        if(savedInstanceState == null) {
         setContentView(R.layout.activity_drawer);
         // First this activity will be opened and if user is logged in, then it is okay, else login activity will be displayed
         session = new UserSessionManager(getApplicationContext());
         // Check user login (this is the important point)
         // If User is not logged in , This will redirect user to LoginActivity
         // and finish current activity from activity stack.
-        if(session.checkLogin()){
+        if(session.checkLogin())
+        {
             finish();
         }
-        else{
+        else
+        {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
@@ -64,6 +65,7 @@ public class DrawerActivity extends AppCompatActivity
             toggle.syncState();
             email = session.getUserDetails().get(UserSessionManager.KEY_EMAIL);
             tenant = session.getUserDetails().get(UserSessionManager.KEY_TENANT);
+            token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
 
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             Menu navMenu = navigationView.getMenu();
@@ -73,31 +75,40 @@ public class DrawerActivity extends AppCompatActivity
 
             navtenant.setText(tenant);
             navemail.setText(email);
+
             String jsonMenu = session.getUserDetails().get(UserSessionManager.KEY_MENU);
-            try {
+            try
+            {
                 JSONArray menuArray = new JSONArray(jsonMenu);
-                menu = new String[menuArray.length()];
-                for (int i = 0; i < menuArray.length(); i++) {
+                menu = new String[menuArray.length()+1];
+                int i;
+                for (i = 0; i < menuArray.length(); i++)
+                {
                     menu[i] = menuArray.getString(i);
                 }
-            } catch (JSONException e) {
+                menu[i] = "Logout";
+            }
+            catch (JSONException e)
+            {
                 e.printStackTrace();
             }
 
-
-            for (int i = 0; i < menu.length; i++) {
+            int i;
+            for (i = 0; i < menu.length; i++)
+            {
                 navMenu.add(Menu.NONE, i, i, menu[i]);
             }
+//            navMenu.add(Menu.NONE,i,i,"Logout");
             navigationView.setNavigationItemSelectedListener(this);
-
-            token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
-            dashboardFragment();
+            if(savedInstanceState == null)
+            {
+                dashboardFragment();
+            }
         }
     }
     private void launchMap()
     {
         Intent intent = new Intent(this, MapsActivity.class);
-        intent.putExtra("token",token);
         startActivity(intent);
     }
     @Override
@@ -128,22 +139,27 @@ public class DrawerActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings)
+        {
             return true;
         }
 
-        if (item.getItemId() == R.id.action_logout) {
-            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.remove("logged");
-            editor.commit();
-            session.logoutUser();
-            finishAfterTransition();
+        if (item.getItemId() == R.id.action_logout)
+        {
+           logout();
         }
 
         return super.onOptionsItemSelected(item);
     }
-    private void deviceFragment()
+    public void logout()
+    {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.commit();
+        session.logoutUser();
+        finishAfterTransition();
+    }
+    private void deviceListFragment()
     {
         Fragment fragment = null;
         Bundle bundle = new Bundle();
@@ -163,8 +179,6 @@ public class DrawerActivity extends AppCompatActivity
         fragment.setArguments(bundle);
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.content_frame, fragment);
-//        Log.d("after commit", "ok");
-//        tx.addToBackStack(null);
         tx.commit();
         return ;
     }
@@ -186,33 +200,22 @@ public class DrawerActivity extends AppCompatActivity
     {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        /**   if (id == R.id.nav_camera) {
-         // Handle the camera action
-         } else if (id == R.id.nav_gallery) {
-
-         } else if (id == R.id.nav_slideshow) {
-
-         } else if (id == R.id.nav_manage) {
-
-         } else if (id == R.id.nav_share) {
-
-         } else if (id == R.id.nav_send) {
-
-         }
-         */
         if(menu[id].equals("Devices"))
         {
-            deviceFragment();
+            deviceListFragment();
         }
         else if(menu[id].equals("Dashboard"))
         {
             dashboardFragment();
         }
-        else if(menu[id].equals("Reports")){
-//            Log.d("here", "reports launched");
-            DeviceList r = new DeviceList();
-            Log.d("here", "reportsLaunched");
+        else if(menu[id].equals("Reports"))
+        {
             reportsFragment();
+        }
+        else if(menu[id].equals("Logout"))
+        {
+            logout();
+            return true;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

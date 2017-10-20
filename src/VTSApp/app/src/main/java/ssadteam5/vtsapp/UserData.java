@@ -13,11 +13,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-/**
- * Created by anish on 18/10/17.
- */
-
-public class UserData {
+public class UserData
+{
     SharedPreferences pref;
     Editor editor;
     Context _context;
@@ -32,7 +29,8 @@ public class UserData {
 
     public static final String DATA_FETCHED = "data_fetched";
 
-    public UserData(Context context){
+    public UserData(Context context)
+    {
         this._context = context;
         pref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = pref.edit();
@@ -54,7 +52,8 @@ public class UserData {
             InputStream in = conn.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(in);
             int inputStreamData = inputStreamReader.read();
-            while (inputStreamData != -1) {
+            while (inputStreamData != -1)
+            {
                 char current = (char) inputStreamData;
                 inputStreamData = inputStreamReader.read();
                 response += current;
@@ -79,7 +78,8 @@ public class UserData {
     /**
      * Get stored session data
      * */
-    public HashMap<String, String> getResponse(){
+    public HashMap<String, String> getResponse()
+    {
 
         //Use hashmap to store user credentials
         HashMap<String, String> response = new HashMap<String, String>();
@@ -90,11 +90,13 @@ public class UserData {
         return response;
     }
 
-    public boolean isDataFetched(){
+    public boolean isDataFetched()
+    {
         return pref.getBoolean(DATA_FETCHED, false);
     }
 
-    public void destroyResponse(){
+    public void destroyResponse()
+    {
         editor.clear();
         editor.commit();
     }

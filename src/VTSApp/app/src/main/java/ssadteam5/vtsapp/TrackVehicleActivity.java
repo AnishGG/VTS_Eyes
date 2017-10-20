@@ -86,12 +86,12 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                         if(marker != null) {
                             if (deviceId.equals(marker.getTag().toString())) {
                                 animateMarker(marker, new LatLng(lat, lon));
-                                mGoogleMap.addCircle(new CircleOptions()
-                                        .center(marker.getPosition())
-                                        .radius(1)
-                                        .strokeColor(Color.RED)
-                                        .fillColor(Color.BLUE));
-                                marker.setPosition(new LatLng(lat, lon));
+//                                mGoogleMap.addCircle(new CircleOptions()
+//                                        .center(marker.getPosition())
+//                                        .radius(1)
+//                                        .strokeColor(Color.RED)
+//                                        .fillColor(Color.BLUE));
+//                                marker.setPosition(new LatLng(lat, lon));
                                 New = false;
                             }
                         }
