@@ -29,9 +29,6 @@ public class UserSessionManager
     // Email address (make variable public to access from outside)
     public static final String KEY_EMAIL = "email";
 
-    // Menu (make variable public to access from outside)
-    public static final String KEY_MENU = "menu";
-
     // Tenant Id (make variable public to acces from outside)
     public static final String KEY_TENANT = "tenant";
 
@@ -47,16 +44,13 @@ public class UserSessionManager
     }
 
     //Create login session
-    public void createUserLoginSession(String email, String tenant, String jsonMenu, String token)
+    public void createUserLoginSession(String email, String tenant, String token)
     {
         // Storing login value as TRUE
         editor.putBoolean(IS_USER_LOGIN, true);
 
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
-
-        // Storing menu in pref
-        editor.putString(KEY_MENU, jsonMenu);
 
         // Storing tenant id in pref
         editor.putString(KEY_TENANT, tenant);
@@ -104,9 +98,6 @@ public class UserSessionManager
 
         // user email id
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
-
-        // user menu in string format which can later be retrieved
-        user.put(KEY_MENU, pref.getString(KEY_MENU, null));
 
         // user tenant in string format
         user.put(KEY_TENANT, pref.getString(KEY_TENANT, null));

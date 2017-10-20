@@ -44,6 +44,7 @@ public class DrawerActivity extends AppCompatActivity
         // and finish current activity from activity stack.
         if(session.checkLogin())
         {
+            Log.d("check","finish");
             finish();
         }
         else
@@ -76,29 +77,16 @@ public class DrawerActivity extends AppCompatActivity
             navtenant.setText(tenant);
             navemail.setText(email);
 
-            String jsonMenu = session.getUserDetails().get(UserSessionManager.KEY_MENU);
-            try
-            {
-                JSONArray menuArray = new JSONArray(jsonMenu);
-                menu = new String[menuArray.length()+1];
-                int i;
-                for (i = 0; i < menuArray.length(); i++)
-                {
-                    menu[i] = menuArray.getString(i);
-                }
-                menu[i] = "Logout";
-            }
-            catch (JSONException e)
-            {
-                e.printStackTrace();
-            }
-
-            int i;
-            for (i = 0; i < menu.length; i++)
+            menu = new String[4];
+            menu[0] = "Dashboard";
+            menu[1] = "Devices";
+            menu[2] = "Reports";
+            menu[3] = "Logout";
+            for (int i = 0; i < menu.length-1; i++)
             {
                 navMenu.add(Menu.NONE, i, i, menu[i]);
             }
-//            navMenu.add(Menu.NONE,i,i,"Logout");
+            navMenu.add(Menu.CATEGORY_CONTAINER,menu.length -1,menu.length-1,menu[menu.length -1]);
             navigationView.setNavigationItemSelectedListener(this);
             if(savedInstanceState == null)
             {

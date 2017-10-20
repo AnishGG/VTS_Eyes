@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,7 +48,6 @@ public class LoginActivity extends AppCompatActivity
     private String token;
     private String errorCode;
     private String errorMessage;
-    private String[] menu;
     private String email;
     private String tenant;
 
@@ -247,6 +247,7 @@ public class LoginActivity extends AppCompatActivity
 
     private void launchDrawer()
     {
+        Log.d("check","drawer launched");
         Intent intent = new Intent(this, DrawerActivity.class);
         startActivity(intent);
     }
@@ -274,12 +275,10 @@ public class LoginActivity extends AppCompatActivity
 
             HttpURLConnection conn;
             try {
-
                 String response = "";
                 JSONArray jsonArray = new JSONArray();
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("email", mEmail);
-                jsonObject.put("menu", jsonArray);
                 jsonObject.put("password", mPassword);
                 jsonObject.put("tenantId", mTenantId);
                 URL url = new URL(getString(R.string.login_controller));
@@ -302,20 +301,12 @@ public class LoginActivity extends AppCompatActivity
                     inputStreamData = inputStreamReader.read();
                     response += current;
                 }
-
                 JSONObject resp = new JSONObject(response);
                 status = resp.get("status").toString();
                 token = resp.get("token").toString();
                 errorCode = resp.get("errorCode").toString();
                 errorMessage = resp.get("errorMessage").toString();
-                String tmenu = resp.get("menu").toString();
-                JSONArray menuArray = new JSONArray(tmenu);
-                menu = new String[menuArray.length()];
-                for (int i=0;i<menuArray.length();i++)
-                {
-                    menu[i] = menuArray.getString(i);
-                }
-                session.createUserLoginSession(email, tenant, tmenu, token);
+                session.createUserLoginSession(email, tenant, token);
                 Thread.sleep(1000);
             }
 
@@ -343,6 +334,7 @@ public class LoginActivity extends AppCompatActivity
         {
             mAuthTask = null;
             showProgress(false);
+
 
             if (success)
             {
