@@ -18,10 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-public class DrawerActivity extends AppCompatActivity
+public class NavDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
     private String token;
@@ -152,7 +149,7 @@ public class DrawerActivity extends AppCompatActivity
         Fragment fragment = null;
         Bundle bundle = new Bundle();
         bundle.putString("token",token);
-        fragment = new DeviceList();
+        fragment = new DeviceListFragment();
         fragment.setArguments(bundle);
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.content_frame, fragment);

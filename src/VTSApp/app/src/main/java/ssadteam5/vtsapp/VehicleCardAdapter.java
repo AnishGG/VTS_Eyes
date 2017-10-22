@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -53,10 +52,7 @@ public class VehicleCardAdapter extends RecyclerView.Adapter<VehicleCardAdapter.
             public void onClick(View view)
             {
                 Intent intent = new Intent(mContext, TrackVehicleActivity.class);
-                Log.d("click",""+vehicleCard.getId());
-                Log.d("click",""+vehicleCard.getName());
-                intent.putExtra("vehicle_name", vehicleCard.getName());
-                intent.putExtra("vehicle_id",vehicleCard.getName());
+                intent.putExtra("deviceName",vehicleCard.getName());
                 mContext.startActivity(intent);
             }
         });

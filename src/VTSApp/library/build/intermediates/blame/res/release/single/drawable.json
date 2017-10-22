@@ -1,34 +1,18 @@
 [
     {
-        "merged": "/home/anish/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_text_dark.xml",
-        "source": "/home/anish/.android/build-cache/57598ed5a7cabea793b1108e51d954e805117ab9/output/res/drawable/common_google_signin_btn_text_dark.xml"
-    },
-    {
-        "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_text_light.xml",
+        "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_text_light.xml",
         "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable/common_google_signin_btn_text_light.xml"
     },
     {
-        "merged": "/home/anish/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_icon_dark.xml",
-        "source": "/home/anish/.android/build-cache/57598ed5a7cabea793b1108e51d954e805117ab9/output/res/drawable/common_google_signin_btn_icon_dark.xml"
-    },
-    {
-        "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_text_dark.xml",
+        "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_text_dark.xml",
         "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable/common_google_signin_btn_text_dark.xml"
     },
     {
-        "merged": "/home/anish/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_text_light.xml",
-        "source": "/home/anish/.android/build-cache/57598ed5a7cabea793b1108e51d954e805117ab9/output/res/drawable/common_google_signin_btn_text_light.xml"
-    },
-    {
-        "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_icon_dark.xml",
+        "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_icon_dark.xml",
         "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable/common_google_signin_btn_icon_dark.xml"
     },
     {
-        "merged": "/home/anish/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_icon_light.xml",
-        "source": "/home/anish/.android/build-cache/57598ed5a7cabea793b1108e51d954e805117ab9/output/res/drawable/common_google_signin_btn_icon_light.xml"
-    },
-    {
-        "merged": "/home/ravsimar/temp/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_icon_light.xml",
+        "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/release/drawable/common_google_signin_btn_icon_light.xml",
         "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable/common_google_signin_btn_icon_light.xml"
     }
 ]

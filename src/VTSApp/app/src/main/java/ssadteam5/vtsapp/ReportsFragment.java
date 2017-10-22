@@ -36,8 +36,10 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class ReportsFragment extends Fragment {
-    public static ReportsFragment newInstance() {
+public class ReportsFragment extends Fragment
+{
+    public static ReportsFragment newInstance()
+    {
         ReportsFragment r = new ReportsFragment();
         return r;
     }
@@ -73,14 +75,16 @@ public class ReportsFragment extends Fragment {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         Log.d("started", "reportfrag");
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState)
+    {
         view = inflater.inflate(R.layout.fragment_reports, container, false);
         token = getArguments().getString("token");
         userData = new UserData(getActivity().getApplicationContext());

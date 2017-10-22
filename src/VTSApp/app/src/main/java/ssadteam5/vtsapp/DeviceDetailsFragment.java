@@ -21,25 +21,27 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 
-public class DeviceDetailsFragment extends DialogFragment {
-    public static DeviceDetailsFragment newInstance() {
+public class DeviceDetailsFragment extends DialogFragment
+{
+    public static DeviceDetailsFragment newInstance()
+    {
         DeviceDetailsFragment f = new DeviceDetailsFragment();
         return f;
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState)
+    {
         LayoutInflater l = getActivity().getLayoutInflater();
         View view = l.inflate(R.layout.fragment_device_details, null);
-        HashMap<String, String> details = (HashMap<String, String>) getArguments().getSerializable("details");
-        String det = getArguments().getString("det");
-        final String vehicledetails = details.get("vehicleDetails");
-//        String driverdetails = details.get("driverDetails");
-        Log.d("det", det);
+        String vehicleDetails = getArguments().getString("vehicleDetails");
+        String deviceName = getArguments().getString("deviceName");
+
         TableLayout tl = view.findViewById(R.id.tl);
 //        tl.setPadding(75, 50, 0, 0);
-        try {
-            JSONObject json = new JSONObject(vehicledetails);
+        try
+        {
+            JSONObject json = new JSONObject(vehicleDetails);
             tl.addView(row("Vehicle name", json.getString("vehicleName")));
 
 //            Spannable spannableText = (Spannable) tl.getText();
@@ -52,7 +54,9 @@ public class DeviceDetailsFragment extends DialogFragment {
             tl.addView(row("Previous Service", json.getString("serviceOn")));
             tl.addView(row("Next Service", json.getString("nextServiceOn")));
             tl.addView(row("Notes", json.getString("notes")));
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
 
@@ -63,21 +67,17 @@ public class DeviceDetailsFragment extends DialogFragment {
         builder.setPositiveButton("Track", new DialogInterface.OnClickListener(){
             public void onClick(DialogInterface dialog, int id){
                 try {
-                    Log.d("this is the activity", getActivity().getLocalClassName());
                     Intent intent = new Intent(getActivity(), TrackVehicleActivity.class);
-                    JSONObject json = new JSONObject(vehicledetails);
-                    intent.putExtra("vehicle_id", json.getString("device"));
-                    intent.putExtra("vehicle_name", json.getString("vehicleName"));
+                    JSONObject json = new JSONObject(vehicleDetails);
+                    intent.putExtra("deviceName", deviceName);
                     startActivity(intent);
                 }
-                catch(Exception e){
-                    Log.d("exception", "here");
+                catch(Exception e)
+                {
                     e.printStackTrace();
                 }
             }
         });
-
-
         return builder.create();
     }
 

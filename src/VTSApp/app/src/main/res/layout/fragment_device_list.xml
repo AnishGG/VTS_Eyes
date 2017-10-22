@@ -2,18 +2,17 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="ssadteam5.vtsapp.DeviceList">
+             tools:context="ssadteam5.vtsapp.DeviceListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeRefreshDeviceList"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/listview"></ListView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/summary_card_view"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

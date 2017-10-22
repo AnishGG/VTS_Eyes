@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ssadteam5.vtsapp.DrawerActivity"
+    tools:context="ssadteam5.vtsapp.NavDrawerActivity"
     tools:showIn="@layout/app_bar_drawer">
     <FrameLayout
         android:id="@+id/content_frame"

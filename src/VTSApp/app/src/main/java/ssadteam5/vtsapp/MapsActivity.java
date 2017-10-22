@@ -1,5 +1,6 @@
 package ssadteam5.vtsapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -8,6 +9,7 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -108,12 +110,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng latLng = new LatLng(17.9,78);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,5));
         mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+        mGoogleMap.getUiSettings().setCompassEnabled(true);
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
         {
             @Override
             public boolean onMarkerClick(final Marker marker)
             {
-                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),18));
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),16));
                 marker.showInfoWindow();
                 return true;
             }
@@ -150,7 +153,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .center(oldPos)
                             .radius(2)
                             .strokeColor(Color.RED)
-                            .fillColor(Color.BLUE));
+                            .fillColor(Color.RED));
                 }
             }
         });
@@ -175,6 +178,52 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private static final CharSequence[] MAP_TYPE_ITEMS =
+            {"Road Map", "Hybrid", "Satellite", "Terrain"};
+
+    private void showMapTypeSelectorDialog()
+    {
+        // Prepare the dialog by setting up a Builder.
+        final String fDialogTitle = "Select Map Type";
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(fDialogTitle);
+
+        // Find the current map type to pre-check the item representing the current state.
+        int checkItem = mGoogleMap.getMapType() - 1;
+
+        // Add an OnClickListener to the dialog, so that the selection will be handled.
+        builder.setSingleChoiceItems(
+                MAP_TYPE_ITEMS,
+                checkItem,
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int item) {
+                        // Locally create a finalised object.
+
+                        // Perform an action depending on which item was selected.
+                        switch (item) {
+                            case 1:
+                                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                                break;
+                            case 2:
+                                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                                break;
+                            case 3:
+                                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                                break;
+                            default:
+                                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                        }
+                        dialog.dismiss();
+                    }
+                }
+        );
+
+        // Build the dialog and show it.
+        AlertDialog fMapTypeDialog = builder.create();
+        fMapTypeDialog.setCanceledOnTouchOutside(true);
+        fMapTypeDialog.show();
     }
 }
 

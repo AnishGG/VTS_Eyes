@@ -1,0 +1,82 @@
+package ssadteam5.vtsapp;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import java.util.List;
+
+public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.MyViewHolder>
+{
+    private Context mContext;
+    private List<VehicleCard> vehicleCards;
+
+    public DeviceListAdapter(Context mContext, List<VehicleCard> vehicleCards)
+    {
+        this.mContext = mContext;
+        this.vehicleCards = vehicleCards;
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder
+    {
+        public ImageView thumbnail;
+        public TextView name;
+        public TextView account;
+        public TextView description;
+        public RelativeLayout relativeLayout;
+        public MyViewHolder(View view)
+        {
+            super(view);
+            relativeLayout = (RelativeLayout) view.findViewById(R.id.relLayout);
+            name = (TextView) view.findViewById(R.id.name);
+            thumbnail = (ImageView) view.findViewById(R.id.icon);
+            account = (TextView) view.findViewById(R.id.account);
+            description = (TextView) view.findViewById(R.id.description);
+        }
+    }
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        return new MyViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(final MyViewHolder holder, int position)
+    {
+        final VehicleCard vehicleCard = vehicleCards.get(position);
+
+        holder.relativeLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                DeviceDetailsFragment dialog = new DeviceDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("deviceName",vehicleCard.getName());
+                bundle.putSerializable("vehicleDetails",vehicleCard.getVehicleDetailsDO().toString());
+
+                dialog.setArguments(bundle);
+                dialog.show(((AppCompatActivity)mContext).getSupportFragmentManager(),"dialog");
+            }
+        });
+        holder.name.setText(vehicleCard.getName());
+        holder.account.setText(vehicleCard.getAccount());
+        holder.description.setText(vehicleCard.getDescription());
+    }
+
+    @Override
+    public int getItemCount()
+    {
+        return vehicleCards.size();
+    }
+}

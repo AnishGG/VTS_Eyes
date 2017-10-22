@@ -41,8 +41,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     SupportMapFragment mapFrag;
     StompClient mStompClient;
     private String token;
-    private String vehicle_id;
-    private String vehicle_name; // only needed to display name on top of the activity
+    private String deviceName;
     private Marker marker = null;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -54,15 +53,13 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
         session = new UserSessionManager(getApplicationContext());
         mapFrag.getMapAsync(this);
-        Log.d("reached in here", "hello");
 
         token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN); //fetching from the UserSessionManager
-        vehicle_id = getIntent().getExtras().getString("vehicle_id");
-        vehicle_name = getIntent().getExtras().getString("vehicle_name");
-        getSupportActionBar().setTitle(vehicle_name);
+        deviceName = getIntent().getExtras().getString("deviceName");
+        getSupportActionBar().setTitle(deviceName);
         // Setting sliding panel text
         TextView mytextview = (TextView) findViewById(R.id.panel_text);
-        mytextview.setText("Device ID: " + vehicle_name);
+        mytextview.setText("Device: " + deviceName);
 
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");
@@ -97,7 +94,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                         }
                         if (New)
                         {
-                            if(vehicle_id.equals(deviceId)) {
+                            if(deviceName.equals(deviceId)) {
                                 marker = mGoogleMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(lat, lon))
                                         .title(deviceId));
@@ -123,12 +120,13 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         LatLng latLng = new LatLng(17.9,78);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,5));
         mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+        mGoogleMap.getUiSettings().setCompassEnabled(true);
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
         {
             @Override
             public boolean onMarkerClick(final Marker marker)
             {
-                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),18));
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),16));
                 marker.showInfoWindow();
                 return true;
             }
@@ -161,11 +159,12 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                 else
                 {
                     marker.setVisible(true);
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),16));
                     mGoogleMap.addCircle(new CircleOptions()
                             .center(oldPos)
                             .radius(2)
                             .strokeColor(Color.RED)
-                            .fillColor(Color.BLUE));
+                            .fillColor(Color.RED));
                 }
             }
         });
@@ -175,7 +174,8 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed()
+    {
         if (mLayout != null && (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         }
@@ -190,7 +190,8 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:

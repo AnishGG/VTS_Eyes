@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -248,7 +247,7 @@ public class LoginActivity extends AppCompatActivity
     private void launchDrawer()
     {
         Log.d("check","drawer launched");
-        Intent intent = new Intent(this, DrawerActivity.class);
+        Intent intent = new Intent(this, NavDrawerActivity.class);
         startActivity(intent);
     }
     /**
@@ -309,7 +308,6 @@ public class LoginActivity extends AppCompatActivity
                 session.createUserLoginSession(email, tenant, token);
                 Thread.sleep(1000);
             }
-
             catch (MalformedURLException e)
             {
                 e.printStackTrace();
@@ -334,7 +332,6 @@ public class LoginActivity extends AppCompatActivity
         {
             mAuthTask = null;
             showProgress(false);
-
 
             if (success)
             {
