@@ -2,8 +2,10 @@ package ssadteam5.vtsapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
@@ -22,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -41,6 +44,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     ArrayList<Marker> markerList = new ArrayList<Marker>();
     UserSessionManager session;
     private String token;
+    boolean isMarkerRotating = false;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -67,6 +71,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 final String deviceName = payload.get("DeviceId").toString();
                 Double lat = Double.parseDouble(payload.get("Latitude").toString());
                 Double lon = Double.parseDouble(payload.get("Longitude").toString());
+                final Float courseOverGround = Float.parseFloat(payload.get("CourseOverGround").toString());
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable()
                 {
@@ -79,8 +84,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Log.d("test", markerList.get(i).getTag().toString());
                             if (deviceName.equals(markerList.get(i).getTag().toString()))
                             {
+                                rotateMarker(markerList.get(i), courseOverGround);
                                 animateMarker(markerList.get(i),new LatLng(lat,lon));
-
                                 New = false;
                             }
                         }
@@ -89,7 +94,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Marker amarker = mGoogleMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(lat, lon ))
                                     .title(deviceName));
+                            int height = 160;
+                            int width = 80;
+                            BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.cars);
+                            Bitmap b=bitmapdraw.getBitmap();
+                            Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                            amarker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                             amarker.setTag(deviceName);
+                            amarker.setAnchor(0.5f, 0.5f);
+                            amarker.setInfoWindowAnchor(0.5f, 0.5f);
+                            amarker.setRotation(courseOverGround);
                             markerList.add(amarker);
                         }
                     }
@@ -224,6 +238,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         AlertDialog fMapTypeDialog = builder.create();
         fMapTypeDialog.setCanceledOnTouchOutside(true);
         fMapTypeDialog.show();
+    }
+
+    private void rotateMarker(final Marker marker, final float toRotation) {
+        if(!isMarkerRotating) {
+            final Handler handler = new Handler();
+            final long start = SystemClock.uptimeMillis();
+            final float startRotation = marker.getRotation();
+            final long duration = 1000;
+
+            final Interpolator interpolator = new LinearInterpolator();
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    isMarkerRotating = true;
+
+                    long elapsed = SystemClock.uptimeMillis() - start;
+                    float t = interpolator.getInterpolation((float) elapsed / duration);
+
+                    float rot = t * toRotation + (1 - t) * startRotation;
+
+                    marker.setRotation(-rot > 180 ? rot / 2 : rot);
+                    if (t < 1.0) {
+                        // Post again 16ms later.
+                        handler.postDelayed(this, 16);
+                    } else {
+                        isMarkerRotating = false;
+                    }
+                }
+            });
+        }
     }
 }
 
