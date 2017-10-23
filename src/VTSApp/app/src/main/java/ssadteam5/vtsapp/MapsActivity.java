@@ -1,10 +1,12 @@
 package ssadteam5.vtsapp;
 
+import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,9 +16,14 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.auth0.android.jwt.Claim;
 import com.auth0.android.jwt.JWT;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,6 +52,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     UserSessionManager session;
     private String token;
     boolean isMarkerRotating = false;
+    Float courseOverGround = null;
+    int flag;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -64,6 +73,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mStompClient = Stomp.over(WebSocket.class,getString(R.string.websocket));
         mStompClient.connect();
+        Log.d("yololo", "hello");
         mStompClient.topic("/device/message" + organisationId).subscribe(topicMessage -> {
             JSONObject payload = new JSONObject(topicMessage.getPayload());
             try
@@ -71,7 +81,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 final String deviceName = payload.get("DeviceId").toString();
                 Double lat = Double.parseDouble(payload.get("Latitude").toString());
                 Double lon = Double.parseDouble(payload.get("Longitude").toString());
-                final Float courseOverGround = Float.parseFloat(payload.get("CourseOverGround").toString());
+                final String speed = payload.get("Speed").toString();
+                final String FuelLevel = payload.get("FuelLevel").toString();
+                final String GSMStrength = payload.get("GSMStrength").toString();
+                final String InternalBatteryVoltage = payload.get("InternalBatteryVoltage").toString();
+                final String EngineStatus = payload.get("EngineStatus").toString();
+                flag = 0;
+                try {
+                    courseOverGround = Float.parseFloat(payload.get("CourseOverGround").toString());
+                }
+                catch (Exception e){
+                    flag = 1;
+                    e.printStackTrace();
+                }
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable()
                 {
@@ -84,10 +106,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Log.d("test", markerList.get(i).getTag().toString());
                             if (deviceName.equals(markerList.get(i).getTag().toString()))
                             {
-                                rotateMarker(markerList.get(i), courseOverGround);
-                                animateMarker(markerList.get(i),new LatLng(lat,lon));
+                                Marker oldpos = markerList.get(i);
+                                oldpos.setSnippet("Engine Status: " + EngineStatus + "\n" + "Speed: " + speed + "Km/h" + "\n" + "Fuel Level: " + FuelLevel + "\n" + "Internal Battery Voltage: " + InternalBatteryVoltage + "\n" +
+                                        "GSM Strength: " + GSMStrength);
+                                /* To update the opened Info window */
+                                if(oldpos.isInfoWindowShown()) {
+                                    oldpos.hideInfoWindow();
+                                    oldpos.showInfoWindow();
+                                }
+                                /**/
+                                if(flag == 1)
+                                    courseOverGround = getAngle(oldpos.getPosition(), new LatLng(lat, lon));
+                                rotateMarker(markerList.get(i), new LatLng(lat, lon), courseOverGround);
+                                mGoogleMap.addCircle(new CircleOptions()
+                                        .center(oldpos.getPosition())
+                                        .radius(2)
+                                        .strokeColor(Color.RED)
+                                        .fillColor(Color.RED));
                                 New = false;
                             }
+                            Log.d("mynew", deviceName + "  " + markerList.get(i).getTag().toString());
                         }
                         if (New)
                         {
@@ -96,14 +134,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     .title(deviceName));
                             int height = 160;
                             int width = 80;
-                            BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.cars);
+                            BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car4);
                             Bitmap b=bitmapdraw.getBitmap();
                             Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
                             amarker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                             amarker.setTag(deviceName);
+                            amarker.setSnippet("Engine Status: " + EngineStatus + "\n" + "Speed: " + speed + "Km/h" + "\n" + "Fuel Level: " + FuelLevel + "\n" + "Internal Battery Voltage: " + InternalBatteryVoltage + "\n" +
+                                    "GSM Strength: " + GSMStrength);
                             amarker.setAnchor(0.5f, 0.5f);
                             amarker.setInfoWindowAnchor(0.5f, 0.5f);
-                            amarker.setRotation(courseOverGround);
+                            if(flag == 0)
+                                amarker.setRotation(courseOverGround);
                             markerList.add(amarker);
                         }
                     }
@@ -125,6 +166,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,5));
         mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
         mGoogleMap.getUiSettings().setCompassEnabled(true);
+        mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
         {
             @Override
@@ -135,47 +177,42 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             }
         });
-    }
-    public void animateMarker(final Marker marker, final LatLng toPosition)
-    {
-        final Handler handler = new Handler();
-        final LatLng oldPos = marker.getPosition();
-        final long start = SystemClock.uptimeMillis();
-        Projection proj = mGoogleMap.getProjection();
-        Point startPoint = proj.toScreenLocation(marker.getPosition());
-        final LatLng startLatLng = proj.fromScreenLocation(startPoint);
-        final long duration = 500;
-        final Interpolator interpolator = new LinearInterpolator();
-        handler.post(new Runnable()
-        {
+        mGoogleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
             @Override
-            public void run()
-            {
-                long elapsed = SystemClock.uptimeMillis() - start;
-                float t = interpolator.getInterpolation((float) elapsed / duration);
-                double lng = t * toPosition.longitude + (1 - t) * startLatLng.longitude;
-                double lat = t * toPosition.latitude + (1 - t) * startLatLng.latitude;
-                marker.setPosition(new LatLng(lat, lng));
-                if (t < 1.0)
-                {
-                    handler.postDelayed(this, 16);
-                }
-                else
-                {
-                    marker.setVisible(true);
-                    mGoogleMap.addCircle(new CircleOptions()
-                            .center(oldPos)
-                            .radius(2)
-                            .strokeColor(Color.RED)
-                            .fillColor(Color.RED));
-                }
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+
+                LinearLayout info = new LinearLayout(getApplicationContext());
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(getApplicationContext());
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(getApplicationContext());
+                snippet.setTextColor(Color.GRAY);
+                snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.addView(snippet);
+
+                return info;
             }
         });
     }
+
     @Override
     protected void onDestroy()
     {
         super.onDestroy();
+        Log.d("destroy", "here");
         mStompClient.disconnect();
     }
 
@@ -240,35 +277,84 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fMapTypeDialog.show();
     }
 
-    private void rotateMarker(final Marker marker, final float toRotation) {
-        if(!isMarkerRotating) {
-            final Handler handler = new Handler();
-            final long start = SystemClock.uptimeMillis();
+    private void rotateMarker(final Marker marker, final LatLng destination, final float rotation) {
+
+        if (marker != null) {
+
+            final LatLng startPosition = marker.getPosition();
             final float startRotation = marker.getRotation();
-            final long duration = 1000;
 
-            final Interpolator interpolator = new LinearInterpolator();
-
-            handler.post(new Runnable() {
+            final LatLngInterpolator latLngInterpolator = new LatLngInterpolator.Spherical();
+            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
+            valueAnimator.setDuration(3000); // duration 3 second
+            valueAnimator.setInterpolator(new LinearInterpolator());
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
-                public void run() {
-                    isMarkerRotating = true;
+                public void onAnimationUpdate(ValueAnimator animation) {
 
-                    long elapsed = SystemClock.uptimeMillis() - start;
-                    float t = interpolator.getInterpolation((float) elapsed / duration);
+                    try {
+                        float v = animation.getAnimatedFraction();
+                        LatLng newPosition = latLngInterpolator.interpolate(v, startPosition, destination);
+                        float bearing = computeRotation(v, startRotation, rotation);
 
-                    float rot = t * toRotation + (1 - t) * startRotation;
+                        marker.setRotation(bearing);
+                        marker.setPosition(newPosition);
 
-                    marker.setRotation(-rot > 180 ? rot / 2 : rot);
-                    if (t < 1.0) {
-                        // Post again 16ms later.
-                        handler.postDelayed(this, 16);
-                    } else {
-                        isMarkerRotating = false;
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
             });
+            valueAnimator.start();
         }
+    }
+
+    private static float computeRotation(float fraction, float start, float end) {
+        float normalizeEnd = end - start; // rotate start to 0
+        float normalizedEndAbs = (normalizeEnd + 360) % 360;
+
+        float direction = (normalizedEndAbs > 180) ? -1 : 1; // -1 = anticlockwise, 1 = clockwise
+        float rotation;
+        if (direction > 0) {
+            rotation = normalizedEndAbs;
+        } else {
+            rotation = normalizedEndAbs - 360;
+        }
+
+        float result = fraction * rotation + start;
+        return (result + 360) % 360;
+    }
+
+    public static float getAngle(LatLng source, LatLng destination) {
+
+        // calculate the angle theta from the deltaY and deltaX values
+        // (atan2 returns radians values from [-PI,PI])
+        // 0 currently points EAST.
+        // NOTE: By preserving Y and X param order to atan2,  we are expecting
+        // a CLOCKWISE angle direction.
+        double theta = Math.atan2(
+                destination.longitude - source.longitude, destination.latitude - source.latitude);
+
+        // rotate the theta angle clockwise by 90 degrees
+        // (this makes 0 point NORTH)
+        // NOTE: adding to an angle rotates it clockwise.
+        // subtracting would rotate it counter-clockwise
+        theta += Math.PI / 2.0;
+
+        // convert from radians to degrees
+        // this will give you an angle from [0->270],[-180,0]
+        double angle = Math.toDegrees(theta);
+
+        // convert to positive range [0-360)
+        // since we want to prevent negative angles, adjust them now.
+        // we can assume that atan2 will not return a negative value
+        // greater than one partial rotation
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        return (float) angle;
     }
 }
 
