@@ -7,11 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,15 +23,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.IOException;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -44,7 +40,6 @@ public class LoginActivity extends AppCompatActivity
      *  These variables store the login response
      */
     private String status;    //The variable status determines whether the login is successful or not.
-    private String token;
     private String errorCode;
     private String errorMessage;
     private String email;
@@ -62,9 +57,7 @@ public class LoginActivity extends AppCompatActivity
     private View mProgressView;
     private View mLoginFormView;
 
-    UserSessionManager session;     // To store the user session
-
-    public static final String PREFS_NAME = "LoginPrefs";
+    private UserSessionManager session;     // To store the user session
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -75,10 +68,10 @@ public class LoginActivity extends AppCompatActivity
         session = new UserSessionManager(getApplicationContext());
 
         // Set up the login form.
-        mEmailView = (EditText) findViewById(R.id.email);
+        mEmailView = findViewById(R.id.email);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mTenantIdView = (EditText) findViewById(R.id.tenantId);
+        mPasswordView = findViewById(R.id.password);
+        mTenantIdView = findViewById(R.id.tenantId);
         mTenantIdView.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
@@ -92,7 +85,7 @@ public class LoginActivity extends AppCompatActivity
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -209,38 +202,29 @@ public class LoginActivity extends AppCompatActivity
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter()
-            {
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter()
-            {
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        }
-        else
+        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter()
         {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
 
@@ -275,7 +259,6 @@ public class LoginActivity extends AppCompatActivity
             HttpURLConnection conn;
             try {
                 String response = "";
-                JSONArray jsonArray = new JSONArray();
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("email", mEmail);
                 jsonObject.put("password", mPassword);
@@ -302,25 +285,12 @@ public class LoginActivity extends AppCompatActivity
                 }
                 JSONObject resp = new JSONObject(response);
                 status = resp.get("status").toString();
-                token = resp.get("token").toString();
+                String token = resp.get("token").toString();
                 errorCode = resp.get("errorCode").toString();
                 errorMessage = resp.get("errorMessage").toString();
                 session.createUserLoginSession(email, tenant, token);
                 Thread.sleep(1000);
-            }
-            catch (MalformedURLException e)
-            {
-                e.printStackTrace();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            catch (JSONException e)
-            {
-                e.printStackTrace();
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 e.printStackTrace();
             }
@@ -342,20 +312,20 @@ public class LoginActivity extends AppCompatActivity
                 }
                 else if(status.equals("FAILURE"))
                 {
-                    if(errorCode.equals("3116"))
+                    switch (errorCode)
                     {
-                        mEmailView.setError(errorMessage);
-                        mEmailView.requestFocus();
-                    }
-                    else if(errorCode.equals("4103"))
-                    {
-                        mPasswordView.setError(errorMessage);
-                        mPasswordView.requestFocus();
-                    }
-                    else if(errorCode.equals("4104"))
-                    {
-                        mTenantIdView.setError(errorMessage);
-                        mTenantIdView.requestFocus();
+                        case "3116":
+                            mEmailView.setError(errorMessage);
+                            mEmailView.requestFocus();
+                            break;
+                        case "4103":
+                            mPasswordView.setError(errorMessage);
+                            mPasswordView.requestFocus();
+                            break;
+                        case "4104":
+                            mTenantIdView.setError(errorMessage);
+                            mTenantIdView.requestFocus();
+                            break;
                     }
                 }
             }
@@ -393,7 +363,7 @@ public class LoginActivity extends AppCompatActivity
     }
 
     // To check the internet services
-    public boolean isOnline()
+    private boolean isOnline()
     {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();

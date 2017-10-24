@@ -9,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,15 +24,14 @@ import java.util.List;
 
 public class DashboardFragment extends Fragment
 {
-    View view;
-    SwipeRefreshLayout swipeLayout;
-    private String token;
-    public RecyclerView recyclerView;
-    public VehicleCardAdapter vehicleCardAdapter;
-    public List<VehicleCard> vehicleCardList;
+    private View view;
+    private SwipeRefreshLayout swipeLayout;
+    private RecyclerView recyclerView;
+    private VehicleCardAdapter vehicleCardAdapter;
+    private List<VehicleCard> vehicleCardList;
     private DeviceFetchTask mFetchTask;
     private TableLayout tableLayout;
-    UserData userData;
+    private UserData userData;
 
 
     @Nullable
@@ -41,8 +39,7 @@ public class DashboardFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        token = getArguments().getString("token");
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.recycler_view);
         vehicleCardList = new ArrayList<>();
         vehicleCardAdapter = new VehicleCardAdapter(getContext(),vehicleCardList);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
@@ -56,7 +53,7 @@ public class DashboardFragment extends Fragment
         mFetchTask = new DeviceFetchTask();
         mFetchTask.execute((Void) null);
 
-        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshDashboard);
+        swipeLayout = view.findViewById(R.id.swipeRefreshDashboard);
         swipeLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -86,13 +83,13 @@ public class DashboardFragment extends Fragment
         heading.setTextAppearance(getActivity(), R.style.TextAppearance_AppCompat_Large);
         heading.setPadding(50,20,50,20);
         tableLayout.addView(heading);
-        tableLayout.addView(createRow("Active Vehicles","-"));
-        tableLayout.addView(createRow("Inactive Vehicles","-"));
-        tableLayout.addView(createRow("Total Distance Covered","-"));
-        tableLayout.addView(createRow("Alerts Generated","-"));
+        tableLayout.addView(createRow("Active Vehicles"));
+        tableLayout.addView(createRow("Inactive Vehicles"));
+        tableLayout.addView(createRow("Total Distance Covered"));
+        tableLayout.addView(createRow("Alerts Generated"));
 
     }
-    private TableRow createRow(String a, String b)
+    private TableRow createRow(String a)
     {
         TableRow tr = new TableRow(getActivity());
         TextView tv1 = new TextView(getActivity());
@@ -100,7 +97,7 @@ public class DashboardFragment extends Fragment
         tv1.setText(a);
         tr.addView(tv1);
         TextView tv2 = new TextView(getActivity());
-        tv2.setText(b);
+        tv2.setText("-");
         tr.addView(tv2);
         tr.setPadding(50, 20, 50, 20);
         return tr;

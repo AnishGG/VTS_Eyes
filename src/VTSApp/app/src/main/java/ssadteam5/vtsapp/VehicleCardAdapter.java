@@ -3,7 +3,6 @@ package ssadteam5.vtsapp;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +30,8 @@ public class VehicleCardAdapter extends RecyclerView.Adapter<VehicleCardAdapter.
         public MyViewHolder(View view)
         {
             super(view);
-            name = (TextView) view.findViewById(R.id.vehicle_name);
-            thumbnail = (ImageView) view.findViewById(R.id.vehicle_thumbnail);
+            name = view.findViewById(R.id.vehicle_name);
+            thumbnail = view.findViewById(R.id.vehicle_thumbnail);
         }
     }
     @Override

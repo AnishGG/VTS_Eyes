@@ -5,13 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.SystemClock;
-import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +17,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,31 +26,30 @@ import com.auth0.android.jwt.JWT;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
+
 import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback
 {
-    GoogleMap mGoogleMap;
-    SupportMapFragment mapFrag;
-    StompClient mStompClient;
-    ArrayList<Marker> markerList = new ArrayList<Marker>();
-    UserSessionManager session;
-    private String token;
-    boolean isMarkerRotating = false;
-    Float courseOverGround = null;
-    int flag;
+    private GoogleMap mGoogleMap;
+    private SupportMapFragment mapFrag;
+    private StompClient mStompClient;
+    private ArrayList<Marker> markerList = new ArrayList<>();
+    private UserSessionManager session;
+    private Float courseOverGround = null;
+    private int flag;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -65,13 +61,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFrag.getMapAsync(this);
 
         session = new UserSessionManager(getApplicationContext());
-        token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
+        String token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
 
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");
         String organisationId = claim.asString();
 
-        mStompClient = Stomp.over(WebSocket.class,getString(R.string.websocket));
+        mStompClient = Stomp.over(WebSocket.class,getString(R.string.web_socket));
         mStompClient.connect();
         Log.d("yololo", "hello");
         mStompClient.topic("/device/message" + organisationId).subscribe(topicMessage -> {
@@ -326,7 +322,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return (result + 360) % 360;
     }
 
-    public static float getAngle(LatLng source, LatLng destination) {
+    private static float getAngle(LatLng source, LatLng destination) {
 
         // calculate the angle theta from the deltaY and deltaX values
         // (atan2 returns radians values from [-PI,PI])

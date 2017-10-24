@@ -1,8 +1,6 @@
 package ssadteam5.vtsapp;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -36,11 +34,11 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.My
         public MyViewHolder(View view)
         {
             super(view);
-            relativeLayout = (RelativeLayout) view.findViewById(R.id.relLayout);
-            name = (TextView) view.findViewById(R.id.name);
-            thumbnail = (ImageView) view.findViewById(R.id.icon);
-            account = (TextView) view.findViewById(R.id.account);
-            description = (TextView) view.findViewById(R.id.description);
+            relativeLayout = view.findViewById(R.id.relLayout);
+            name = view.findViewById(R.id.name);
+            thumbnail = view.findViewById(R.id.icon);
+            account = view.findViewById(R.id.account);
+            description = view.findViewById(R.id.description);
         }
     }
     @Override

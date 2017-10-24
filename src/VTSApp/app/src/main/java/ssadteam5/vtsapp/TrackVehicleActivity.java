@@ -4,23 +4,20 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -30,7 +27,6 @@ import com.auth0.android.jwt.JWT;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -41,36 +37,24 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-import static java.lang.StrictMath.asin;
-import static java.lang.StrictMath.atan2;
-import static java.lang.StrictMath.cos;
-import static java.lang.StrictMath.pow;
-import static java.lang.StrictMath.sin;
-import static java.lang.StrictMath.sqrt;
-import static java.lang.StrictMath.toDegrees;
-import static java.lang.StrictMath.toRadians;
-
 public class TrackVehicleActivity extends AppCompatActivity implements OnMapReadyCallback
 {
     private SlidingUpPanelLayout mLayout;
-    UserSessionManager session;
-    UserData userData;
-    GoogleMap mGoogleMap;
-    SupportMapFragment mapFrag;
-    StompClient mStompClient;
-    private String token;
+    private UserSessionManager session;
+    private UserData userData;
+    private GoogleMap mGoogleMap;
+    private SupportMapFragment mapFrag;
+    private StompClient mStompClient;
     private String deviceName;
     private Marker marker = null;
-    boolean isMarkerRotating = false;
-    Float courseOverGround = null;
-    String organisationId;
-    int flag;
+    private Float courseOverGround = null;
+    private String organisationId;
+    private int flag;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -83,7 +67,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         userData = new UserData(getApplicationContext());
         mapFrag.getMapAsync(this);
 
-        token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN); //fetching from the UserSessionManager
+        String token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
         deviceName = getIntent().getExtras().getString("deviceName");
         getSupportActionBar().setTitle(deviceName);
         // Setting sliding panel text
@@ -94,7 +78,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         Claim claim = jwt.getClaim("organisationId");
         organisationId = claim.asString();
 
-        mStompClient = Stomp.over(WebSocket.class,getString(R.string.websocket));
+        mStompClient = Stomp.over(WebSocket.class,getString(R.string.web_socket));
         mStompClient.connect();
         mStompClient.topic("/device/message" + organisationId).subscribe(topicMessage -> {
             JSONObject payload = new JSONObject(topicMessage.getPayload());
@@ -229,8 +213,8 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         });
     }
 
-    public void init(){
-        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+    private void init(){
+        mLayout = findViewById(R.id.sliding_layout);
     }
 
     @Override
@@ -337,7 +321,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
             }
             vehicleDetailsDO = arr.getJSONObject(idx).getString("vehicleDetailsDO");
 
-            TableLayout t = (TableLayout) findViewById(R.id.vehicleInformationPanel);
+            TableLayout t = findViewById(R.id.vehicleInformationPanel);
             TableRow row = new TableRow(this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
             row.setLayoutParams(lp);
@@ -405,7 +389,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
 
     }
 
-    public static float getAngle(LatLng source, LatLng destination) {
+    private static float getAngle(LatLng source, LatLng destination) {
 
         // calculate the angle theta from the deltaY and deltaX values
         // (atan2 returns radians values from [-PI,PI])

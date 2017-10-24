@@ -1,5 +1,6 @@
 package ssadteam5.vtsapp;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,9 +8,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TableLayout;
@@ -18,22 +19,16 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 
 public class DeviceDetailsFragment extends DialogFragment
 {
-    public static DeviceDetailsFragment newInstance()
-    {
-        DeviceDetailsFragment f = new DeviceDetailsFragment();
-        return f;
-    }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         LayoutInflater l = getActivity().getLayoutInflater();
-        View view = l.inflate(R.layout.fragment_device_details, null);
+        @SuppressLint("InflateParams") View view = l.inflate(R.layout.fragment_device_details, null);
         String vehicleDetails = getArguments().getString("vehicleDetails");
         String deviceName = getArguments().getString("deviceName");
 
@@ -68,7 +63,6 @@ public class DeviceDetailsFragment extends DialogFragment
             public void onClick(DialogInterface dialog, int id){
                 try {
                     Intent intent = new Intent(getActivity(), TrackVehicleActivity.class);
-                    JSONObject json = new JSONObject(vehicleDetails);
                     intent.putExtra("deviceName", deviceName);
                     startActivity(intent);
                 }
