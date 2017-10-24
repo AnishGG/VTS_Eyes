@@ -20,10 +20,14 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.google.gson.JsonIOException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -66,9 +70,13 @@ public class ReportsFragment extends Fragment
     Boolean flag2 = false;
     private String startdate = "";
     private String enddate = "";
+    private String vehicle = "";
     private String spres = "";
     static final int DATE_DIALOG_ID = 999;
     UserData userData;
+    private StringBuilder sdate;
+    //    StringBuffer sb = new StringBuffer();
+    String sb = "";
 
 
 //    private OnFragmentInteractionListener mListener;
@@ -94,10 +102,23 @@ public class ReportsFragment extends Fragment
         mFetchTask.execute((Void) null);
         setCurrentDateOnView();
         addListenerOnButton();
-        ReportsInfo mRepTask = new ReportsInfo("1", "2", "3", token);
+        btnsub = (Button) view.findViewById(R.id.btnsub);
+        btnsub.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                showTables();
+            }
+        });
+        return view;
+    }
+
+    private void showTables(){
+        vehicle = spinner.getSelectedItem().toString();
+        ReportsInfo mRepTask = new ReportsInfo(vehicle, startdate, enddate, token);
         mRepTask.execute((Void) null);
         Log.d("ok", "ready");
-        return view;
     }
 
     public void setCurrentDateOnView() {
@@ -108,16 +129,26 @@ public class ReportsFragment extends Fragment
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
+        if((month + 1)/10 == 0){
+            if(day/10 == 0){
+                sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append("0").append(day);
+            }
+            else{
+                sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append(day);
+            }
+        }
+        else{
+            if(day/10 == 0){
+                sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append("0").append(day);
+            }
+            else{
+                sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append(day);
+            }
+        }
 
         // set current date into textview
-        tvDisplayDate1.setText(new StringBuilder()
-                // Month is 0 based, just add 1
-                .append(year).append("-").append(month + 1).append("-").append(day).append(" ")
-        );
-        tvDisplayDate2.setText(new StringBuilder()
-                // Month is 0 based, just add 1
-                .append(year).append("-").append(month + 1).append("-").append(day).append(" ")
-        );
+        tvDisplayDate1.setText(sdate);
+        tvDisplayDate2.setText(sdate);
 
         startdate = tvDisplayDate1.getText().toString();
         enddate = tvDisplayDate2.getText().toString();
@@ -134,7 +165,6 @@ public class ReportsFragment extends Fragment
 
         btnChangeDate1 = (Button) view.findViewById(R.id.btnChangeDate1);
         btnChangeDate2 = (Button) view.findViewById(R.id.btnChangeDate2);
-        btnsub = (Button) view.findViewById(R.id.btnsub);
 
         btnChangeDate1.setOnClickListener(new View.OnClickListener() {
 
@@ -184,19 +214,47 @@ public class ReportsFragment extends Fragment
 
             // set selected date into textview
             if (flag1) {
-                tvDisplayDate1.setText(new StringBuilder().append(year)
-                        .append("-").append(month + 1)
-                        .append("-").append(day).append(" "));
-                flag1 = false;
-                flag2 = false;
+                if((month + 1)/10 == 0){
+                    if(day/10 == 0){
+                        sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append("0").append(day);
+                    }
+                    else{
+                        sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append(day);
+                    }
+                }
+                else{
+                    if(day/10 == 0){
+                        sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append("0").append(day);
+                    }
+                    else{
+                        sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append(day);
+                    }
+                }
+                tvDisplayDate1.setText(sdate);
             }
             if (flag2) {
-                tvDisplayDate2.setText(new StringBuilder().append(year)
-                        .append("-").append(month + 1)
-                        .append("-").append(day).append(" "));
+                if((month + 1)/10 == 0){
+                    if(day/10 == 0){
+                        sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append("0").append(day);
+                    }
+                    else{
+                        sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append(day);
+                    }
+                }
+                else{
+                    if(day/10 == 0){
+                        sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append("0").append(day);
+                    }
+                    else{
+                        sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append(day);
+                    }
+                }
+                tvDisplayDate2.setText(sdate);
             }
             startdate = tvDisplayDate1.getText().toString();
             enddate = tvDisplayDate2.getText().toString();
+            flag1 = false;
+            flag2 = false;
             Log.d("got1", startdate);
             Log.d("got2", enddate);
         }
@@ -226,7 +284,6 @@ public class ReportsFragment extends Fragment
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            HttpURLConnection conn;
             try {
                 if(!userData.isDataFetched())
                 {
@@ -238,7 +295,6 @@ public class ReportsFragment extends Fragment
                 JSONArray arr = obj.getJSONArray("deviceDTOS");
                 Log.d("hellodakshsize", "" + arr.length());
                 for (int i = 0; i < arr.length(); i++) {
-//                    spinner.setOnItemSelectedListener(this);
                     try {
                         JSONObject ob = arr.getJSONObject(i);
                         JSONObject hello = new JSONObject(ob.getString("vehicleDetailsDO"));
@@ -246,7 +302,6 @@ public class ReportsFragment extends Fragment
                         Log.d("dakshhello", number);
                         list.add(number);
                     } catch (Exception e) {
-//                        e.printStackTrace();
                         JSONObject obn = arr.getJSONObject(i);
                         String name = obn.getString("name");
                         Log.d("nameprint", name);
@@ -276,9 +331,9 @@ public class ReportsFragment extends Fragment
         private final String mToken;
 
         ReportsInfo(String vehicleNo, String startDate, String endDate, String token) {
-            mVehicleNo = "868325025608599";
-            mStartDate = "2017-09-30";
-            mEndDate = "2017-10-16";
+            mVehicleNo = vehicleNo;
+            mStartDate = startDate + "T18:30:00Z";
+            mEndDate = endDate + "T18:30:00Z";
             mToken = token;
         }
 
@@ -289,29 +344,48 @@ public class ReportsFragment extends Fragment
             try {
                 String response = "";
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("deviceId", mVehicleNo);
-                jsonObject.put("fromDate", mStartDate);
-                jsonObject.put("toDate", mEndDate);
-                URL url = new URL("http://eyedentifyapps.com:8080/api/report/");
+                JSONObject jo = new JSONObject();
+                JSONObject jo2 = new JSONObject();
+                jo.put("$gt", mStartDate);
+                jo.put("$lt", mEndDate);
+                jo2.put("$gt", "0.0000");
+                jsonObject.put("DeviceId", mVehicleNo);
+                jsonObject.put("GPSTimestamp", jo);
+                jsonObject.put("Latitude", jo2);
+                Log.d("json",jsonObject.toString());
+                URL url = new URL("http://eyedentifyapps.com:8080/api/native/query/APAC_EYES_GPS?orderBy=GPSTimestamp/");
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
-                conn.setRequestProperty("Accept", "/");
+                conn.setRequestProperty("Accept", "application/json");
                 conn.setRequestProperty("Authorization", "Bearer " + mToken);
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setDoOutput(true);
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
                 wr.write(jsonObject.toString());
                 wr.close();
-                InputStream in = conn.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(in);
-                int inputStreamData = inputStreamReader.read();
-                while (inputStreamData != -1) {
-                    char current = (char) inputStreamData;
-                    inputStreamData = inputStreamReader.read();
-                    response += current;
+                int count=0;
+                BufferedReader ini = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String temp;
+                while((temp=ini.readLine())!=null) {
+                    count+=1;
+                    Log.d("in-while", String.valueOf(count));
+                    response += temp;
                 }
-                Log.d("respveh", response);
-                JSONObject repObj = new JSONObject(response);
+                int counter=0;
+                try{
+                    JSONArray jsonArray = new JSONArray(response);
+                    for(int i=0;i<jsonArray.length();i++)
+                    {
+                        JSONObject ob = jsonArray.getJSONObject(i);
+                        Log.d("test",ob.toString());
+                        counter++;
+                        Log.d("counter", String.valueOf(counter));
+                    }
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -324,54 +398,5 @@ public class ReportsFragment extends Fragment
 
             return true;
         }
-
-//        @Override
-//        protected void onPostExecute(final Boolean success)
-//        {
-//            mAuthTask = null;
-//            showProgress(false);
-//
-//            if (success)
-//            {
-//                if(status.equals("SUCCESS"))
-//                {
-//                    launchDrawer();
-//                    finish();
-//                    //launchMap();
-//                }
-//                else if(status.equals("FAILURE"))
-//                {
-//                    if(errorCode.equals("3116"))
-//                    {
-//                        mEmailView.setError(errorMessage);
-//                        mEmailView.requestFocus();
-//                    }
-//                    else if(errorCode.equals("4103"))
-//                    {
-//                        mPasswordView.setError(errorMessage);
-//                        mPasswordView.requestFocus();
-//                    }
-//                    else if(errorCode.equals("4104"))
-//                    {
-//                        mTenantIdView.setError(errorMessage);
-//                        mTenantIdView.requestFocus();
-//                    }
-//                }
-//
-//                //finish();
-//            }
-//            else
-//            {
-//                mPasswordView.setError(getString(R.string.error_incorrect_password));
-//                mPasswordView.requestFocus();
-//            }
-//        }
-//
-//        @Override
-//        protected void onCancelled()
-//        {
-//            mAuthTask = null;
-//            showProgress(false);
-//        }
     }
 }

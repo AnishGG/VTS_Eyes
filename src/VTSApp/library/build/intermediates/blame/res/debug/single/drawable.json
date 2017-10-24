@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_text_dark.xml",
+        "source": "/home/daksh/.android/build-cache/63d89ee40b266cfb4d72338208e165c2d3b08194/output/res/drawable/common_google_signin_btn_text_dark.xml"
+    },
+    {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_dark.xml",
         "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable/common_google_signin_btn_icon_dark.xml"
     },
@@ -8,11 +12,23 @@
         "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable/common_google_signin_btn_text_dark.xml"
     },
     {
+        "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_light.xml",
+        "source": "/home/daksh/.android/build-cache/63d89ee40b266cfb4d72338208e165c2d3b08194/output/res/drawable/common_google_signin_btn_icon_light.xml"
+    },
+    {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_light.xml",
         "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable/common_google_signin_btn_icon_light.xml"
     },
     {
         "merged": "/home/ravsimar/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_text_light.xml",
         "source": "/home/ravsimar/.android/build-cache/f54e98b225cc2e5c37a65653db3ff3e7a2833e6a/output/res/drawable/common_google_signin_btn_text_light.xml"
+    },
+    {
+        "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_dark.xml",
+        "source": "/home/daksh/.android/build-cache/63d89ee40b266cfb4d72338208e165c2d3b08194/output/res/drawable/common_google_signin_btn_icon_dark.xml"
+    },
+    {
+        "merged": "/home/daksh/StudioProjects/ssad10/ssad10/src/VTSApp/library/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_text_light.xml",
+        "source": "/home/daksh/.android/build-cache/63d89ee40b266cfb4d72338208e165c2d3b08194/output/res/drawable/common_google_signin_btn_text_light.xml"
     }
 ]
