@@ -8,7 +8,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +22,10 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.google.gson.JsonIOException;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -97,6 +96,33 @@ public class ReportsFragment extends Fragment
         token = getArguments().getString("token");
         userData = new UserData(getActivity().getApplicationContext());
         Log.d("tokeni", token);
+        TabLayout tabLayout=(TabLayout)view.findViewById(R.id.tabl);
+        tabLayout.addTab(tabLayout.newTab().setText("Trip report"));
+        tabLayout.addTab(tabLayout.newTab().setText("Idle report"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getActivity().getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         cont = getActivity();
         mFetchTask = new FetchDevNo(token);
         mFetchTask.execute((Void) null);

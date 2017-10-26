@@ -1,0 +1,44 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <HorizontalScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1">
+            <TableRow>
+                <TextView
+                    android:text="#"
+                    android:padding="3dip" android:textStyle="bold"/>
+                <TextView
+                    android:text="Vehicle"
+                    android:padding="3dip" android:textStyle="bold"/>
+
+                <TextView
+                    android:text="Start time"
+                    android:padding="3dip" android:textStyle="bold"/>
+                <TextView
+                    android:text="End time"
+                    android:padding="3dip" android:textStyle="bold"/>
+                <TextView
+                    android:text="location"
+                    android:padding="3dip" android:textStyle="bold"/>
+
+                <TextView
+                    android:text="Duration(hours)"
+                    android:padding="3dip" android:textStyle="bold"/>
+
+            </TableRow>
+            <ListView
+                android:id="@+id/idlereport"></ListView>
+
+        </TableLayout>
+
+
+
+    </HorizontalScrollView>
+
+</ScrollView>
