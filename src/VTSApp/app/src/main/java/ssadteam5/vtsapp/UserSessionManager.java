@@ -42,6 +42,7 @@ class UserSessionManager
         this._context = context;
         pref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = pref.edit();
+        editor.commit();
     }
 
     //Create login session

@@ -5,8 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    sothree:umanoPanelHeight="48dp"
-    sothree:umanoShadowHeight="4dp">
+    sothree:umanoPanelHeight="42dp"
+    sothree:umanoShadowHeight="4dp"
+    sothree:umanoFadeColor="@android:color/transparent"
+    sothree:umanoParallaxOffset="100dp">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
@@ -21,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="left|top"
-        android:layout_weight="0.6">
+        android:layout_weight="0.45">
 
     </TableLayout>
 

@@ -32,7 +32,7 @@ class UserData
         pref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = pref.edit();
 //        editor.putBoolean(DATA_FETCHED, false);
-//        editor.commit();
+        editor.commit();
     }
 
     public void fetchData(){

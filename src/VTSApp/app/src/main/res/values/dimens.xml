@@ -6,4 +6,7 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="card_margin">5dp</dimen>
+    <!-- For setting text size in track vehicle activity -->
+    <dimen name="trackvehicle">10sp</dimen>
+    <dimen name="trackvehicle1">8sp</dimen>
 </resources>

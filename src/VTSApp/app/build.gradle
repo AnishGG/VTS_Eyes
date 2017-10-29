@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 // Starting from version 26 of support libraries make sure that the repositories section includes a maven section with the "https://maven.google.com" endpoint.
 allprojects {

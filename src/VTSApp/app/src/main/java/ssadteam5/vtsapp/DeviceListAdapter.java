@@ -15,8 +15,8 @@ import java.util.List;
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.MyViewHolder>
 {
-    private Context mContext;
-    private List<VehicleCard> vehicleCards;
+    private final Context mContext;
+    private final List<VehicleCard> vehicleCards;
 
     public DeviceListAdapter(Context mContext, List<VehicleCard> vehicleCards)
     {
@@ -26,11 +26,11 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder
     {
-        public ImageView thumbnail;
-        public TextView name;
-        public TextView account;
-        public TextView description;
-        public RelativeLayout relativeLayout;
+        public final ImageView thumbnail;
+        public final TextView name;
+        public final TextView account;
+        public final TextView description;
+        public final RelativeLayout relativeLayout;
         public MyViewHolder(View view)
         {
             super(view);

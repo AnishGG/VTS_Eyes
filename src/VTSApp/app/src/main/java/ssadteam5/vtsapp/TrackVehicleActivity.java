@@ -54,7 +54,8 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     private Marker marker = null;
     private Float courseOverGround = null;
     private String organisationId;
-    private int flag;
+    private Double Lat;
+    private Double Lon;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -70,9 +71,26 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         String token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
         deviceName = getIntent().getExtras().getString("deviceName");
         getSupportActionBar().setTitle(deviceName);
-        // Setting sliding panel text
-        setPanelText();
+        setPanelText();     // For setting slidding panel text
+        mLayout.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
 
+        mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                Log.i("TAG", "onPanelSlide, offset " + slideOffset);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                Log.i("TAG", "onPanelStateChanged " + newState);
+            }
+
+        });
 
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");
@@ -82,22 +100,19 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         mStompClient.connect();
         mStompClient.topic("/device/message" + organisationId).subscribe(topicMessage -> {
             JSONObject payload = new JSONObject(topicMessage.getPayload());
-            try
-            {
+            try {
                 final String deviceId = payload.get("DeviceId").toString();
-                Double lat = Double.parseDouble(payload.get("Latitude").toString());
-                final Double lon = Double.parseDouble(payload.get("Longitude").toString());
+                Lat = Double.parseDouble(payload.get("Latitude").toString());
+                Lon = Double.parseDouble(payload.get("Longitude").toString());
                 final String speed = payload.get("Speed").toString();
                 final String FuelLevel = payload.get("FuelLevel").toString();
                 final String GSMStrength = payload.get("GSMStrength").toString();
                 final String InternalBatteryVoltage = payload.get("InternalBatteryVoltage").toString();
                 final String EngineStatus = payload.get("EngineStatus").toString();
-                flag = 0;
                 try {
                     courseOverGround = Float.parseFloat(payload.get("CourseOverGround").toString());
                 }
                 catch (Exception e){
-                    flag = 1;
                     e.printStackTrace();
                 }
                 Handler handler = new Handler(Looper.getMainLooper());
@@ -117,9 +132,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                                     oldpos.showInfoWindow();
                                 }
                                 /**/
-                                if(flag == 1)
-                                    courseOverGround = getAngle(oldpos.getPosition(), new LatLng(lat, lon));
-                                rotateMarker(marker, new LatLng(lat, lon), courseOverGround);
+                                rotateMarker(marker, new LatLng(Lat, Lon), courseOverGround);
                                 mGoogleMap.addCircle(new CircleOptions()
                                         .center(oldpos.getPosition())
                                         .radius(2)
@@ -130,11 +143,9 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                         }
                         if (New)
                         {
-                            if(flag == 1)
-                                courseOverGround = 0f;
                             if(deviceName.equals(deviceId)) {
                                 marker = mGoogleMap.addMarker(new MarkerOptions()
-                                        .position(new LatLng(lat, lon))
+                                        .position(new LatLng(Lat, Lon))
                                         .title(deviceId));
                                 int height = 140;
                                 int width = 70;
@@ -154,16 +165,14 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                     }
                 });
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 e.printStackTrace();
             }
         });
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap)
-    {
+    public void onMapReady(GoogleMap googleMap) {
         mGoogleMap=googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -218,8 +227,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         if (mLayout != null && (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         }
@@ -229,16 +237,13 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         }
     }
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         super.onDestroy();
         mStompClient.disconnect();
-        Log.d("stompinfo", mStompClient.isConnected()+"");
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
@@ -254,10 +259,8 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     private void rotateMarker(final Marker marker, final LatLng destination, final float rotation) {
 
         if (marker != null) {
-
             final LatLng startPosition = marker.getPosition();
             final float startRotation = marker.getRotation();
-
             final long start = SystemClock.uptimeMillis();
 
             final LatLngInterpolator latLngInterpolator = new LatLngInterpolator.Spherical();
@@ -292,7 +295,6 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     private static float computeRotation(float fraction, float start, float end) {
         float normalizeEnd = end - start; // rotate start to 0
         float normalizedEndAbs = (normalizeEnd + 360) % 360;
-
         float direction = (normalizedEndAbs > 180) ? -1 : 1; // -1 = anticlockwise, 1 = clockwise
         float rotation;
         if (direction > 0) {
@@ -304,6 +306,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         float result = fraction * rotation + start;
         return (result + 360) % 360;
     }
+
 
     private void setPanelText(){
         String response = userData.getResponse().get(UserData.KEY_RESPONSE);
@@ -324,9 +327,11 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
             TableLayout t = findViewById(R.id.vehicleInformationPanel);
             TableRow row = new TableRow(this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+//            lp.weight = 2f;
             row.setLayoutParams(lp);
             TextView qty = new TextView(this);
             qty.setText("Device: " + deviceName);
+            qty.setTextSize(getResources().getDimension(R.dimen.trackvehicle));
             row.addView(qty);
             t.addView(row);
 
@@ -343,36 +348,42 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                 row1.setLayoutParams(lp);
                 TextView qty1 = new TextView(this);
                 qty1.setText("Vehicle Name: " + vehicleName);
+                qty1.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
                 row1.addView(qty1);
 
                 TableRow row2 = new TableRow(this);
                 row2.setLayoutParams(lp);
                 TextView qty2 = new TextView(this);
                 qty2.setText("Vehicle Number: " + vehicleNumber);
+                qty2.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
                 row2.addView(qty2);
 
                 TableRow row3 = new TableRow(this);
                 row3.setLayoutParams(lp);
                 TextView qty3 = new TextView(this);
                 qty3.setText("Vehicle Type: " + vehicleType);
+                qty3.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
                 row3.addView(qty3);
 
                 TableRow row4 = new TableRow(this);
                 row4.setLayoutParams(lp);
                 TextView qty4 = new TextView(this);
                 qty4.setText("Make: " + make);
+                qty4.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
                 row4.addView(qty4);
 
                 TableRow row5 = new TableRow(this);
                 row5.setLayoutParams(lp);
                 TextView qty5 = new TextView(this);
                 qty5.setText("Next Service: " + nextService);
+                qty5.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
                 row5.addView(qty5);
 
                 TableRow row6 = new TableRow(this);
                 row6.setLayoutParams(lp);
                 TextView qty6 = new TextView(this);
                 qty6.setText("Notes: " + notes);
+                qty6.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
                 row6.addView(qty6);
 
                 t.addView(row1);
@@ -387,36 +398,5 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
             e.printStackTrace();
         }
 
-    }
-
-    private static float getAngle(LatLng source, LatLng destination) {
-
-        // calculate the angle theta from the deltaY and deltaX values
-        // (atan2 returns radians values from [-PI,PI])
-        // 0 currently points EAST.
-        // NOTE: By preserving Y and X param order to atan2,  we are expecting
-        // a CLOCKWISE angle direction.
-        double theta = Math.atan2(
-                destination.longitude - source.longitude, destination.latitude - source.latitude);
-
-        // rotate the theta angle clockwise by 90 degrees
-        // (this makes 0 point NORTH)
-        // NOTE: adding to an angle rotates it clockwise.
-        // subtracting would rotate it counter-clockwise
-        theta -= Math.PI / 2.0;
-
-        // convert from radians to degrees
-        // this will give you an angle from [0->270],[-180,0]
-        double angle = Math.toDegrees(theta);
-
-        // convert to positive range [0-360)
-        // since we want to prevent negative angles, adjust them now.
-        // we can assume that atan2 will not return a negative value
-        // greater than one partial rotation
-        if (angle < 0) {
-            angle += 360;
-        }
-
-        return (float) angle + 90;
     }
 }

@@ -26,7 +26,7 @@ public class DashboardFragment extends Fragment
 {
     private View view;
     private SwipeRefreshLayout swipeLayout;
-    private RecyclerView recyclerView;
+//    private RecyclerView recyclerView;
     private VehicleCardAdapter vehicleCardAdapter;
     private List<VehicleCard> vehicleCardList;
     private DeviceFetchTask mFetchTask;
@@ -39,7 +39,7 @@ public class DashboardFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        recyclerView = view.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         vehicleCardList = new ArrayList<>();
         vehicleCardAdapter = new VehicleCardAdapter(getContext(),vehicleCardList);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
