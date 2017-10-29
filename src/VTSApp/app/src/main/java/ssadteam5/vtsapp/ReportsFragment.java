@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -37,6 +38,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class ReportsFragment extends Fragment
@@ -73,10 +75,10 @@ public class ReportsFragment extends Fragment
     private String spres = "";
     static final int DATE_DIALOG_ID = 999;
     UserData userData;
-    private StringBuilder sdate;
+    private StringBuilder sdate;Bundle bund;
+    ViewPager viewPager;PagerAdapter adapter;TabLayout tabLayout;
     //    StringBuffer sb = new StringBuffer();
     String sb = "";
-
 
 //    private OnFragmentInteractionListener mListener;
 
@@ -96,14 +98,16 @@ public class ReportsFragment extends Fragment
         token = getArguments().getString("token");
         userData = new UserData(getActivity().getApplicationContext());
         Log.d("tokeni", token);
-        TabLayout tabLayout=(TabLayout)view.findViewById(R.id.tabl);
+        tabLayout=(TabLayout)view.findViewById(R.id.tabl);
         tabLayout.addTab(tabLayout.newTab().setText("Trip report"));
         tabLayout.addTab(tabLayout.newTab().setText("Idle report"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        //bund =new Bundle();
+        //bund.putString("kes","keshav");
 
-        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter
-                (getActivity().getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        adapter = new PagerAdapter
+                (getActivity().getSupportFragmentManager(), tabLayout.getTabCount(),bund);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -143,7 +147,10 @@ public class ReportsFragment extends Fragment
     private void showTables(){
         vehicle = spinner.getSelectedItem().toString();
         ReportsInfo mRepTask = new ReportsInfo(vehicle, startdate, enddate, token);
-        mRepTask.execute((Void) null);
+
+            mRepTask.execute((Void) null);
+
+
         Log.d("ok", "ready");
     }
 
@@ -191,6 +198,7 @@ public class ReportsFragment extends Fragment
 
         btnChangeDate1 = (Button) view.findViewById(R.id.btnChangeDate1);
         btnChangeDate2 = (Button) view.findViewById(R.id.btnChangeDate2);
+
 
         btnChangeDate1.setOnClickListener(new View.OnClickListener() {
 
@@ -314,7 +322,7 @@ public class ReportsFragment extends Fragment
                 if(!userData.isDataFetched())
                 {
                     userData.fetchData();
-                    Log.d("MyNameisVTS", "isthatso");
+
                 }
                 String response = userData.getResponse().get(UserData.KEY_RESPONSE);
                 JSONObject obj = new JSONObject(response);
@@ -349,7 +357,7 @@ public class ReportsFragment extends Fragment
         }
     }
 
-    public class ReportsInfo extends AsyncTask<Void, Void, Boolean> {
+    public class ReportsInfo extends AsyncTask<Void, Void, String> {
 
         private final String mVehicleNo;
         private final String mStartDate;
@@ -364,11 +372,11 @@ public class ReportsFragment extends Fragment
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
 
             HttpURLConnection conn;
             try {
-                String response = "";
+                response = "";
                 JSONObject jsonObject = new JSONObject();
                 JSONObject jo = new JSONObject();
                 JSONObject jo2 = new JSONObject();
@@ -398,20 +406,22 @@ public class ReportsFragment extends Fragment
                     response += temp;
                 }
                 int counter=0;
-                try{
-                    JSONArray jsonArray = new JSONArray(response);
-                    for(int i=0;i<jsonArray.length();i++)
-                    {
-                        JSONObject ob = jsonArray.getJSONObject(i);
-                        Log.d("test",ob.toString());
-                        counter++;
-                        Log.d("counter", String.valueOf(counter));
-                    }
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
+                Log.d("response",response);
+
+
+//                    JSONArray jsonArray = new JSONArray(response);
+////                    for(int i=0;i<jsonArray.length();i++)
+////                    {
+////                        JSONObject ob = jsonArray.getJSONObject(i);
+////                        Log.d("test",ob.toString());
+////                        counter++;
+////                        Log.d("counter", String.valueOf(counter));
+////                    }
+//                }
+//                catch (JSONException e)
+//                {
+//                    e.printStackTrace();
+//                }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -421,8 +431,40 @@ public class ReportsFragment extends Fragment
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            return response;
 
-            return true;
         }
+
+        @Override
+        protected void onPostExecute(String response){
+
+            bund=new Bundle();
+            bund.putString("resp",response);
+            Log.d("resp",response);
+            //viewPager.getAdapter().notifyDataSetChanged();
+            adapter = new PagerAdapter
+                    (getActivity().getSupportFragmentManager(), tabLayout.getTabCount(),bund);
+            viewPager.setAdapter(adapter);
+            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+            tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            });
+
+        }
+
+
     }
 }

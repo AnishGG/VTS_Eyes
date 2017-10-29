@@ -8,7 +8,8 @@
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:stretchColumns="1">
+            android:stretchColumns="1"
+            android:id="@+id/idlereport">
             <TableRow>
                 <TextView
                     android:text="#"
@@ -33,7 +34,7 @@
 
             </TableRow>
             <ListView
-                android:id="@+id/idlereport"></ListView>
+                ></ListView>
 
         </TableLayout>
 
