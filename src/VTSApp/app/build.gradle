@@ -18,8 +18,8 @@ android {
         }
     }
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
 }
 // Starting from version 26 of support libraries make sure that the repositories section includes a maven section with the "https://maven.google.com" endpoint.

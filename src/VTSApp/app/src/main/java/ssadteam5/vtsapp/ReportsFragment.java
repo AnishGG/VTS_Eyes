@@ -41,10 +41,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
-public class ReportsFragment extends Fragment
-{
-    public static ReportsFragment newInstance()
-    {
+public class ReportsFragment extends Fragment {
+    public static ReportsFragment newInstance() {
         ReportsFragment r = new ReportsFragment();
         return r;
     }
@@ -75,8 +73,11 @@ public class ReportsFragment extends Fragment
     private String spres = "";
     static final int DATE_DIALOG_ID = 999;
     UserData userData;
-    private StringBuilder sdate;Bundle bund;
-    ViewPager viewPager;PagerAdapter adapter;TabLayout tabLayout;
+    private StringBuilder sdate;
+    Bundle bund;
+    ViewPager viewPager;
+    PagerAdapter adapter;
+    TabLayout tabLayout;
     //    StringBuffer sb = new StringBuffer();
     String sb = "";
 
@@ -84,30 +85,26 @@ public class ReportsFragment extends Fragment
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         Log.d("started", "reportfrag");
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState)
-    {
+                             @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_reports, container, false);
         token = getArguments().getString("token");
         userData = new UserData(getActivity().getApplicationContext());
         Log.d("tokeni", token);
-        tabLayout=(TabLayout)view.findViewById(R.id.tabl);
+        tabLayout = (TabLayout) view.findViewById(R.id.tabl);
         tabLayout.addTab(tabLayout.newTab().setText("Trip report"));
         tabLayout.addTab(tabLayout.newTab().setText("Idle report"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        //bund =new Bundle();
-        //bund.putString("kes","keshav");
 
         viewPager = (ViewPager) view.findViewById(R.id.pager);
         adapter = new PagerAdapter
-                (getActivity().getSupportFragmentManager(), tabLayout.getTabCount(),bund);
+                (getActivity().getSupportFragmentManager(), tabLayout.getTabCount(), bund);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -133,22 +130,20 @@ public class ReportsFragment extends Fragment
         setCurrentDateOnView();
         addListenerOnButton();
         btnsub = (Button) view.findViewById(R.id.btnsub);
-        btnsub.setOnClickListener(new View.OnClickListener()
-        {
+        btnsub.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 showTables();
             }
         });
         return view;
     }
 
-    private void showTables(){
+    private void showTables() {
         vehicle = spinner.getSelectedItem().toString();
         ReportsInfo mRepTask = new ReportsInfo(vehicle, startdate, enddate, token);
 
-            mRepTask.execute((Void) null);
+        mRepTask.execute((Void) null);
 
 
         Log.d("ok", "ready");
@@ -162,20 +157,17 @@ public class ReportsFragment extends Fragment
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
-        if((month + 1)/10 == 0){
-            if(day/10 == 0){
-                sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append("0").append(day);
+        if ((month + 1) / 10 == 0) {
+            if (day / 10 == 0) {
+                sdate = new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append("0").append(day);
+            } else {
+                sdate = new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append(day);
             }
-            else{
-                sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append(day);
-            }
-        }
-        else{
-            if(day/10 == 0){
-                sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append("0").append(day);
-            }
-            else{
-                sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append(day);
+        } else {
+            if (day / 10 == 0) {
+                sdate = new StringBuilder().append(year).append("-").append(month + 1).append("-").append("0").append(day);
+            } else {
+                sdate = new StringBuilder().append(year).append("-").append(month + 1).append("-").append(day);
             }
         }
 
@@ -248,39 +240,33 @@ public class ReportsFragment extends Fragment
 
             // set selected date into textview
             if (flag1) {
-                if((month + 1)/10 == 0){
-                    if(day/10 == 0){
-                        sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append("0").append(day);
+                if ((month + 1) / 10 == 0) {
+                    if (day / 10 == 0) {
+                        sdate = new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append("0").append(day);
+                    } else {
+                        sdate = new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append(day);
                     }
-                    else{
-                        sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append(day);
-                    }
-                }
-                else{
-                    if(day/10 == 0){
-                        sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append("0").append(day);
-                    }
-                    else{
-                        sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append(day);
+                } else {
+                    if (day / 10 == 0) {
+                        sdate = new StringBuilder().append(year).append("-").append(month + 1).append("-").append("0").append(day);
+                    } else {
+                        sdate = new StringBuilder().append(year).append("-").append(month + 1).append("-").append(day);
                     }
                 }
                 tvDisplayDate1.setText(sdate);
             }
             if (flag2) {
-                if((month + 1)/10 == 0){
-                    if(day/10 == 0){
-                        sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append("0").append(day);
+                if ((month + 1) / 10 == 0) {
+                    if (day / 10 == 0) {
+                        sdate = new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append("0").append(day);
+                    } else {
+                        sdate = new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append(day);
                     }
-                    else{
-                        sdate=new StringBuilder().append(year).append("-").append("0").append(month + 1).append("-").append(day);
-                    }
-                }
-                else{
-                    if(day/10 == 0){
-                        sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append("0").append(day);
-                    }
-                    else{
-                        sdate=new StringBuilder().append(year).append("-").append(month + 1).append("-").append(day);
+                } else {
+                    if (day / 10 == 0) {
+                        sdate = new StringBuilder().append(year).append("-").append(month + 1).append("-").append("0").append(day);
+                    } else {
+                        sdate = new StringBuilder().append(year).append("-").append(month + 1).append("-").append(day);
                     }
                 }
                 tvDisplayDate2.setText(sdate);
@@ -319,8 +305,7 @@ public class ReportsFragment extends Fragment
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                if(!userData.isDataFetched())
-                {
+                if (!userData.isDataFetched()) {
                     userData.fetchData();
 
                 }
@@ -353,7 +338,6 @@ public class ReportsFragment extends Fragment
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
             spinner.setAdapter(dataAdapter);
-//            spres = (String) spinner.getItemAtPosition(0);
         }
     }
 
@@ -386,7 +370,7 @@ public class ReportsFragment extends Fragment
                 jsonObject.put("DeviceId", mVehicleNo);
                 jsonObject.put("GPSTimestamp", jo);
                 jsonObject.put("Latitude", jo2);
-                Log.d("json",jsonObject.toString());
+                Log.d("json", jsonObject.toString());
                 URL url = new URL("http://eyedentifyapps.com:8080/api/native/query/APAC_EYES_GPS?orderBy=GPSTimestamp/");
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -397,31 +381,16 @@ public class ReportsFragment extends Fragment
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
                 wr.write(jsonObject.toString());
                 wr.close();
-                int count=0;
+                int count = 0;
                 BufferedReader ini = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String temp;
-                while((temp=ini.readLine())!=null) {
-                    count+=1;
+                while ((temp = ini.readLine()) != null) {
+                    count += 1;
                     Log.d("in-while", String.valueOf(count));
                     response += temp;
                 }
-                int counter=0;
-                Log.d("response",response);
-
-
-//                    JSONArray jsonArray = new JSONArray(response);
-////                    for(int i=0;i<jsonArray.length();i++)
-////                    {
-////                        JSONObject ob = jsonArray.getJSONObject(i);
-////                        Log.d("test",ob.toString());
-////                        counter++;
-////                        Log.d("counter", String.valueOf(counter));
-////                    }
-//                }
-//                catch (JSONException e)
-//                {
-//                    e.printStackTrace();
-//                }
+                int counter = 0;
+                Log.d("response", response);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -436,14 +405,14 @@ public class ReportsFragment extends Fragment
         }
 
         @Override
-        protected void onPostExecute(String response){
+        protected void onPostExecute(String response) {
 
-            bund=new Bundle();
-            bund.putString("resp",response);
-            Log.d("resp",response);
+            bund = new Bundle();
+            bund.putString("resp", response);
+            Log.d("resp", response);
             //viewPager.getAdapter().notifyDataSetChanged();
             adapter = new PagerAdapter
-                    (getActivity().getSupportFragmentManager(), tabLayout.getTabCount(),bund);
+                    (getActivity().getSupportFragmentManager(), tabLayout.getTabCount(), bund);
             viewPager.setAdapter(adapter);
             viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
