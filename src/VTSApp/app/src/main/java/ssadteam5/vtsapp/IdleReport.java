@@ -38,7 +38,7 @@ public class IdleReport extends Fragment {
                 long millis, second, minute, hour;
                 String engst, Starttime = "", Endtime = "", locstart = "0.000000" + "," + "0.000000", locend = "0.000000" + "," + "0.000000", time1, time2, timedur;
                 for (i = 0; i < jsonArray.length(); i++) {
-                    TableRow tr1 = new TableRow(getActivity());
+                    TableRow tr1 = new TableRow(getActivity());tr1.setPadding(0,3,0,0);
                     TextView tv1 = new TextView(getActivity());
                     TextView tv2 = new TextView(getActivity());
                     TextView tv3 = new TextView(getActivity());

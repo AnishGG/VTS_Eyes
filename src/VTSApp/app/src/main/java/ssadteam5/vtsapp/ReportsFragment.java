@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,32 +98,32 @@ public class    ReportsFragment extends Fragment {
         token = getArguments().getString("token");
         userData = new UserData(getActivity().getApplicationContext());
         Log.d("tokeni", token);
-        tabLayout = (TabLayout) view.findViewById(R.id.tabl);
-        tabLayout.addTab(tabLayout.newTab().setText("Trip report"));
-        tabLayout.addTab(tabLayout.newTab().setText("Idle report"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
-        adapter = new PagerAdapter
-                (getActivity().getSupportFragmentManager(), tabLayout.getTabCount(), bund);
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+//        tabLayout = (TabLayout) view.findViewById(R.id.tabl);
+//        tabLayout.addTab(tabLayout.newTab().setText("Trip report"));
+//        tabLayout.addTab(tabLayout.newTab().setText("Idle report"));
+//        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+//
+//        viewPager = (ViewPager) view.findViewById(R.id.pager);
+//        adapter = new PagerAdapter
+//                (getActivity().getSupportFragmentManager(), tabLayout.getTabCount(), bund);
+//        viewPager.setAdapter(adapter);
+//        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+//            @Override
+//            public void onTabSelected(TabLayout.Tab tab) {
+//                viewPager.setCurrentItem(tab.getPosition());
+//            }
+//
+//            @Override
+//            public void onTabUnselected(TabLayout.Tab tab) {
+//
+//            }
+//
+//            @Override
+//            public void onTabReselected(TabLayout.Tab tab) {
+//
+//            }
+//        });
 
         cont = getActivity();
         mFetchTask = new FetchDevNo(token);
@@ -133,21 +134,30 @@ public class    ReportsFragment extends Fragment {
         btnsub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showTables();
+                vehicle = spinner.getSelectedItem().toString();
+                Fragment fragment;
+                Bundle bundle = new Bundle();
+                bundle.putString("token",token);
+                bundle.putString("vehicle",vehicle);
+                bundle.putString("startdate",startdate);
+                bundle.putString("enddate",enddate);
+                fragment = new Reports();
+                fragment.setArguments(bundle);
+                FragmentTransaction tx = getActivity().getSupportFragmentManager().beginTransaction();
+                tx.replace(R.id.content_frame, fragment);
+                tx.addToBackStack(null);
+
+                tx.commit();
+
+
+
+                //showTables();
             }
         });
         return view;
     }
 
-    private void showTables() {
-        vehicle = spinner.getSelectedItem().toString();
-        ReportsInfo mRepTask = new ReportsInfo(vehicle, startdate, enddate, token);
 
-        mRepTask.execute((Void) null);
-
-
-        Log.d("ok", "ready");
-    }
 
     public void setCurrentDateOnView() {
 
@@ -341,99 +351,5 @@ public class    ReportsFragment extends Fragment {
         }
     }
 
-    public class ReportsInfo extends AsyncTask<Void, Void, String> {
 
-        private final String mVehicleNo;
-        private final String mStartDate;
-        private final String mEndDate;
-        private final String mToken;
-
-        ReportsInfo(String vehicleNo, String startDate, String endDate, String token) {
-            mVehicleNo = vehicleNo;
-            mStartDate = startDate + "T18:30:00Z";
-            mEndDate = endDate + "T18:30:00Z";
-            mToken = token;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            HttpURLConnection conn;
-            try {
-                response = "";
-                JSONObject jsonObject = new JSONObject();
-                JSONObject jo = new JSONObject();
-                JSONObject jo2 = new JSONObject();
-                jo.put("$gt", mStartDate);
-                jo.put("$lt", mEndDate);
-                jo2.put("$gt", "0.0000");
-                jsonObject.put("DeviceId", mVehicleNo);
-                jsonObject.put("GPSTimestamp", jo);
-                jsonObject.put("Latitude", jo2);
-                Log.d("json", jsonObject.toString());
-                URL url = new URL("http://eyedentifyapps.com:8080/api/native/query/APAC_EYES_GPS?orderBy=GPSTimestamp/");
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Accept", "application/json");
-                conn.setRequestProperty("Authorization", "Bearer " + mToken);
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setDoOutput(true);
-                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                wr.write(jsonObject.toString());
-                wr.close();
-                int count = 0;
-                BufferedReader ini = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String temp;
-                while ((temp = ini.readLine()) != null) {
-                    count += 1;
-                    Log.d("in-while", String.valueOf(count));
-                    response += temp;
-                }
-                int counter = 0;
-                Log.d("response", response);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return response;
-
-        }
-
-        @Override
-        protected void onPostExecute(String response) {
-
-            bund = new Bundle();
-            bund.putString("resp", response);
-            Log.d("resp", response);
-            //viewPager.getAdapter().notifyDataSetChanged();
-            adapter = new PagerAdapter
-                    (getActivity().getSupportFragmentManager(), tabLayout.getTabCount(), bund);
-            viewPager.setAdapter(adapter);
-            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-            tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    viewPager.setCurrentItem(tab.getPosition());
-                }
-
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-
-                }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-
-                }
-            });
-
-        }
-
-
-    }
 }

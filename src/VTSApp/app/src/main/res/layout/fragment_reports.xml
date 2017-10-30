@@ -1,6 +1,4 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+
 
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -146,16 +144,6 @@
 
 
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabl"
-        android:layout_below="@+id/btnsub"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_below="@+id/tabl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+
     </RelativeLayout>
 
-</ScrollView>
