@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -42,7 +43,7 @@ import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-public class TrackVehicleActivity extends AppCompatActivity implements OnMapReadyCallback
+public class TrackVehicleActivity extends AppCompatActivity implements GoogleMap.OnMapClickListener, OnMapReadyCallback
 {
     private SlidingUpPanelLayout mLayout;
     private UserSessionManager session;
@@ -56,18 +57,22 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     private String organisationId;
     private Double Lat;
     private Double Lon;
+    private int mapArea = 0;
+    private int panelHeight;
+    private android.support.v7.app.ActionBar actionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_vehicle);
         init();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
         session = new UserSessionManager(getApplicationContext());
         userData = new UserData(getApplicationContext());
         mapFrag.getMapAsync(this);
-
+        actionBar = getSupportActionBar();
         String token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
         deviceName = getIntent().getExtras().getString("deviceName");
         getSupportActionBar().setTitle(deviceName);
@@ -75,6 +80,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         mLayout.setFadeOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("baby", "I am clicked");
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
@@ -91,6 +97,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
             }
 
         });
+        panelHeight = mLayout.getPanelHeight();
 
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");
@@ -172,7 +179,25 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     }
 
     @Override
+    public void onMapClick(LatLng point){
+        if(mapArea == 0){
+            actionBar.hide();
+            mapArea = 1;
+            /*** Can not implement this due to buggy google map view ***/
+//            mLayout.setPanelHeight(0);
+        }
+        else{
+            actionBar.show();
+//            mLayout.setPanelHeight(panelHeight);
+            Log.d("ThisIsTheHeight", panelHeight+"");
+            mapArea = 0;
+        }
+        Log.d("ThePointIs", point.toString());
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mGoogleMap=googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -220,6 +245,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                 return info;
             }
         });
+        mGoogleMap.setOnMapClickListener(this);
     }
 
     private void init(){
@@ -331,7 +357,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
             row.setLayoutParams(lp);
             TextView qty = new TextView(this);
             qty.setText("Device: " + deviceName);
-            qty.setTextSize(getResources().getDimension(R.dimen.trackvehicle));
+            qty.setTextAppearance(R.style.TextAppearance_AppCompat_Large);
             row.addView(qty);
             t.addView(row);
 
@@ -348,42 +374,41 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                 row1.setLayoutParams(lp);
                 TextView qty1 = new TextView(this);
                 qty1.setText("Vehicle Name: " + vehicleName);
-                qty1.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
+                qty1.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
                 row1.addView(qty1);
 
                 TableRow row2 = new TableRow(this);
                 row2.setLayoutParams(lp);
                 TextView qty2 = new TextView(this);
-                qty2.setText("Vehicle Number: " + vehicleNumber);
-                qty2.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
+                qty2.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
                 row2.addView(qty2);
 
                 TableRow row3 = new TableRow(this);
                 row3.setLayoutParams(lp);
                 TextView qty3 = new TextView(this);
                 qty3.setText("Vehicle Type: " + vehicleType);
-                qty3.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
+                qty3.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
                 row3.addView(qty3);
 
                 TableRow row4 = new TableRow(this);
                 row4.setLayoutParams(lp);
                 TextView qty4 = new TextView(this);
                 qty4.setText("Make: " + make);
-                qty4.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
+                qty4.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
                 row4.addView(qty4);
 
                 TableRow row5 = new TableRow(this);
                 row5.setLayoutParams(lp);
                 TextView qty5 = new TextView(this);
                 qty5.setText("Next Service: " + nextService);
-                qty5.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
+                qty5.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
                 row5.addView(qty5);
 
                 TableRow row6 = new TableRow(this);
                 row6.setLayoutParams(lp);
                 TextView qty6 = new TextView(this);
                 qty6.setText("Notes: " + notes);
-                qty6.setTextSize(getResources().getDimension(R.dimen.trackvehicle1));
+                qty6.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
                 row6.addView(qty6);
 
                 t.addView(row1);
