@@ -10,43 +10,62 @@
             android:id="@+id/idlereport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#fafafa"
             android:stretchColumns="*">
 
-            <TableRow>
+            <TableRow
+                android:layout_margin="2dip"
+                android:background="#011201">
 
                 <TextView
-                    android:padding="3dip"
-                    android:text="#"
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="  #   "
                     android:textStyle="bold" />
 
                 <TextView
-                    android:padding="3dip"
-                    android:text="Vehicle"
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="            Vehicle             "
                     android:textStyle="bold" />
 
                 <TextView
-                    android:padding="3dip"
-                    android:text="Start time"
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="               Start time                "
                     android:textStyle="bold" />
 
                 <TextView
-                    android:padding="3dip"
-                    android:text="End time"
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="                End time                "
                     android:textStyle="bold" />
 
                 <TextView
-                    android:padding="3dip"
-                    android:text="location"
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="               Location                "
                     android:textStyle="bold" />
 
                 <TextView
-                    android:padding="3dip"
-                    android:text="Duration(hours)"
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="  Duration(hours)  "
                     android:textStyle="bold" />
 
             </TableRow>
-
-            <ListView></ListView>
 
         </TableLayout>
 

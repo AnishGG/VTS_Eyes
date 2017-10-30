@@ -1,6 +1,8 @@
 package ssadteam5.vtsapp;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +28,7 @@ import java.util.Objects;
 public class TripReport extends Fragment {
     private View view;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.trip_report, container, false);
@@ -33,10 +37,11 @@ public class TripReport extends Fragment {
         if (bundle != null) {
             try {
                 JSONArray jsonArray = new JSONArray(getArguments().getString("resp"));
-                int counti = 0;
-                int k = 1, l = 0, flagi = 0, i, dist = 0, speed = 0;
-                long millis, second, minute, hour;
-                String engst, Starttime = "", Endtime = "", locstart = "0.000000" + "," + "0.000000", locend = "0.000000" + "," + "0.000000", time1, time2, timedur;
+                int counti = 0, diffdate;
+                int k = 1, l = 0, flagi = 0, i, dist = 0, speed = 0, Radius = 6371, kmInDec = 0, meterInDec = 0;
+                double lat1, lat2, lon1, lon2, dLat, dLon, a, c, valueResult = 0, km, meter, distance = 0;
+                long millis = 0, second, minute, hour = 0, differ;
+                String engst, Starttime = "", Endtime = "", locstart = "0.000000" + "," + "0.000000", locend = "0.000000" + "," + "0.000000", time1, time2, timedur, st = "", et = "", datea, dateb;
                 for (i = 0; i < jsonArray.length(); i++) {
                     TableRow tr1 = new TableRow(getActivity());
                     TextView tv1 = new TextView(getActivity());
@@ -61,7 +66,19 @@ public class TripReport extends Fragment {
                         Log.d("after", "inoutif");
                         if(l > 1) {
                             JSONObject obj2 = jsonArray.getJSONObject(i-1);
-                            dist += (Integer.parseInt(ob.getString("Distance"))-Integer.parseInt(obj2.getString("Distance")));
+                            lat1 = Double.parseDouble(ob.getString("Latitude"));
+                            lat2 = Double.parseDouble(obj2.getString("Latitude"));
+                            lon1 = Double.parseDouble(ob.getString("Longitude"));
+                            lon2 = Double.parseDouble(obj2.getString("Longitude"));
+                            dLat = Math.toRadians(lat2 - lat1);
+                            dLon = Math.toRadians(lon2 - lon1);
+                            a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                                    + Math.cos(Math.toRadians(lat1))
+                                    * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                                    * Math.sin(dLon / 2);
+                            c = 2 * Math.asin(Math.sqrt(a));
+                            valueResult = Radius * c;
+                            distance += valueResult;
                         }
                         speed = java.lang.Math.max(speed, Integer.parseInt(ob.getString("Speed")));
                     } else if (Objects.equals(engst, "OFF") && counti == 1) {
@@ -72,24 +89,60 @@ public class TripReport extends Fragment {
                         Endtime = obj1.getString("GPSTimestamp");
                         time1 = Starttime.substring(Starttime.indexOf("T")+1, Starttime.indexOf("Z"));
                         time2 = Endtime.substring(Endtime.indexOf("T")+1, Endtime.indexOf("Z"));
+                        datea = Starttime.substring(Starttime.indexOf(0)+1, Starttime.indexOf("T"));
+                        dateb = Endtime.substring(Endtime.indexOf(0)+1, Endtime.indexOf("T"));
+                        differ = java.lang.Math.abs((Long.parseLong(dateb.substring(8,10))-Long.parseLong(datea.substring(8,10))));
                         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
                         Date date1 = format.parse(time1);
                         Date date2 = format.parse(time2);
-                        millis = date2.getTime() - date1.getTime();
+                        millis = java.lang.Math.abs(date2.getTime() - date1.getTime());
+                        if(differ>1 && (date2.getTime() - date1.getTime())<0){
+                            differ -= 1;
+                        }
                         second = (millis / 1000) % 60;
                         minute = (millis / (1000 * 60)) % 60;
-                        hour = (millis / (1000 * 60 * 60)) % 24;
+                        hour = (24 * differ + (millis / (1000 * 60 * 60)));
                         timedur = String.format("%02d:%02d:%02d", hour, minute, second);
                         locend = obj1.getString("Latitude") + "," + obj1.getString("Longitude");
+                        distance = Math.round(distance*100D)/100D;
+                        st  = Starttime.substring(Starttime.indexOf(0)+1, Starttime.indexOf("T"))+"   "+Starttime.substring(Starttime.indexOf("T")+1, Starttime.indexOf("Z"));
+                        et  = Endtime.substring(Endtime.indexOf(0)+1, Endtime.indexOf("T"))+"   "+Endtime.substring(Endtime.indexOf("T")+1, Endtime.indexOf("Z"));
                         tv1.setText(String.valueOf(k));
+                        tv1.setBackgroundResource(R.drawable.cellborder);
+                        tv1.setHeight(75);
+                        tv1.setTextAppearance(android.R.style.TextAppearance_Small);
                         tv2.setText(ob.getString("DeviceId"));
-                        tv3.setText(Starttime);
-                        tv4.setText(Endtime);
+                        tv2.setBackgroundResource(R.drawable.cellborder);
+                        tv2.setHeight(75);
+                        tv2.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv3.setText(st);
+                        tv3.setBackgroundResource(R.drawable.cellborder);
+                        tv3.setHeight(75);
+                        tv3.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv4.setText(et);
+                        tv4.setBackgroundResource(R.drawable.cellborder);
+                        tv4.setHeight(75);
+                        tv4.setTextAppearance(android.R.style.TextAppearance_Small);
                         tv5.setText(locstart);
+                        tv5.setBackgroundResource(R.drawable.cellborder);
+                        tv5.setHeight(75);
+                        tv5.setTextAppearance(android.R.style.TextAppearance_Small);
                         tv6.setText(locend);
+                        tv6.setBackgroundResource(R.drawable.cellborder);
+                        tv6.setHeight(75);
+                        tv6.setTextAppearance(android.R.style.TextAppearance_Small);
                         tv7.setText(timedur);
-                        tv8.setText(String.valueOf(dist));
+                        tv7.setBackgroundResource(R.drawable.cellborder);
+                        tv7.setHeight(75);
+                        tv7.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv8.setText(String.valueOf((distance)));
+                        tv8.setBackgroundResource(R.drawable.cellborder);
+                        tv8.setHeight(75);
+                        tv8.setTextAppearance(android.R.style.TextAppearance_Small);
                         tv9.setText(String.valueOf(speed));
+                        tv9.setBackgroundResource(R.drawable.cellborder);
+                        tv9.setHeight(75);
+                        tv9.setTextAppearance(android.R.style.TextAppearance_Small);
                         tv1.setGravity(Gravity.CENTER_HORIZONTAL);
                         tv2.setGravity(Gravity.CENTER_HORIZONTAL);
                         tv3.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -110,7 +163,7 @@ public class TripReport extends Fragment {
                         tr1.addView(tv9);
                         list.addView(tr1);
                         k++;
-                        dist = 0;
+                        distance = 0;
                         speed = 0;
                     }
                 }
@@ -129,23 +182,31 @@ public class TripReport extends Fragment {
                     Endtime = obj1.getString("GPSTimestamp");
                     time1 = Starttime.substring(Starttime.indexOf("T")+1, Starttime.indexOf("Z"));
                     time2 = Endtime.substring(Endtime.indexOf("T")+1, Endtime.indexOf("Z"));
+                    datea = Starttime.substring(Starttime.indexOf(0)+1, Starttime.indexOf("T"));
+                    dateb = Endtime.substring(Endtime.indexOf(0)+1, Endtime.indexOf("T"));
+                    differ = java.lang.Math.abs((Long.parseLong(dateb.substring(8,10))-Long.parseLong(datea.substring(8,10))));
                     SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
                     Date date1 = format.parse(time1);
                     Date date2 = format.parse(time2);
-                    millis = date2.getTime() - date1.getTime();
+                    millis = java.lang.Math.abs(date2.getTime() - date1.getTime());
+                    if(differ>1 && (date2.getTime() - date1.getTime())<0){
+                        differ -= 1;
+                    }
                     second = (millis / 1000) % 60;
                     minute = (millis / (1000 * 60)) % 60;
-                    hour = (millis / (1000 * 60 * 60)) % 24;
+                    hour = (24 * differ + (millis / (1000 * 60 * 60)));
                     timedur = String.format("%02d:%02d:%02d", hour, minute, second);
                     locend = obj1.getString("Latitude") + "," + obj1.getString("Longitude");
+                    st  = Starttime.substring(Starttime.indexOf(0)+1, Starttime.indexOf("T"))+"   "+Starttime.substring(Starttime.indexOf("T")+1, Starttime.indexOf("Z"));
+                    et  = Endtime.substring(Endtime.indexOf(0)+1, Endtime.indexOf("T"))+"   "+Endtime.substring(Endtime.indexOf("T")+1, Endtime.indexOf("Z"));
                     tv1.setText(String.valueOf(k));
                     tv2.setText(obj1.getString("DeviceId"));
-                    tv3.setText(Starttime);
-                    tv4.setText(Endtime);
+                    tv3.setText(st);
+                    tv4.setText(et);
                     tv5.setText(locstart);
                     tv6.setText(locend);
                     tv7.setText(timedur);
-                    tv8.setText(String.valueOf(dist));
+                    tv8.setText(String.valueOf(distance));
                     tv9.setText(String.valueOf(speed));
                     tv1.setGravity(Gravity.CENTER_HORIZONTAL);
                     tv2.setGravity(Gravity.CENTER_HORIZONTAL);
