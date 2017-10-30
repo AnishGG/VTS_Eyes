@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
-public class ReportsFragment extends Fragment {
+public class    ReportsFragment extends Fragment {
     public static ReportsFragment newInstance() {
         ReportsFragment r = new ReportsFragment();
         return r;
@@ -335,8 +335,8 @@ public class ReportsFragment extends Fragment {
         }
 
         protected void onPostExecute(final Boolean success) {
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, list);
+            dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
             spinner.setAdapter(dataAdapter);
         }
     }

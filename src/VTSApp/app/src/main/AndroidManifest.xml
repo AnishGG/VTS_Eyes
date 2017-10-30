@@ -41,7 +41,7 @@
             android:label="@string/title_activity_login"></activity>
         <activity
             android:name=".NavDrawerActivity"
-            android:configChanges="orientation"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_drawer"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
