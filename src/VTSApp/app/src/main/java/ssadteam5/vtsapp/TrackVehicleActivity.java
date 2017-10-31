@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
@@ -17,10 +16,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -30,7 +28,6 @@ import com.auth0.android.jwt.JWT;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -39,38 +36,66 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-import static java.lang.StrictMath.asin;
-import static java.lang.StrictMath.atan2;
-import static java.lang.StrictMath.cos;
-import static java.lang.StrictMath.pow;
-import static java.lang.StrictMath.sin;
-import static java.lang.StrictMath.sqrt;
-import static java.lang.StrictMath.toDegrees;
-import static java.lang.StrictMath.toRadians;
-
 public class TrackVehicleActivity extends AppCompatActivity implements OnMapReadyCallback
 {
+    // DEFAULT DISPLAY VALUES
+    private final String UNAVAILABLE = "N/A";
+
     private SlidingUpPanelLayout mLayout;
+    private String deviceName;
+    private String token;
+
+    // Add handles to display real-time information
+    private Switch ignitionStatusSwitch;
+    private TextView gpsTimestampTextView;
+
+    // User specific variables
     UserSessionManager session;
     UserData userData;
+    String organisationId;
+
+    // Map specific variables
     GoogleMap mGoogleMap;
     SupportMapFragment mapFrag;
-    StompClient mStompClient;
-    private String token;
-    private String deviceName;
     private Marker marker = null;
     boolean isMarkerRotating = false;
-    Float courseOverGround = null;
-    String organisationId;
-    int flag;
+
+    // Websocket connection to consume real-time information
+    StompClient mStompClient;
+
+    /**
+     * INIT on activity page load
+     */
+    public void init(){
+        // Initialize sliding pane layout
+        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout.setDragView(null);
+
+        // Initialize display elements
+        gpsTimestampTextView = (TextView) findViewById(R.id.gpsTimestampView);
+        ignitionStatusSwitch = (Switch) findViewById(R.id.ignitionStatusSwitch);
+        ignitionStatusSwitch.setClickable(false);
+    }
+
+
+    //FIXME Need to modularise this method for re-usability
+
+    /**
+     *  Gets called when activity page is created.
+     *
+     * Page pre-load operations go here
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -85,9 +110,11 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
 
         token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN); //fetching from the UserSessionManager
         deviceName = getIntent().getExtras().getString("deviceName");
+
+        // FIXME Update title of the map to show vehicle license plate number
         getSupportActionBar().setTitle(deviceName);
         // Setting sliding panel text
-        setPanelText();
+        //setPanelText();
 
 
         JWT jwt = new JWT(token);
@@ -97,75 +124,84 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         mStompClient = Stomp.over(WebSocket.class,getString(R.string.websocket));
         mStompClient.connect();
         mStompClient.topic("/device/message" + organisationId).subscribe(topicMessage -> {
+
+            // FIXME Need to add time filter here for GPSTimestamp field to avoid showing historical data
             JSONObject payload = new JSONObject(topicMessage.getPayload());
             try
             {
-                final String deviceId = payload.get("DeviceId").toString();
-                Double lat = Double.parseDouble(payload.get("Latitude").toString());
-                final Double lon = Double.parseDouble(payload.get("Longitude").toString());
-                final String speed = payload.get("Speed").toString();
-                final String FuelLevel = payload.get("FuelLevel").toString();
-                final String GSMStrength = payload.get("GSMStrength").toString();
-                final String InternalBatteryVoltage = payload.get("InternalBatteryVoltage").toString();
-                final String EngineStatus = payload.get("EngineStatus").toString();
-                flag = 0;
-                try {
-                    courseOverGround = Float.parseFloat(payload.get("CourseOverGround").toString());
-                }
-                catch (Exception e){
-                    flag = 1;
-                    e.printStackTrace();
-                }
+                // Retrieve values being sent on topic here
+                final String deviceId = payload.has("DeviceId") ? payload.getString("DeviceId") : UNAVAILABLE;
+                final DateTime gpsUtcTimestamp = payload.has("GPSTimestamp") ? DateTime.parse(payload.getString("GPSTimestamp")) : null;
+                final String gpsLocaleTimestamp = gpsUtcTimestamp != null ? gpsUtcTimestamp.withZone(
+                        DateTimeZone.forOffsetHoursMinutes(5,30)
+                ).toString("hh:mm:ss a") : UNAVAILABLE;
+                double lat = payload.has("Latitude") ? payload.getDouble("Latitude") : 0.0000;
+                final double lon = payload.has("Longitude") ? payload.getDouble("Longitude") : 0.0000;
+                final String speed = payload.has("Speed") ? payload.getString("Speed") : "0.0";
+                final String FuelLevel = payload.has("FuelLevel") ? payload.getString("FuelLevel") : UNAVAILABLE;
+                final String GSMStrength = payload.has("GSMStrength") ? payload.getString("GSMStrength") : UNAVAILABLE;
+                final String InternalBatteryVoltage = payload.has("InternalBatteryVoltage") ? payload.getString("InternalBatteryVoltage") : UNAVAILABLE;
+                final String EngineStatus = payload.has("EngineStatus") ? payload.getString("EngineStatus") : UNAVAILABLE;
+                final float courseOverGround = payload.has("CourseOverGround") ? new Double(payload.getDouble("CourseOverGround")).floatValue() : 0;
+
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable()
                 {
                     public void run()
                     {
                         boolean New = true;
-                        if(marker != null) {
-                            if (deviceId.equals(marker.getTag().toString())) {
-                                Marker oldpos = marker;
-                                oldpos.setSnippet("Engine Status: " + EngineStatus + "\n" + "Speed: " + speed + "Km/h" + "\n" + "Fuel Level: " + FuelLevel + "\n" + "Internal Battery Voltage: " + InternalBatteryVoltage + "\n" +
-                                        "GSM Strength: " + GSMStrength);
-                                /* To update the opened Info window */
-                                if(oldpos.isInfoWindowShown()) {
-                                    oldpos.hideInfoWindow();
-                                    oldpos.showInfoWindow();
-                                }
-                                /**/
-                                if(flag == 1)
-                                    courseOverGround = getAngle(oldpos.getPosition(), new LatLng(lat, lon));
-                                rotateMarker(marker, new LatLng(lat, lon), courseOverGround);
-                                mGoogleMap.addCircle(new CircleOptions()
-                                        .center(oldpos.getPosition())
-                                        .radius(2)
-                                        .strokeColor(Color.RED)
-                                        .fillColor(Color.RED));
-                                New = false;
+                        if(marker != null && deviceId.equals(marker.getTag().toString())) {
+                            gpsTimestampTextView.setText(gpsLocaleTimestamp);
+                            ignitionStatusSwitch.setChecked("ON".equals(EngineStatus));
+                            Marker oldpos = marker;
+                            oldpos.setSnippet(
+                                    "Time: " + gpsLocaleTimestamp + "\n" +
+                                    "Ignition: " + EngineStatus + "\n" +
+                                    "Latitude: " + lat + "\n" +
+                                    "Longitude: " + lon + "\n" +
+                                    "Speed: " + speed + "KM/H" + "\n" +
+                                    "GSM Strength: " + GSMStrength
+                            );
+                            /* To update the opened Info window */
+                            if(oldpos.isInfoWindowShown()) {
+                                oldpos.hideInfoWindow();
+                                oldpos.showInfoWindow();
                             }
+                            /**/
+                            if(courseOverGround != 0)
+                                rotateMarker(marker, new LatLng(lat, lon), getAngle(oldpos.getPosition(), new LatLng(lat, lon)));
+                            mGoogleMap.addCircle(new CircleOptions()
+                                    .center(oldpos.getPosition())
+                                    .radius(2)
+                                    .strokeColor(Color.RED)
+                                    .fillColor(Color.RED));
                         }
-                        if (New)
-                        {
-                            if(flag == 1)
-                                courseOverGround = 0f;
-                            if(deviceName.equals(deviceId)) {
-                                marker = mGoogleMap.addMarker(new MarkerOptions()
-                                        .position(new LatLng(lat, lon))
-                                        .title(deviceId));
-                                int height = 140;
-                                int width = 70;
-                                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car4);
-                                Bitmap b=bitmapdraw.getBitmap();
-                                Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-                                marker.setTag(deviceId);
-                                marker.setSnippet("Engine Status: " + EngineStatus + "\n" + "Speed: " + speed + "Km/h" + "\n" + "Fuel Level: " + FuelLevel + "\n" + "Internal Battery Voltage: " + InternalBatteryVoltage + "\n" +
-                                        "GSM Strength: " + GSMStrength);
-                                marker.setAnchor(0.5f, 0.5f);
-                                marker.setInfoWindowAnchor(0.5f, 0.5f);
-                                marker.setRotation(courseOverGround);
-                                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),16));
-                            }
+                        else if(deviceName.equals(deviceId)) {
+                            gpsTimestampTextView.setText(gpsLocaleTimestamp);
+                            ignitionStatusSwitch.setChecked("ON".equals(EngineStatus));
+                            marker = mGoogleMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(lat, lon))
+                                .title("LOCATION INFO")
+                            );
+                            int height = 140;
+                            int width = 70;
+                            BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car4);
+                            Bitmap b=bitmapdraw.getBitmap();
+                            Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                            marker.setTag(deviceId);
+                            marker.setSnippet(
+                                    "Time: " + gpsLocaleTimestamp + "\n" +
+                                    "Ignition: " + EngineStatus + "\n" +
+                                    "Latitude: " + lat + "\n" +
+                                    "Longitude: " + lon + "\n" +
+                                    "Speed: " + speed + "KM/H" + "\n" +
+                                    "GSM Strength: " + GSMStrength
+                            );
+                            marker.setAnchor(0.5f, 0.5f);
+                            marker.setInfoWindowAnchor(0.5f, 0.5f);
+                            marker.setRotation(courseOverGround);
+                            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),16));
                         }
                     }
                 });
@@ -177,6 +213,13 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         });
     }
 
+    /**
+     * Invoked when google map is loaded.
+     *
+     * Initialize google map parameters here
+     *
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
@@ -205,6 +248,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                 return null;
             }
 
+            // TODO Need to style info window to show information more cleanly
             @Override
             public View getInfoContents(Marker marker) {
 
@@ -229,10 +273,9 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         });
     }
 
-    public void init(){
-        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-    }
-
+    /**
+     * Maintain websocket connection even when back button is pressed
+     */
     @Override
     public void onBackPressed()
     {
@@ -267,6 +310,13 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Used to align the icon on the map appropriately based on the latest GPS information received
+     *
+     * @param marker
+     * @param destination
+     * @param rotation
+     */
     private void rotateMarker(final Marker marker, final LatLng destination, final float rotation) {
 
         if (marker != null) {
@@ -305,6 +355,21 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         }
     }
 
+    // FIXME Move these helper functions to util class
+
+    /**
+     * START HELPER FUNCTIONS
+     */
+
+    /**
+     *
+     * Helper function to calculate rotation of the car icon on the map
+     *
+     * @param fraction
+     * @param start
+     * @param end
+     * @return
+     */
     private static float computeRotation(float fraction, float start, float end) {
         float normalizeEnd = end - start; // rotate start to 0
         float normalizedEndAbs = (normalizeEnd + 360) % 360;
@@ -321,6 +386,50 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         return (result + 360) % 360;
     }
 
+    /**
+     *
+     * Helper function to calculate angle of the car icon shown on the map
+     *
+     * @param source
+     * @param destination
+     * @return
+     */
+    public static float getAngle(LatLng source, LatLng destination) {
+
+        // calculate the angle theta from the deltaY and deltaX values
+        // (atan2 returns radians values from [-PI,PI])
+        // 0 currently points EAST.
+        // NOTE: By preserving Y and X param order to atan2,  we are expecting
+        // a CLOCKWISE angle direction.
+        double theta = Math.atan2(
+                destination.longitude - source.longitude, destination.latitude - source.latitude);
+
+        // rotate the theta angle clockwise by 90 degrees
+        // (this makes 0 point NORTH)
+        // NOTE: adding to an angle rotates it clockwise.
+        // subtracting would rotate it counter-clockwise
+        theta -= Math.PI / 2.0;
+
+        // convert from radians to degrees
+        // this will give you an angle from [0->270],[-180,0]
+        double angle = Math.toDegrees(theta);
+
+        // convert to positive range [0-360)
+        // since we want to prevent negative angles, adjust them now.
+        // we can assume that atan2 will not return a negative value
+        // greater than one partial rotation
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        return (float) angle + 90;
+    }
+
+    /**
+     * END HELPER FUNCTIONS
+     */
+
+    /*
     private void setPanelText(){
         String response = userData.getResponse().get(UserData.KEY_RESPONSE);
         Log.d("myresp", response);
@@ -342,7 +451,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
             row.setLayoutParams(lp);
             TextView qty = new TextView(this);
-            qty.setText("Device: " + deviceName);
+            qty.setText("Test : " + deviceName);
             row.addView(qty);
             t.addView(row);
 
@@ -403,36 +512,6 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
             e.printStackTrace();
         }
 
-    }
+    }*/
 
-    public static float getAngle(LatLng source, LatLng destination) {
-
-        // calculate the angle theta from the deltaY and deltaX values
-        // (atan2 returns radians values from [-PI,PI])
-        // 0 currently points EAST.
-        // NOTE: By preserving Y and X param order to atan2,  we are expecting
-        // a CLOCKWISE angle direction.
-        double theta = Math.atan2(
-                destination.longitude - source.longitude, destination.latitude - source.latitude);
-
-        // rotate the theta angle clockwise by 90 degrees
-        // (this makes 0 point NORTH)
-        // NOTE: adding to an angle rotates it clockwise.
-        // subtracting would rotate it counter-clockwise
-        theta -= Math.PI / 2.0;
-
-        // convert from radians to degrees
-        // this will give you an angle from [0->270],[-180,0]
-        double angle = Math.toDegrees(theta);
-
-        // convert to positive range [0-360)
-        // since we want to prevent negative angles, adjust them now.
-        // we can assume that atan2 will not return a negative value
-        // greater than one partial rotation
-        if (angle < 0) {
-            angle += 360;
-        }
-
-        return (float) angle + 90;
-    }
 }

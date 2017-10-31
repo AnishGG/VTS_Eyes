@@ -71,14 +71,14 @@ public class NavDrawerActivity extends AppCompatActivity
             TextView navtenant = hview.findViewById(R.id.tenantName);
             TextView navemail = hview.findViewById(R.id.emailname);
 
-            navtenant.setText(tenant);
+            navtenant.setText(tenant.toUpperCase());
             navemail.setText(email);
 
             menu = new String[4];
             menu[0] = "Dashboard";
             menu[1] = "Devices";
-            menu[2] = "Reports";
-            menu[3] = "Logout";
+            //menu[2] = "Reports";
+            menu[2] = "Logout";
             for (int i = 0; i < menu.length-1; i++)
             {
                 navMenu.add(Menu.NONE, i, i, menu[i]);

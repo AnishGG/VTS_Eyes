@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "ssadteam5.vtsapp"
         minSdkVersion 21
@@ -35,6 +35,7 @@ dependencies {
     })
     compile project(':library')
     compile 'com.sothree.slidinguppanel:library:3.4.0'
+    compile 'joda-time:joda-time:2.9.9'
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'com.google.android.gms:play-services-location:11.0.4'
