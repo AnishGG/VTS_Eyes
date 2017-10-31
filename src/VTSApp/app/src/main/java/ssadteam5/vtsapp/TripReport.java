@@ -1,5 +1,6 @@
 package ssadteam5.vtsapp;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -34,14 +35,23 @@ public class TripReport extends Fragment {
     private ReportsFetchTask mFetchTask;
     List<tableText> trip = new ArrayList<tableText>();
     private ProgressDialog Dialog;
+    private Activity mActivity;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.trip_report, container, false);
+        mActivity = getActivity();
         TableLayout list = view.findViewById(R.id.tripreport);
         Bundle bundle = getArguments();
         if (bundle != null) {
+            Log.d("Why", "Again");
             mFetchTask = new ReportsFetchTask(list);
             mFetchTask.execute((Void) null);
         }
@@ -57,7 +67,7 @@ public class TripReport extends Fragment {
 
         @Override
         protected void onPreExecute(){
-            Dialog = new ProgressDialog(getActivity());
+            Dialog = new ProgressDialog(mActivity);
             Dialog.setMessage("Finalising Data...");
             Dialog.show();
         }
@@ -83,7 +93,6 @@ public class TripReport extends Fragment {
                             locstart = ob.getString("Latitude") + "," + ob.getString("Longitude");
                             flagi = 1;
                         }
-                        Log.d("after", "inoutif");
                         if(l > 1) {
                             JSONObject obj2 = jsonArray.getJSONObject(i-1);
                             lat1 = Double.parseDouble(ob.getString("Latitude"));
@@ -192,9 +201,9 @@ public class TripReport extends Fragment {
         protected void onPostExecute(final Boolean success) {
             TextView[] tv = new TextView[9];
             for(int i = 0;i < trip.size(); i++){
-                TableRow tr1 = new TableRow(getActivity());
+                TableRow tr1 = new TableRow(mActivity);
                 for(int j = 0; j < 9; j++){
-                    tv[j] = new TextView(getActivity());
+                    tv[j] = new TextView(mActivity);
                     tv[j].setText(trip.get(i).getString(j));
                     tv[j].setBackgroundResource(R.drawable.cellborder);
                     tv[j].setHeight(75);

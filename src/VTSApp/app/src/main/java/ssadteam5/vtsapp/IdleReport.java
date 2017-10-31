@@ -1,5 +1,6 @@
 package ssadteam5.vtsapp;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -35,11 +36,21 @@ public class IdleReport extends Fragment {
     private IdleFetchTask mFetchTask;
     List<tableText> trip = new ArrayList<tableText>();
     private ProgressDialog Dialog;
+    private Activity mActivity;
+    private UserData userData;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.idle_report, container, false);
+        mActivity = getActivity();
+        userData = new UserData(getActivity().getApplicationContext());
         TableLayout list = view.findViewById(R.id.idlereport);
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -57,7 +68,8 @@ public class IdleReport extends Fragment {
 
         @Override
         protected void onPreExecute(){
-            Dialog = new ProgressDialog(getActivity());
+            Log.d("Fragment", "IdleReport");
+            Dialog = new ProgressDialog(mActivity);
             Dialog.setTitle("Finalising Data...");
             Dialog.show();
         }
@@ -79,7 +91,6 @@ public class IdleReport extends Fragment {
                             locstart = ob.getString("Latitude") + "," + ob.getString("Longitude");
                             flagi = 1;
                         }
-                        Log.d("after", "inoutif");
                     } else if (Objects.equals(engst, "ON") && counti == 1) {
                         counti = 0;
                         flagi = 0;
@@ -97,7 +108,6 @@ public class IdleReport extends Fragment {
                         if(differ>1 && (date2.getTime() - date1.getTime())<0){
                             differ -= 1;
                         }
-                        Log.d("days", String.valueOf(differ));
                         second = (millis / 1000) % 60;
                         minute = (millis / (1000 * 60)) % 60;
                         hour = (24 * differ + (millis / (1000 * 60 * 60)));
@@ -160,9 +170,9 @@ public class IdleReport extends Fragment {
         protected void onPostExecute(final Boolean success) {
             TextView[] tv = new TextView[9];
             for(int i = 0;i < trip.size(); i++){
-                TableRow tr1 = new TableRow(getActivity());
+                TableRow tr1 = new TableRow(mActivity);
                 for(int j = 0; j < 6; j++){
-                    tv[j] = new TextView(getActivity());
+                    tv[j] = new TextView(mActivity);
                     tv[j].setText(trip.get(i).getString(j));
                     tv[j].setBackgroundResource(R.drawable.cellborder);
                     tv[j].setHeight(75);

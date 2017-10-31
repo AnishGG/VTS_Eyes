@@ -4,30 +4,36 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 class PagerAdapter extends FragmentStatePagerAdapter {
     private final int mNumOfTabs;
     private final Bundle bun;
+    TripReport tab1;
+    IdleReport tab2;
+
 
     public PagerAdapter(FragmentManager fm, int NumOfTabs, Bundle bundle) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
         bun=bundle;
+        tab1= new TripReport();
+        tab1.setArguments(bun);
+        tab2 = new IdleReport();
+        tab2.setArguments(bun);
     }
 
     @Override
     public Fragment getItem(int position) {
-
+        Log.d("Fragment", "PageAdapter");
+        Log.d("FragmentPosition: ", position+"");
         switch (position) {
             case 0:
-               TripReport tab1= new TripReport();
-               tab1.setArguments(bun);
+               Log.d("pager", "Trip");
                return tab1;
             case 1:
-                IdleReport tab2 = new IdleReport();
-                tab2.setArguments(bun);
+                Log.d("pager", "Idle");
                 return tab2;
-
             default:
                 return null;
         }

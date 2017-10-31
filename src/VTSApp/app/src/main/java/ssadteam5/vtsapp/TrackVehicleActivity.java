@@ -80,6 +80,12 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         // Initialize sliding pane layout
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setDragView(null);
+        mLayout.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
         actionBar = getSupportActionBar();
 
         // Initialize display elements

@@ -3,6 +3,7 @@ package ssadteam5.vtsapp;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -145,20 +146,12 @@ public class    ReportsFragment extends Fragment {
     private void getReports()
     {
         String vehicle = spinner.getSelectedItem().toString();
-        Fragment fragment;
-        Bundle bundle = new Bundle();
-        bundle.putString("token",token);
-        bundle.putString("vehicle", vehicle);
-        startdate = tvDisplayDate1.getText().toString();
-        enddate = tvDisplayDate2.getText().toString();
-        bundle.putString("startdate",startdate);
-        bundle.putString("enddate",enddate);
-        fragment = new Reports();
-        fragment.setArguments(bundle);
-        FragmentTransaction tx = getActivity().getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.content_frame, fragment);
-        tx.addToBackStack(null);
-        tx.commit();
+        Intent intent = new Intent(getActivity(), Reports.class);
+        intent.putExtra("token", token);
+        intent.putExtra("vehicle", vehicle);
+        intent.putExtra("startdate", startdate);
+        intent.putExtra("enddate", enddate);
+        startActivity(intent);
     }
 
     private void setCurrentDateOnView() {

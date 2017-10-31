@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,6 +110,7 @@ public class DashboardFragment extends Fragment
         @Override
         protected Boolean doInBackground(Void... params)
         {
+            Log.d("Fragment", "Dashboard");
             try {
                 if(!userData.isDataFetched())
                 {
