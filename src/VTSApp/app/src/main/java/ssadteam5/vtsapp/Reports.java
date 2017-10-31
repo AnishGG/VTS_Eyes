@@ -1,34 +1,23 @@
 package ssadteam5.vtsapp;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import android.view.MenuItem;
 
 public class Reports extends AppCompatActivity {
     private Bundle bund;
     private ViewPager viewPager;
     private PagerAdapter adapter;
     private TabLayout tabLayout;
-    private String response;
     private UserData userData;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +67,20 @@ public class Reports extends AppCompatActivity {
         ReportsInfo mRepTask = new ReportsInfo(vehicle, startdate, enddate, token);
         mRepTask.execute((Void) null);
         }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent parentIntent = NavUtils.getParentActivityIntent(this);
+                parentIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(parentIntent);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     public class ReportsInfo extends AsyncTask<Void, Void, String> {
 
         private final String mVehicleNo;
@@ -106,7 +109,7 @@ public class Reports extends AppCompatActivity {
             Log.d("Fragment", "Reports");
             if(!userData.isReportFetched(mStartDate, mEndDate, mVehicleNo))
                 userData.fetchReports(mStartDate, mEndDate, mVehicleNo, mToken);
-            response = userData.getReports().get(UserData.KEY_REPORTS);
+            String response = userData.getReports().get(UserData.KEY_REPORTS);
             return response;
         }
 

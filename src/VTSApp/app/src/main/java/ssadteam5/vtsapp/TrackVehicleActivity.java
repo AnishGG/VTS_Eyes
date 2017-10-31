@@ -19,8 +19,6 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.auth0.android.jwt.Claim;
@@ -38,7 +36,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import okhttp3.WebSocket;
@@ -52,7 +49,6 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
 
     private SlidingUpPanelLayout mLayout;
     private String deviceName;
-    private String token;
     private android.support.v7.app.ActionBar actionBar;
 
     // Add handles to display real-time information
@@ -61,24 +57,24 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
 
     // User specific variables
     UserSessionManager session;
-    UserData userData;
+    private UserData userData;
     String organisationId;
 
     // Map specific variables
-    GoogleMap mGoogleMap;
+    private GoogleMap mGoogleMap;
     SupportMapFragment mapFrag;
     private Marker marker = null;
     boolean isMarkerRotating = false;
 
     // Websocket connection to consume real-time information
-    StompClient mStompClient;
+    private StompClient mStompClient;
 
     /**
      * INIT on activity page load
      */
-    public void init(){
+    private void init(){
         // Initialize sliding pane layout
-        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout = findViewById(R.id.sliding_layout);
         mLayout.setDragView(null);
         mLayout.setFadeOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,8 +85,8 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         actionBar = getSupportActionBar();
 
         // Initialize display elements
-        gpsTimestampTextView = (TextView) findViewById(R.id.gpsTimestampView);
-        ignitionStatusSwitch = (Switch) findViewById(R.id.ignitionStatusSwitch);
+        gpsTimestampTextView = findViewById(R.id.gpsTimestampView);
+        ignitionStatusSwitch = findViewById(R.id.ignitionStatusSwitch);
         ignitionStatusSwitch.setClickable(false);
     }
 
@@ -116,7 +112,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         userData = new UserData(getApplicationContext());
         mapFrag.getMapAsync(this);
 
-        token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN); //fetching from the UserSessionManager
+        String token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
         deviceName = getIntent().getExtras().getString("deviceName");
 
         // FIXME Update title of the map to show vehicle license plate number
@@ -415,7 +411,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
      * @param destination
      * @return
      */
-    public static float getAngle(LatLng source, LatLng destination) {
+    private static float getAngle(LatLng source, LatLng destination) {
 
         // calculate the angle theta from the deltaY and deltaX values
         // (atan2 returns radians values from [-PI,PI])

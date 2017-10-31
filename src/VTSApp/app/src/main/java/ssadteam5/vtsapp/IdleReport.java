@@ -2,6 +2,7 @@ package ssadteam5.vtsapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +13,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -28,16 +28,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import static android.graphics.Typeface.BOLD;
-
 
 public class IdleReport extends Fragment {
-    private View view;
-    private IdleFetchTask mFetchTask;
-    List<tableText> trip = new ArrayList<tableText>();
+    private final List<tableText> trip = new ArrayList<>();
     private ProgressDialog Dialog;
     private Activity mActivity;
-    private UserData userData;
+    private Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -48,20 +44,21 @@ public class IdleReport extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.idle_report, container, false);
+        View view = inflater.inflate(R.layout.idle_report, container, false);
         mActivity = getActivity();
-        userData = new UserData(getActivity().getApplicationContext());
+        mContext = getContext();
+        UserData userData = new UserData(getActivity().getApplicationContext());
         TableLayout list = view.findViewById(R.id.idlereport);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mFetchTask = new IdleFetchTask(list);
+            IdleFetchTask mFetchTask = new IdleFetchTask(list);
             mFetchTask.execute((Void) null);
         }
         return view;
     }
     public class IdleFetchTask extends AsyncTask<Void, Void, Boolean>
     {
-        TableLayout list;
+        final TableLayout list;
         IdleFetchTask(TableLayout mylist) {
             list = mylist;
         }
@@ -79,8 +76,8 @@ public class IdleReport extends Fragment {
                 JSONArray jsonArray = new JSONArray(getArguments().getString("resp"));
                 int counti = 0;
                 int k = 1, flagi = 0, i, diffdate;
-                long millis = 0, second, minute, hour = 0, differ;
-                String engst, Starttime = "", Endtime = "", locstart = "0.000000" + "," + "0.000000", locend = "0.000000" + "," + "0.000000", time1, time2, timedur, st = "", et = "", datea, dateb;
+                long millis, second, minute, hour, differ;
+                String engst, Starttime = "", Endtime, locstart = "0.000000" + "," + "0.000000", locend = "0.000000" + "," + "0.000000", time1, time2, timedur, st, et, datea, dateb;
                 for (i = 0; i < jsonArray.length(); i++) {
                     JSONObject ob = jsonArray.getJSONObject(i);
                     engst = ob.getString("EngineStatus");
@@ -159,9 +156,7 @@ public class IdleReport extends Fragment {
                     mynewtext.setFlagi(flagi);
                     trip.add(mynewtext);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
+            } catch (JSONException | ParseException e) {
                 e.printStackTrace();
             }
             return true;
@@ -171,12 +166,16 @@ public class IdleReport extends Fragment {
             TextView[] tv = new TextView[9];
             for(int i = 0;i < trip.size(); i++){
                 TableRow tr1 = new TableRow(mActivity);
+                if(i%2==0)
+                {
+                    tr1.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                }
                 for(int j = 0; j < 6; j++){
                     tv[j] = new TextView(mActivity);
                     tv[j].setText(trip.get(i).getString(j));
                     tv[j].setBackgroundResource(R.drawable.cellborder);
                     tv[j].setHeight(75);
-                    tv[j].setTextAppearance(android.R.style.TextAppearance_Small);
+                    tv[j].setTextAppearance(mContext,android.R.style.TextAppearance_Small);
                     tv[j].setGravity(Gravity.CENTER_HORIZONTAL);
                     tr1.addView(tv[j]);
                 }
@@ -189,9 +188,10 @@ public class IdleReport extends Fragment {
     }
 
     private class tableText{
-        private String[] text = new String[6];
+        private final String[] text = new String[6];
         private int flagi, counti;
-        public tableText(){};
+        public tableText(){}
+
         public void setString(String s, int idx){
             text[idx] = s;
         }

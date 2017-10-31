@@ -2,16 +2,11 @@ package ssadteam5.vtsapp;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,10 +35,8 @@ public class    ReportsFragment extends Fragment {
 
     private View view;
     private String token;
-    private String response;
     private Spinner spinner;
     private final List<String> list = new ArrayList<>();
-    private String[] vehicle_list;
 
     private EditText tvDisplayDate1;
     private EditText tvDisplayDate2;
@@ -55,26 +48,9 @@ public class    ReportsFragment extends Fragment {
     private Boolean flag2 = false;
     private String startdate = "";
     private String enddate = "";
-    private String spres = "";
-    private InputMethodManager inputMethodManager;
     private static final int DATE_DIALOG_ID = 999;
     private UserData userData;
     private StringBuilder sdate;
-    Bundle bund;
-    ViewPager viewPager;
-    PagerAdapter adapter;
-    TabLayout tabLayout;
-    //    StringBuffer sb = new StringBuffer();
-    String sb = "";
-
-//    private OnFragmentInteractionListener mListener;
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        Log.d("started", "reportfrag");
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -82,35 +58,7 @@ public class    ReportsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_reports, container, false);
         token = getArguments().getString("token");
         userData = new UserData(getActivity().getApplicationContext());
-        Log.d("tokeni", token);
-//        tabLayout = (TabLayout) view.findViewById(R.id.tabl);
-//        tabLayout.addTab(tabLayout.newTab().setText("Trip report"));
-//        tabLayout.addTab(tabLayout.newTab().setText("Idle report"));
-//        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-//
-//        viewPager = (ViewPager) view.findViewById(R.id.pager);
-//        adapter = new PagerAdapter
-//                (getActivity().getSupportFragmentManager(), tabLayout.getTabCount(), bund);
-//        viewPager.setAdapter(adapter);
-//        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-//        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//                viewPager.setCurrentItem(tab.getPosition());
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-//
-//            }
-//        });
 
-        Context cont = getActivity();
         FetchDevNo mFetchTask = new FetchDevNo(token);
         mFetchTask.execute((Void) null);
         setCurrentDateOnView();
@@ -137,7 +85,6 @@ public class    ReportsFragment extends Fragment {
                 InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
                 inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 getReports();
-                //showTables();
             }
         });
         return view;
@@ -149,6 +96,8 @@ public class    ReportsFragment extends Fragment {
         Intent intent = new Intent(getActivity(), Reports.class);
         intent.putExtra("token", token);
         intent.putExtra("vehicle", vehicle);
+        startdate = tvDisplayDate1.getText().toString();
+        enddate = tvDisplayDate2.getText().toString();
         intent.putExtra("startdate", startdate);
         intent.putExtra("enddate", enddate);
         startActivity(intent);
@@ -176,18 +125,11 @@ public class    ReportsFragment extends Fragment {
             }
         }
 
-        // set current date into textview
         tvDisplayDate1.setText(sdate);
         tvDisplayDate2.setText(sdate);
 
         startdate = tvDisplayDate1.getText().toString();
         enddate = tvDisplayDate2.getText().toString();
-        Log.d("got", startdate);
-        Log.d("got2", enddate);
-
-//         set current date into datepicker
-//        tvDisplayDate1.setText(null);
-//        tvDisplayDate2.setText(null);
 
     }
 
@@ -195,7 +137,6 @@ public class    ReportsFragment extends Fragment {
 
         Button btnChangeDate1 = view.findViewById(R.id.btnChangeDate1);
         Button btnChangeDate2 = view.findViewById(R.id.btnChangeDate2);
-
 
         btnChangeDate1.setOnClickListener(new View.OnClickListener() {
 
@@ -215,7 +156,6 @@ public class    ReportsFragment extends Fragment {
                 flag2 = true;
                 flag1 = false;
                 onCreateDialog().show();
-//                showDialog(DATE_DIALOG_ID);
 
             }
 
@@ -226,7 +166,6 @@ public class    ReportsFragment extends Fragment {
     private Dialog onCreateDialog() {
         switch (ReportsFragment.DATE_DIALOG_ID) {
             case DATE_DIALOG_ID:
-                // set date picker as current date
                 return new DatePickerDialog(getActivity(), datePickerListener,
                         year, month, day);
         }
@@ -280,15 +219,12 @@ public class    ReportsFragment extends Fragment {
             enddate = tvDisplayDate2.getText().toString();
             flag1 = false;
             flag2 = false;
-            Log.d("got1", startdate);
-            Log.d("got2", enddate);
         }
     };
 
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        Log.d("yolo", "yolo");
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Reports");
     }
@@ -302,7 +238,6 @@ public class    ReportsFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            Log.d("something", "something");
             spinner = view.findViewById(R.id.spinner);
 
         }
@@ -316,19 +251,16 @@ public class    ReportsFragment extends Fragment {
                 String response = userData.getResponse().get(UserData.KEY_RESPONSE);
                 JSONObject obj = new JSONObject(response);
                 JSONArray arr = obj.getJSONArray("deviceDTOS");
-                Log.d("hellodakshsize", "" + arr.length());
                 list.clear();
                 for (int i = 0; i < arr.length(); i++) {
                     try {
                         JSONObject ob = arr.getJSONObject(i);
                         JSONObject hello = new JSONObject(ob.getString("vehicleDetailsDO"));
                         String number = hello.getString("vehicleNumber");
-                        Log.d("dakshhello", number);
                         list.add(number);
                     } catch (Exception e) {
                         JSONObject obn = arr.getJSONObject(i);
                         String name = obn.getString("name");
-                        Log.d("nameprint", name);
                         list.add(name);
                     }
                 }

@@ -2,6 +2,7 @@ package ssadteam5.vtsapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +13,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -21,7 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,11 +30,10 @@ import java.util.Objects;
 
 
 public class TripReport extends Fragment {
-    private View view;
-    private ReportsFetchTask mFetchTask;
-    List<tableText> trip = new ArrayList<tableText>();
+    private final List<tableText> trip = new ArrayList<>();
     private ProgressDialog Dialog;
     private Activity mActivity;
+    private Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -46,13 +44,14 @@ public class TripReport extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.trip_report, container, false);
+        View view = inflater.inflate(R.layout.trip_report, container, false);
         mActivity = getActivity();
+        mContext = getContext();
         TableLayout list = view.findViewById(R.id.tripreport);
         Bundle bundle = getArguments();
         if (bundle != null) {
             Log.d("Why", "Again");
-            mFetchTask = new ReportsFetchTask(list);
+            ReportsFetchTask mFetchTask = new ReportsFetchTask(list);
             mFetchTask.execute((Void) null);
         }
         return view;
@@ -60,7 +59,7 @@ public class TripReport extends Fragment {
 
     public class ReportsFetchTask extends AsyncTask<Void, Void, Boolean>
     {
-        TableLayout list;
+        final TableLayout list;
         ReportsFetchTask(TableLayout mylist) {
             list = mylist;
         }
@@ -79,9 +78,9 @@ public class TripReport extends Fragment {
                 JSONArray jsonArray = new JSONArray(getArguments().getString("resp"));
                 int counti = 0, diffdate;
                 int k = 1, l = 0, flagi = 0, i, dist = 0, speed = 0, Radius = 6371, kmInDec = 0, meterInDec = 0;
-                double lat1, lat2, lon1, lon2, dLat, dLon, a, c, valueResult = 0, km, meter, distance = 0;
-                long millis = 0, second, minute, hour = 0, differ;
-                String engst, Starttime = "", Endtime = "", locstart = "0.000000" + "," + "0.000000", locend = "0.000000" + "," + "0.000000", time1, time2, timedur, st = "", et = "", datea, dateb;
+                double lat1, lat2, lon1, lon2, dLat, dLon, a, c, valueResult, km, meter, distance = 0;
+                long millis, second, minute, hour, differ;
+                String engst, Starttime = "", Endtime, locstart = "0.000000" + "," + "0.000000", locend, time1, time2, timedur, st, et, datea, dateb;
                 for (i = 0; i < jsonArray.length(); i++) {
                     JSONObject ob = jsonArray.getJSONObject(i);
                     engst = ob.getString("EngineStatus");
@@ -190,9 +189,7 @@ public class TripReport extends Fragment {
                     mynewtext.setFlagi(flagi);
                     trip.add(mynewtext);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
+            } catch (JSONException | ParseException e) {
                 e.printStackTrace();
             }
             return true;
@@ -202,12 +199,16 @@ public class TripReport extends Fragment {
             TextView[] tv = new TextView[9];
             for(int i = 0;i < trip.size(); i++){
                 TableRow tr1 = new TableRow(mActivity);
+                if(i%2==0)
+                {
+                    tr1.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                }
                 for(int j = 0; j < 9; j++){
                     tv[j] = new TextView(mActivity);
                     tv[j].setText(trip.get(i).getString(j));
                     tv[j].setBackgroundResource(R.drawable.cellborder);
                     tv[j].setHeight(75);
-                    tv[j].setTextAppearance(android.R.style.TextAppearance_Small);
+                    tv[j].setTextAppearance(mContext,android.R.style.TextAppearance_Small);
                     tv[j].setGravity(Gravity.CENTER_HORIZONTAL);
                     tr1.addView(tv[j]);
                 }
@@ -220,9 +221,10 @@ public class TripReport extends Fragment {
     }
 
     private class tableText{
-        private String[] text = new String[9];
+        private final String[] text = new String[9];
         private int flagi, counti;
-        public tableText(){};
+        public tableText(){}
+
         public void setString(String s, int idx){
             text[idx] = s;
         }

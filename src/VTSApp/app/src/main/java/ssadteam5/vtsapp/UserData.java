@@ -78,7 +78,7 @@ class UserData
     public void fetchReports(String mStartDate, String mEndDate, String mVehicleNo, String mToken){
         HttpURLConnection conn;
         try {
-            String response = "";
+            String response;
             JSONObject jsonObject = new JSONObject();
             JSONObject jo = new JSONObject();
             JSONObject jo2 = new JSONObject();
@@ -112,11 +112,9 @@ class UserData
             editor.putString(START_DATE, mStartDate);
             editor.putString(END_DATE, mEndDate);
             editor.putString(VEHICLE_NO, mVehicleNo);
-            editor.putString(KEY_REPORTS, response.toString());
+            editor.putString(KEY_REPORTS, response);
             editor.putBoolean(REPORTS_FETCHED, true);
             editor.commit();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

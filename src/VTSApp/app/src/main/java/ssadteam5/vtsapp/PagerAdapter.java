@@ -8,15 +8,14 @@ import android.util.Log;
 
 class PagerAdapter extends FragmentStatePagerAdapter {
     private final int mNumOfTabs;
-    private final Bundle bun;
-    TripReport tab1;
-    IdleReport tab2;
+    private final TripReport tab1;
+    private final IdleReport tab2;
 
 
     public PagerAdapter(FragmentManager fm, int NumOfTabs, Bundle bundle) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
-        bun=bundle;
+        Bundle bun = bundle;
         tab1= new TripReport();
         tab1.setArguments(bun);
         tab2 = new IdleReport();
