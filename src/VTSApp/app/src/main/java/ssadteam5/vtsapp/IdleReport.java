@@ -1,5 +1,7 @@
 package ssadteam5.vtsapp;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -9,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -19,33 +22,54 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+
+import static android.graphics.Typeface.BOLD;
 
 
 public class IdleReport extends Fragment {
+    private View view;
+    private IdleFetchTask mFetchTask;
+    List<tableText> trip = new ArrayList<tableText>();
+    private ProgressDialog Dialog;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.idle_report, container, false);
+        view = inflater.inflate(R.layout.idle_report, container, false);
         TableLayout list = view.findViewById(R.id.idlereport);
         Bundle bundle = getArguments();
         if (bundle != null) {
+            mFetchTask = new IdleFetchTask(list);
+            mFetchTask.execute((Void) null);
+        }
+        return view;
+    }
+    public class IdleFetchTask extends AsyncTask<Void, Void, Boolean>
+    {
+        TableLayout list;
+        IdleFetchTask(TableLayout mylist) {
+            list = mylist;
+        }
+
+        @Override
+        protected void onPreExecute(){
+            Dialog = new ProgressDialog(getActivity());
+            Dialog.setTitle("Finalising Data...");
+            Dialog.show();
+        }
+        @Override
+        protected Boolean doInBackground(Void... params){
             try {
                 JSONArray jsonArray = new JSONArray(getArguments().getString("resp"));
                 int counti = 0;
                 int k = 1, flagi = 0, i, diffdate;
-                long millis, second, minute, hour, differ;
-                String engst, Starttime = "", Endtime, locstart = "0.000000" + "," + "0.000000", locend = "0.000000" + "," + "0.000000", time1, time2, timedur, st, et, datea, dateb;
+                long millis = 0, second, minute, hour = 0, differ;
+                String engst, Starttime = "", Endtime = "", locstart = "0.000000" + "," + "0.000000", locend = "0.000000" + "," + "0.000000", time1, time2, timedur, st = "", et = "", datea, dateb;
                 for (i = 0; i < jsonArray.length(); i++) {
-                    TableRow tr1 = new TableRow(getActivity());tr1.setPadding(0,3,0,0);
-                    TextView tv1 = new TextView(getActivity());
-                    TextView tv2 = new TextView(getActivity());
-                    TextView tv3 = new TextView(getActivity());
-                    TextView tv4 = new TextView(getActivity());
-                    TextView tv5 = new TextView(getActivity());
-                    TextView tv6 = new TextView(getActivity());
                     JSONObject ob = jsonArray.getJSONObject(i);
                     engst = ob.getString("EngineStatus");
                     if (Objects.equals(engst, "OFF")) {
@@ -80,54 +104,20 @@ public class IdleReport extends Fragment {
                         timedur = String.format("%02d:%02d:%02d", hour, minute, second);
                         st  = Starttime.substring(Starttime.indexOf(0)+1, Starttime.indexOf("T"))+"   "+Starttime.substring(Starttime.indexOf("T")+1, Starttime.indexOf("Z"));
                         et  = Endtime.substring(Endtime.indexOf(0)+1, Endtime.indexOf("T"))+"   "+Endtime.substring(Endtime.indexOf("T")+1, Endtime.indexOf("Z"));
-                        tv1.setText(String.valueOf(k));
-                        tv1.setBackgroundResource(R.drawable.cellborder);
-                        tv1.setHeight(75);
-                        tv1.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                        tv2.setText(ob.getString("DeviceId"));
-                        tv2.setBackgroundResource(R.drawable.cellborder);
-                        tv2.setHeight(75);
-                        tv2.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                        tv3.setText(st);
-                        tv3.setBackgroundResource(R.drawable.cellborder);
-                        tv3.setHeight(75);
-                        tv3.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                        tv4.setText(et);
-                        tv4.setBackgroundResource(R.drawable.cellborder);
-                        tv4.setHeight(75);
-                        tv4.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                        tv5.setText(locstart);
-                        tv5.setBackgroundResource(R.drawable.cellborder);
-                        tv5.setHeight(75);
-                        tv5.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                        tv6.setText(timedur);
-                        tv6.setBackgroundResource(R.drawable.cellborder);
-                        tv6.setHeight(75);
-                        tv6.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                        tv1.setGravity(Gravity.CENTER_HORIZONTAL);
-                        tv2.setGravity(Gravity.CENTER_HORIZONTAL);
-                        tv3.setGravity(Gravity.CENTER_HORIZONTAL);
-                        tv4.setGravity(Gravity.CENTER_HORIZONTAL);
-                        tv5.setGravity(Gravity.CENTER_HORIZONTAL);
-                        tv6.setGravity(Gravity.CENTER_HORIZONTAL);
-                        tr1.addView(tv1);
-                        tr1.addView(tv2);
-                        tr1.addView(tv3);
-                        tr1.addView(tv4);
-                        tr1.addView(tv5);
-                        tr1.addView(tv6);
-                        list.addView(tr1);
+                        tableText mynewtext = new tableText();
+                        mynewtext.setString(String.valueOf(k), 0);
+                        mynewtext.setString(obj1.getString("DeviceId"), 1);
+                        mynewtext.setString(st, 2);
+                        mynewtext.setString(et, 3);
+                        mynewtext.setString(locstart, 4);
+                        mynewtext.setString(timedur, 5);
+                        mynewtext.setCounti(counti);
+                        mynewtext.setFlagi(flagi);
+                        trip.add(mynewtext);
                         k++;
                     }
                 }
                 if(flagi == 1){
-                    TableRow tr1 = new TableRow(getActivity());
-                    TextView tv1 = new TextView(getActivity());
-                    TextView tv2 = new TextView(getActivity());
-                    TextView tv3 = new TextView(getActivity());
-                    TextView tv4 = new TextView(getActivity());
-                    TextView tv5 = new TextView(getActivity());
-                    TextView tv6 = new TextView(getActivity());
                     JSONObject obj1 = jsonArray.getJSONObject(i - 1);
                     Endtime = obj1.getString("GPSTimestamp");
                     time1 = Starttime.substring(Starttime.indexOf("T")+1, Starttime.indexOf("Z"));
@@ -148,48 +138,67 @@ public class IdleReport extends Fragment {
                     timedur = String.format("%02d:%02d:%02d", hour, minute, second);
                     st  = Starttime.substring(Starttime.indexOf(0)+1, Starttime.indexOf("T"))+"   "+Starttime.substring(Starttime.indexOf("T")+1, Starttime.indexOf("Z"));
                     et  = Endtime.substring(Endtime.indexOf(0)+1, Endtime.indexOf("T"))+"   "+Endtime.substring(Endtime.indexOf("T")+1, Endtime.indexOf("Z"));
-                    tv1.setText(String.valueOf(k));
-                    tv1.setBackgroundResource(R.drawable.cellborder);
-                    tv1.setHeight(75);
-                    tv1.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                    tv2.setText(obj1.getString("DeviceId"));
-                    tv2.setBackgroundResource(R.drawable.cellborder);
-                    tv2.setHeight(75);
-                    tv2.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                    tv3.setText(st);
-                    tv3.setBackgroundResource(R.drawable.cellborder);
-                    tv3.setHeight(75);
-                    tv3.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                    tv4.setText(et);
-                    tv4.setBackgroundResource(R.drawable.cellborder);
-                    tv4.setHeight(75);
-                    tv4.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                    tv5.setText(locstart);
-                    tv5.setBackgroundResource(R.drawable.cellborder);
-                    tv5.setHeight(75);
-                    tv5.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                    tv6.setText(timedur);
-                    tv6.setBackgroundResource(R.drawable.cellborder);
-                    tv6.setHeight(75);
-                    tv6.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
-                    tv1.setGravity(Gravity.CENTER_HORIZONTAL);
-                    tv2.setGravity(Gravity.CENTER_HORIZONTAL);
-                    tv3.setGravity(Gravity.CENTER_HORIZONTAL);
-                    tv4.setGravity(Gravity.CENTER_HORIZONTAL);
-                    tv5.setGravity(Gravity.CENTER_HORIZONTAL);
-                    tv6.setGravity(Gravity.CENTER_HORIZONTAL);
-                    tr1.addView(tv1);
-                    tr1.addView(tv2);
-                    tr1.addView(tv3);
-                    tr1.addView(tv4);
-                    tr1.addView(tv5);
-                    tr1.addView(tv6);
-                    list.addView(tr1);
+                    tableText mynewtext = new tableText();
+                    mynewtext.setString(String.valueOf(k), 0);
+                    mynewtext.setString(obj1.getString("DeviceId"), 1);
+                    mynewtext.setString(st, 2);
+                    mynewtext.setString(et, 3);
+                    mynewtext.setString(locstart, 4);
+                    mynewtext.setString(timedur, 5);
+                    mynewtext.setCounti(counti);
+                    mynewtext.setFlagi(flagi);
+                    trip.add(mynewtext);
                 }
-            } catch (JSONException | ParseException e) {
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
+            return true;
         }
-        return view;
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            TextView[] tv = new TextView[9];
+            for(int i = 0;i < trip.size(); i++){
+                TableRow tr1 = new TableRow(getActivity());
+                for(int j = 0; j < 6; j++){
+                    tv[j] = new TextView(getActivity());
+                    tv[j].setText(trip.get(i).getString(j));
+                    tv[j].setBackgroundResource(R.drawable.cellborder);
+                    tv[j].setHeight(75);
+                    tv[j].setTextAppearance(android.R.style.TextAppearance_Small);
+                    tv[j].setGravity(Gravity.CENTER_HORIZONTAL);
+                    tr1.addView(tv[j]);
+                }
+                if(trip.get(i).getCount() == 1)
+                    tr1.setPadding(0, 3, 0, 0);
+                list.addView(tr1);
+            }
+            Dialog.dismiss();
+        }
+    }
+
+    private class tableText{
+        private String[] text = new String[6];
+        private int flagi, counti;
+        public tableText(){};
+        public void setString(String s, int idx){
+            text[idx] = s;
+        }
+        public void setFlagi(int flag){
+            flagi = flag;
+        }
+        public void setCounti(int count){
+            counti = count;
+        }
+        public String getString(int idx){
+            return text[idx];
+        }
+        public int getFlag(){
+            return flagi;
+        }
+        public int getCount(){
+            return counti;
+        }
     }
 }

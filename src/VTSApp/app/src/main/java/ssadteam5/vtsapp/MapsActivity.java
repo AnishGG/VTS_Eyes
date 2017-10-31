@@ -41,18 +41,21 @@ import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener
 {
     private GoogleMap mGoogleMap;
     private StompClient mStompClient;
     private final ArrayList<Marker> markerList = new ArrayList<>();
     private Float courseOverGround = null;
     private int flag;
+    private android.support.v7.app.ActionBar actionBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        actionBar = getSupportActionBar();
         getSupportActionBar().setTitle("Map");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -150,6 +153,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
+    @Override
+    public void onMapClick(LatLng point){
+        if(actionBar.isShowing()){
+            actionBar.hide();
+            /*** Can not implement hidePanel() due to buggy google map view ***/
+        }
+        else{
+            actionBar.show();
+        }
+        Log.d("ThePointIs", point.toString());
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
@@ -200,6 +216,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return info;
             }
         });
+        mGoogleMap.setOnMapClickListener(this);
     }
 
     @Override

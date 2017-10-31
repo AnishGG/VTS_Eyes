@@ -45,7 +45,7 @@ import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-public class TrackVehicleActivity extends AppCompatActivity implements OnMapReadyCallback
+public class TrackVehicleActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener
 {
     // DEFAULT DISPLAY VALUES
     private final String UNAVAILABLE = "N/A";
@@ -53,6 +53,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
     private SlidingUpPanelLayout mLayout;
     private String deviceName;
     private String token;
+    private android.support.v7.app.ActionBar actionBar;
 
     // Add handles to display real-time information
     private Switch ignitionStatusSwitch;
@@ -79,6 +80,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         // Initialize sliding pane layout
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setDragView(null);
+        actionBar = getSupportActionBar();
 
         // Initialize display elements
         gpsTimestampTextView = (TextView) findViewById(R.id.gpsTimestampView);
@@ -121,7 +123,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         Claim claim = jwt.getClaim("organisationId");
         String organisationId = claim.asString();
 
-        mStompClient = Stomp.over(WebSocket.class,getString(R.string.websocket));
+        mStompClient = Stomp.over(WebSocket.class,getString(R.string.web_socket));
         mStompClient.connect();
         mStompClient.topic("/device/message" + organisationId).subscribe(topicMessage -> {
 
@@ -213,6 +215,18 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         });
     }
 
+    @Override
+    public void onMapClick(LatLng point){
+        if(actionBar.isShowing()){
+            actionBar.hide();
+            /*** Can not implement hidePanel() due to buggy google map view ***/
+        }
+        else{
+            actionBar.show();
+        }
+        Log.d("ThePointIs", point.toString());
+    }
+
     /**
      * Invoked when google map is loaded.
      *
@@ -271,6 +285,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                 return info;
             }
         });
+        mGoogleMap.setOnMapClickListener(this);
     }
 
     /**

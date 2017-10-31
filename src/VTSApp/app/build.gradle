@@ -33,7 +33,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project(':library')
+//    compile project(':library')
     compile 'com.sothree.slidinguppanel:library:3.4.0'
     compile 'joda-time:joda-time:2.9.9'
     compile 'com.android.support:appcompat-v7:26.+'
