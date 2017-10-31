@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <HorizontalScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/tripreport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#fafafa"
+            android:orientation="horizontal"
+            android:stretchColumns="*">
+
+            <TableRow
+                android:layout_margin="2dip"
+                android:background="#011201">
+
+                <TextView
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="  #   "
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="            Reg No.             "
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="               Start time                "
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="                End time                "
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="             Start Location             "
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="             End Location             "
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="  Duration(hours)  "
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="  Distance(Km)  "
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="25dp"
+                    android:layout_margin="2dip"
+                    android:background="#f7f9f7"
+                    android:gravity="center_horizontal"
+                    android:text="  Max Speed(Km/h)  "
+                    android:textStyle="bold" />
+            </TableRow>
+        </TableLayout>
+    </HorizontalScrollView>
+
+</ScrollView>

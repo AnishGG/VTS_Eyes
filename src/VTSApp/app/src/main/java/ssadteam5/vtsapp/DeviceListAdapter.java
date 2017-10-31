@@ -1,8 +1,6 @@
 package ssadteam5.vtsapp;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -17,8 +15,8 @@ import java.util.List;
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.MyViewHolder>
 {
-    private Context mContext;
-    private List<VehicleCard> vehicleCards;
+    private final Context mContext;
+    private final List<VehicleCard> vehicleCards;
 
     public DeviceListAdapter(Context mContext, List<VehicleCard> vehicleCards)
     {
@@ -28,19 +26,19 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder
     {
-        public ImageView thumbnail;
-        public TextView name;
-        public TextView account;
-        public TextView description;
-        public RelativeLayout relativeLayout;
+        public final ImageView thumbnail;
+        public final TextView name;
+        public final TextView account;
+        public final TextView description;
+        public final RelativeLayout relativeLayout;
         public MyViewHolder(View view)
         {
             super(view);
-            relativeLayout = (RelativeLayout) view.findViewById(R.id.relLayout);
-            name = (TextView) view.findViewById(R.id.name);
-            thumbnail = (ImageView) view.findViewById(R.id.icon);
-            account = (TextView) view.findViewById(R.id.account);
-            description = (TextView) view.findViewById(R.id.description);
+            relativeLayout = view.findViewById(R.id.relLayout);
+            name = view.findViewById(R.id.name);
+            thumbnail = view.findViewById(R.id.icon);
+            account = view.findViewById(R.id.account);
+            description = view.findViewById(R.id.description);
         }
     }
     @Override

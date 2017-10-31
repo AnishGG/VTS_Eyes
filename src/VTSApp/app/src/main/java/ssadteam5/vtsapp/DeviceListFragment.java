@@ -21,13 +21,13 @@ import java.util.List;
 
 public class DeviceListFragment extends Fragment
 {
-    View view;
-    SwipeRefreshLayout swipeLayout;
+    private View view;
+    private SwipeRefreshLayout swipeLayout;
     private DeviceFetchTask mFetchTask;
-    public RecyclerView recyclerView;
-    public DeviceListAdapter DeviceListAdapter;
-    public List<VehicleCard> vehicleCardList;
-    UserData userData;
+    private RecyclerView recyclerView;
+    private DeviceListAdapter DeviceListAdapter;
+    private List<VehicleCard> vehicleCardList;
+    private UserData userData;
 
     @Nullable
     @Override
@@ -37,7 +37,7 @@ public class DeviceListFragment extends Fragment
         userData = new UserData(getActivity().getApplicationContext());
 
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.recycler_view);
         vehicleCardList = new ArrayList<>();
         DeviceListAdapter = new DeviceListAdapter(getContext(),vehicleCardList);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
@@ -49,7 +49,7 @@ public class DeviceListFragment extends Fragment
         mFetchTask = new DeviceFetchTask();
         mFetchTask.execute((Void) null);
 
-        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshDeviceList);
+        swipeLayout = view.findViewById(R.id.swipeRefreshDeviceList);
         swipeLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override

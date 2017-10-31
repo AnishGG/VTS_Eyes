@@ -5,15 +5,13 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
     <android.support.v7.widget.CardView
-        android:id="@+id/vehicle_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_margin"
         android:elevation="3dp"
         card_view:cardCornerRadius="4dp">
         <RelativeLayout
-            android:id="@+id/rlcontainer"
-        android:layout_width="match_parent"
+            android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
             <ImageView
@@ -23,6 +21,7 @@
             android:padding="2dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:contentDescription="@string/thumbnail_device"
             android:src="@drawable/ic_card_vehicle"/>
 
             <TextView

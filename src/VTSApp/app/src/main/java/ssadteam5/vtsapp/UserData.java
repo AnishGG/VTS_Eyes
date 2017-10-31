@@ -5,29 +5,26 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-public class UserData
+class UserData
 {
-    SharedPreferences pref;
-    Editor editor;
-    Context _context;
-    int PRIVATE_MODE = 0;
-    UserSessionManager session;
-    private String mToken;
+    private SharedPreferences pref;
+    private Editor editor;
+    private Context _context;
+    private int PRIVATE_MODE = 0;
+    private UserSessionManager session;
     // Sharedpref file name
     private static final String PREFER_NAME = "UserData";
 
     // User name (make variable public to access from outside)
     public static final String KEY_RESPONSE = "response";
 
-    public static final String DATA_FETCHED = "data_fetched";
+    private static final String DATA_FETCHED = "data_fetched";
 
     public UserData(Context context)
     {
@@ -35,12 +32,12 @@ public class UserData
         pref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = pref.edit();
 //        editor.putBoolean(DATA_FETCHED, false);
-//        editor.commit();
+        editor.commit();
     }
 
     public void fetchData(){
         session = new UserSessionManager(_context);
-        mToken = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
+        String mToken = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
         HttpURLConnection conn;
         try {
             String response = "";
@@ -62,15 +59,7 @@ public class UserData
             editor.putString(KEY_RESPONSE, response);
             editor.putBoolean(DATA_FETCHED, true);
             editor.commit();
-        }catch (MalformedURLException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -82,7 +71,7 @@ public class UserData
     {
 
         //Use hashmap to store user credentials
-        HashMap<String, String> response = new HashMap<String, String>();
+        HashMap<String, String> response = new HashMap<>();
 
         // user response
         response.put(KEY_RESPONSE, pref.getString(KEY_RESPONSE, null));

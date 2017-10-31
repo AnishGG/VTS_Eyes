@@ -3,7 +3,7 @@ package ssadteam5.vtsapp;
 
 import org.json.JSONObject;
 
-public class VehicleCard
+class VehicleCard
 {
     private String name;
     private String id;
@@ -29,19 +29,9 @@ public class VehicleCard
         return account;
     }
 
-    public void setAccount(String account)
-    {
-        this.account = account;
-    }
-
     public String getDescription()
     {
         return description;
-    }
-
-    public void setDescription(String description)
-    {
-        this.description = description;
     }
 
     public VehicleCard(String name, String account, String description,JSONObject vehicleDetailsDO,JSONObject driverDetailsDO)
@@ -53,25 +43,10 @@ public class VehicleCard
         this.driverDetailsDO = driverDetailsDO;
     }
 
-    public String getId()
-    {
-        return id;
-    }
-
-    public void setId(String id)
-    {
-        this.id = id;
-    }
-
 
     public String getName()
     {
         return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
     }
 
     public VehicleCard(String name)

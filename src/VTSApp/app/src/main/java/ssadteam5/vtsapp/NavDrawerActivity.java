@@ -3,19 +3,20 @@ package ssadteam5.vtsapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 public class NavDrawerActivity extends AppCompatActivity
@@ -23,11 +24,9 @@ public class NavDrawerActivity extends AppCompatActivity
 {
     private String token;
     private String[] menu;
-    private String email;
-    private String tenant;
 
-    UserSessionManager session;
-    public static final String PREFS_NAME = "LoginPrefs";
+    private UserSessionManager session;
+    private static final String PREFS_NAME = "LoginPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,26 +45,26 @@ public class NavDrawerActivity extends AppCompatActivity
         }
         else
         {
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            Toolbar toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            FloatingActionButton fab = findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     launchMap();
                 }
             });
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.setDrawerListener(toggle);
             toggle.syncState();
-            email = session.getUserDetails().get(UserSessionManager.KEY_EMAIL);
-            tenant = session.getUserDetails().get(UserSessionManager.KEY_TENANT);
+            String email = session.getUserDetails().get(UserSessionManager.KEY_EMAIL);
+            String tenant = session.getUserDetails().get(UserSessionManager.KEY_TENANT);
             token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            NavigationView navigationView = findViewById(R.id.nav_view);
             Menu navMenu = navigationView.getMenu();
             View hview = navigationView.getHeaderView(0);
             TextView navtenant = hview.findViewById(R.id.tenantName);
@@ -99,7 +98,7 @@ public class NavDrawerActivity extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -136,7 +135,7 @@ public class NavDrawerActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-    public void logout()
+    private void logout()
     {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -146,7 +145,7 @@ public class NavDrawerActivity extends AppCompatActivity
     }
     private void deviceListFragment()
     {
-        Fragment fragment = null;
+        Fragment fragment;
         Bundle bundle = new Bundle();
         bundle.putString("token",token);
         fragment = new DeviceListFragment();
@@ -154,7 +153,6 @@ public class NavDrawerActivity extends AppCompatActivity
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.content_frame, fragment);
         tx.commit();
-        return ;
     }
     private void reportsFragment()
     {
@@ -165,11 +163,10 @@ public class NavDrawerActivity extends AppCompatActivity
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.content_frame, fragment);
         tx.commit();
-        return ;
     }
     private void dashboardFragment()
     {
-        Fragment fragment = null;
+        Fragment fragment;
         Bundle bundle = new Bundle();
         bundle.putString("token",token);
         fragment = new DashboardFragment();
@@ -177,32 +174,29 @@ public class NavDrawerActivity extends AppCompatActivity
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.content_frame, fragment);
         tx.commit();
-        return ;
     }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item)
+    public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if(menu[id].equals("Devices"))
+        switch (menu[id])
         {
-            deviceListFragment();
+            case "Devices":
+                deviceListFragment();
+                break;
+            case "Dashboard":
+                dashboardFragment();
+                break;
+            case "Reports":
+                reportsFragment();
+                break;
+            case "Logout":
+                logout();
+                return true;
         }
-        else if(menu[id].equals("Dashboard"))
-        {
-            dashboardFragment();
-        }
-        else if(menu[id].equals("Reports"))
-        {
-            reportsFragment();
-        }
-        else if(menu[id].equals("Logout"))
-        {
-            logout();
-            return true;
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

@@ -1,24 +1,25 @@
 package ssadteam5.vtsapp;
 
-import java.util.HashMap;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-public class UserSessionManager
+import java.util.HashMap;
+
+class UserSessionManager
 {
     // To clear the userData on logout
-    UserData userData;
+    private UserData userData;
     // Shared Preferences reference
-    SharedPreferences pref;
+    private SharedPreferences pref;
     // Editor reference for Shared preferences
-    Editor editor;
+    private Editor editor;
     // Context
-    Context _context;
+    private Context _context;
 
     // Shared pref mode
-    int PRIVATE_MODE = 0;
+    private int PRIVATE_MODE = 0;
 
     // Sharedpref file name
     private static final String PREFER_NAME = "AndroidExamplePref";
@@ -41,6 +42,7 @@ public class UserSessionManager
         this._context = context;
         pref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = pref.edit();
+        editor.commit();
     }
 
     //Create login session
@@ -94,7 +96,7 @@ public class UserSessionManager
     public HashMap<String, String> getUserDetails()
     {
         //Use hashmap to store user credentials
-        HashMap<String, String> user = new HashMap<String, String>();
+        HashMap<String, String> user = new HashMap<>();
 
         // user email id
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
@@ -133,7 +135,7 @@ public class UserSessionManager
 
 
     // Check for login
-    public boolean isUserLoggedIn()
+    private boolean isUserLoggedIn()
     {
         return pref.getBoolean(IS_USER_LOGIN, false);
     }
