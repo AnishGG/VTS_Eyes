@@ -27,7 +27,6 @@
             android:background="#aba0a3" />
 
         <TextView
-            android:id="@+id/veh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="8dp"
@@ -50,37 +49,36 @@
             android:layout_marginEnd="20dp" />
 
 
-
         <TextView
-            android:id="@+id/std"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/start_date"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/e1"
-            android:layout_below="@+id/spinner"
-            android:paddingStart="20dp"
+            android:layout_alignTop="@+id/e1"
+            android:layout_toEndOf="@+id/tvDate"
             android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:text="@string/start_date"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
-        <TextView
+        <EditText
             android:id="@+id/e1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
+            android:hint="@string/hint_date_box"
             android:paddingRight="20dp"
             android:layout_below="@+id/spinner"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:maxLength="10"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:inputType="date"/>
 
         <Button
             android:id="@+id/btnChangeDate1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/change_date"
-            android:layout_below="@+id/std"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="20dp" />
+            android:layout_below="@+id/e1"
+            android:layout_toEndOf="@+id/end"
+            android:text="@string/change_date"/>
 
 
         <TextView
@@ -94,27 +92,31 @@
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
-        <TextView
+        <EditText
             android:id="@+id/e2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
+            android:hint="@string/hint_date_box"
             android:layout_below="@+id/btnChangeDate1"
             android:paddingRight="20dp"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:maxLength="10"
+            android:inputType="date"
+            android:imeOptions="actionGo"
+            android:imeActionLabel="@string/get_reports"
+            android:imeActionId="@+id/btnsub"/>
 
 
         <Button
             android:id="@+id/btnChangeDate2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/change_date"
-            android:layout_below="@+id/end"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="20dp" />
+            android:layout_alignStart="@+id/e2"
+            android:layout_below="@+id/e2"
+            android:text="@string/change_date"/>
 
         <View
             android:id="@+id/l6"
@@ -129,10 +131,9 @@
             android:id="@+id/btnsub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/get_reports"
+            android:layout_alignStart="@+id/btnChangeDate2"
             android:layout_below="@+id/l6"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="20dp" />
+            android:text="@string/get_reports"/>
 
 
         <TextView

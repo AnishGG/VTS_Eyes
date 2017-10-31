@@ -258,7 +258,7 @@ public class LoginActivity extends AppCompatActivity
 
             HttpURLConnection conn;
             try {
-                String response = "";
+                StringBuilder response = new StringBuilder();
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("email", mEmail);
                 jsonObject.put("password", mPassword);
@@ -281,9 +281,9 @@ public class LoginActivity extends AppCompatActivity
                 {
                     char current = (char) inputStreamData;
                     inputStreamData = inputStreamReader.read();
-                    response += current;
+                    response.append(current);
                 }
-                JSONObject resp = new JSONObject(response);
+                JSONObject resp = new JSONObject(response.toString());
                 status = resp.get("status").toString();
                 String token = resp.get("token").toString();
                 errorCode = resp.get("errorCode").toString();

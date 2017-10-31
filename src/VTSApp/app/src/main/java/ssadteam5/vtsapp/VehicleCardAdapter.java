@@ -13,8 +13,8 @@ import java.util.List;
 
 public class VehicleCardAdapter extends RecyclerView.Adapter<VehicleCardAdapter.MyViewHolder>
 {
-    private Context mContext;
-    private List<VehicleCard> vehicleCards;
+    private final Context mContext;
+    private final List<VehicleCard> vehicleCards;
 
     public VehicleCardAdapter(Context mContext, List<VehicleCard> vehicleCards)
     {
@@ -24,8 +24,8 @@ public class VehicleCardAdapter extends RecyclerView.Adapter<VehicleCardAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder
     {
-        public TextView name;
-        public ImageView thumbnail;
+        public final TextView name;
+        public final ImageView thumbnail;
 
         public MyViewHolder(View view)
         {

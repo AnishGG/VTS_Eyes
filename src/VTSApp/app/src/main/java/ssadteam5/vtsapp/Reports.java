@@ -7,13 +7,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -21,35 +19,32 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Reports extends Fragment {
-    Bundle bund;
-    ViewPager viewPager;
-    PagerAdapter adapter;
-    TabLayout tabLayout;
-    View view;
-    String token;
-    private String response,startdate,enddate,vehicle;
+    private Bundle bund;
+    private ViewPager viewPager;
+    private PagerAdapter adapter;
+    private TabLayout tabLayout;
+    private String response;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.content_reports, container, false);
-        token = getArguments().getString("token");
-        startdate=getArguments().getString("startdate");
-        enddate=getArguments().getString("enddate");
-        vehicle=getArguments().getString("vehicle");
+        View view = inflater.inflate(R.layout.content_reports, container, false);
+        String token = getArguments().getString("token");
+        String startdate = getArguments().getString("startdate");
+        String enddate = getArguments().getString("enddate");
+        String vehicle = getArguments().getString("vehicle");
 
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tabl);
+        tabLayout = view.findViewById(R.id.tabl);
         tabLayout.addTab(tabLayout.newTab().setText("Trip report"));
         tabLayout.addTab(tabLayout.newTab().setText("Idle report"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        viewPager = view.findViewById(R.id.pager);
         adapter = new PagerAdapter
                 (getActivity().getSupportFragmentManager(), tabLayout.getTabCount(), bund);
         viewPager.setAdapter(adapter);
@@ -91,7 +86,7 @@ public class Reports extends Fragment {
             mEndDate = endDate + "T18:30:00Z";
             mToken = token;
         }
-        private ProgressDialog Dialog = new ProgressDialog(getActivity());
+        private final ProgressDialog Dialog = new ProgressDialog(getActivity());
 
         @Override
         protected void onPreExecute()
@@ -137,11 +132,7 @@ public class Reports extends Fragment {
                 }
                 int counter = 0;
                 Log.d("response", response);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();

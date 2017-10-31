@@ -12,7 +12,6 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -46,15 +45,12 @@ import ua.naiksoftware.stomp.client.StompClient;
 public class TrackVehicleActivity extends AppCompatActivity implements GoogleMap.OnMapClickListener, OnMapReadyCallback
 {
     private SlidingUpPanelLayout mLayout;
-    private UserSessionManager session;
     private UserData userData;
     private GoogleMap mGoogleMap;
-    private SupportMapFragment mapFrag;
     private StompClient mStompClient;
     private String deviceName;
     private Marker marker = null;
     private Float courseOverGround = null;
-    private String organisationId;
     private Double Lat;
     private Double Lon;
     private int mapArea = 0;
@@ -68,8 +64,8 @@ public class TrackVehicleActivity extends AppCompatActivity implements GoogleMap
         init();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
-        session = new UserSessionManager(getApplicationContext());
+        SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
+        UserSessionManager session = new UserSessionManager(getApplicationContext());
         userData = new UserData(getApplicationContext());
         mapFrag.getMapAsync(this);
         actionBar = getSupportActionBar();
@@ -101,7 +97,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements GoogleMap
 
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");
-        organisationId = claim.asString();
+        String organisationId = claim.asString();
 
         mStompClient = Stomp.over(WebSocket.class,getString(R.string.web_socket));
         mStompClient.connect();
@@ -183,8 +179,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements GoogleMap
         if(mapArea == 0){
             actionBar.hide();
             mapArea = 1;
-            /*** Can not implement this due to buggy google map view ***/
-//            mLayout.setPanelHeight(0);
+            //            mLayout.setPanelHeight(0);
         }
         else{
             actionBar.show();
@@ -357,7 +352,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements GoogleMap
             row.setLayoutParams(lp);
             TextView qty = new TextView(this);
             qty.setText("Device: " + deviceName);
-            qty.setTextAppearance(R.style.TextAppearance_AppCompat_Large);
+            qty.setTextAppearance(this,R.style.TextAppearance_AppCompat_Large);
             row.addView(qty);
             t.addView(row);
 
@@ -374,41 +369,41 @@ public class TrackVehicleActivity extends AppCompatActivity implements GoogleMap
                 row1.setLayoutParams(lp);
                 TextView qty1 = new TextView(this);
                 qty1.setText("Vehicle Name: " + vehicleName);
-                qty1.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
+                qty1.setTextAppearance(this,R.style.TextAppearance_AppCompat_Small);
                 row1.addView(qty1);
 
                 TableRow row2 = new TableRow(this);
                 row2.setLayoutParams(lp);
                 TextView qty2 = new TextView(this);
-                qty2.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
+                qty2.setTextAppearance(this,R.style.TextAppearance_AppCompat_Small);
                 row2.addView(qty2);
 
                 TableRow row3 = new TableRow(this);
                 row3.setLayoutParams(lp);
                 TextView qty3 = new TextView(this);
                 qty3.setText("Vehicle Type: " + vehicleType);
-                qty3.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
+                qty3.setTextAppearance(this,R.style.TextAppearance_AppCompat_Small);
                 row3.addView(qty3);
 
                 TableRow row4 = new TableRow(this);
                 row4.setLayoutParams(lp);
                 TextView qty4 = new TextView(this);
                 qty4.setText("Make: " + make);
-                qty4.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
+                qty4.setTextAppearance(this,R.style.TextAppearance_AppCompat_Small);
                 row4.addView(qty4);
 
                 TableRow row5 = new TableRow(this);
                 row5.setLayoutParams(lp);
                 TextView qty5 = new TextView(this);
                 qty5.setText("Next Service: " + nextService);
-                qty5.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
+                qty5.setTextAppearance(this,R.style.TextAppearance_AppCompat_Small);
                 row5.addView(qty5);
 
                 TableRow row6 = new TableRow(this);
                 row6.setLayoutParams(lp);
                 TextView qty6 = new TextView(this);
                 qty6.setText("Notes: " + notes);
-                qty6.setTextAppearance(R.style.TextAppearance_AppCompat_Small);
+                qty6.setTextAppearance(this,R.style.TextAppearance_AppCompat_Small);
                 row6.addView(qty6);
 
                 t.addView(row1);

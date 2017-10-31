@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -23,16 +22,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-import static android.graphics.Typeface.BOLD;
-
 
 public class IdleReport extends Fragment {
-    private View view;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.idle_report, container, false);
+        View view = inflater.inflate(R.layout.idle_report, container, false);
         TableLayout list = view.findViewById(R.id.idlereport);
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -40,8 +36,8 @@ public class IdleReport extends Fragment {
                 JSONArray jsonArray = new JSONArray(getArguments().getString("resp"));
                 int counti = 0;
                 int k = 1, flagi = 0, i, diffdate;
-                long millis = 0, second, minute, hour = 0, differ;
-                String engst, Starttime = "", Endtime = "", locstart = "0.000000" + "," + "0.000000", locend = "0.000000" + "," + "0.000000", time1, time2, timedur, st = "", et = "", datea, dateb;
+                long millis, second, minute, hour, differ;
+                String engst, Starttime = "", Endtime, locstart = "0.000000" + "," + "0.000000", locend = "0.000000" + "," + "0.000000", time1, time2, timedur, st, et, datea, dateb;
                 for (i = 0; i < jsonArray.length(); i++) {
                     TableRow tr1 = new TableRow(getActivity());tr1.setPadding(0,3,0,0);
                     TextView tv1 = new TextView(getActivity());
@@ -87,27 +83,27 @@ public class IdleReport extends Fragment {
                         tv1.setText(String.valueOf(k));
                         tv1.setBackgroundResource(R.drawable.cellborder);
                         tv1.setHeight(75);
-                        tv1.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv1.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv2.setText(ob.getString("DeviceId"));
                         tv2.setBackgroundResource(R.drawable.cellborder);
                         tv2.setHeight(75);
-                        tv2.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv2.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv3.setText(st);
                         tv3.setBackgroundResource(R.drawable.cellborder);
                         tv3.setHeight(75);
-                        tv3.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv3.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv4.setText(et);
                         tv4.setBackgroundResource(R.drawable.cellborder);
                         tv4.setHeight(75);
-                        tv4.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv4.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv5.setText(locstart);
                         tv5.setBackgroundResource(R.drawable.cellborder);
                         tv5.setHeight(75);
-                        tv5.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv5.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv6.setText(timedur);
                         tv6.setBackgroundResource(R.drawable.cellborder);
                         tv6.setHeight(75);
-                        tv6.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv6.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv1.setGravity(Gravity.CENTER_HORIZONTAL);
                         tv2.setGravity(Gravity.CENTER_HORIZONTAL);
                         tv3.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -155,27 +151,27 @@ public class IdleReport extends Fragment {
                     tv1.setText(String.valueOf(k));
                     tv1.setBackgroundResource(R.drawable.cellborder);
                     tv1.setHeight(75);
-                    tv1.setTextAppearance(android.R.style.TextAppearance_Small);
+                    tv1.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                     tv2.setText(obj1.getString("DeviceId"));
                     tv2.setBackgroundResource(R.drawable.cellborder);
                     tv2.setHeight(75);
-                    tv2.setTextAppearance(android.R.style.TextAppearance_Small);
+                    tv2.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                     tv3.setText(st);
                     tv3.setBackgroundResource(R.drawable.cellborder);
                     tv3.setHeight(75);
-                    tv3.setTextAppearance(android.R.style.TextAppearance_Small);
+                    tv3.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                     tv4.setText(et);
                     tv4.setBackgroundResource(R.drawable.cellborder);
                     tv4.setHeight(75);
-                    tv4.setTextAppearance(android.R.style.TextAppearance_Small);
+                    tv4.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                     tv5.setText(locstart);
                     tv5.setBackgroundResource(R.drawable.cellborder);
                     tv5.setHeight(75);
-                    tv5.setTextAppearance(android.R.style.TextAppearance_Small);
+                    tv5.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                     tv6.setText(timedur);
                     tv6.setBackgroundResource(R.drawable.cellborder);
                     tv6.setHeight(75);
-                    tv6.setTextAppearance(android.R.style.TextAppearance_Small);
+                    tv6.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                     tv1.setGravity(Gravity.CENTER_HORIZONTAL);
                     tv2.setGravity(Gravity.CENTER_HORIZONTAL);
                     tv3.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -190,9 +186,7 @@ public class IdleReport extends Fragment {
                     tr1.addView(tv6);
                     list.addView(tr1);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
+            } catch (JSONException | ParseException e) {
                 e.printStackTrace();
             }
         }

@@ -9,17 +9,12 @@ import java.util.HashMap;
 
 class UserSessionManager
 {
-    // To clear the userData on logout
-    private UserData userData;
     // Shared Preferences reference
-    private SharedPreferences pref;
+    private final SharedPreferences pref;
     // Editor reference for Shared preferences
-    private Editor editor;
+    private final Editor editor;
     // Context
-    private Context _context;
-
-    // Shared pref mode
-    private int PRIVATE_MODE = 0;
+    private final Context _context;
 
     // Sharedpref file name
     private static final String PREFER_NAME = "AndroidExamplePref";
@@ -40,6 +35,7 @@ class UserSessionManager
     public UserSessionManager(Context context)
     {
         this._context = context;
+        int PRIVATE_MODE = 0;
         pref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = pref.edit();
         editor.commit();
@@ -117,7 +113,7 @@ class UserSessionManager
         editor.clear();
         editor.commit();
         // Clearing all user responses of UserData Class
-        userData = new UserData(_context);
+        UserData userData = new UserData(_context);
         userData.destroyResponse();
 
         // After logout redirect user to Login Activity

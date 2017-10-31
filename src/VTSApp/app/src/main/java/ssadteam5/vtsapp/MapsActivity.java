@@ -44,10 +44,8 @@ import ua.naiksoftware.stomp.client.StompClient;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback
 {
     private GoogleMap mGoogleMap;
-    private SupportMapFragment mapFrag;
     private StompClient mStompClient;
-    private ArrayList<Marker> markerList = new ArrayList<>();
-    private UserSessionManager session;
+    private final ArrayList<Marker> markerList = new ArrayList<>();
     private Float courseOverGround = null;
     private int flag;
     @Override
@@ -57,10 +55,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
         getSupportActionBar().setTitle("Map");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
 
-        session = new UserSessionManager(getApplicationContext());
+        UserSessionManager session = new UserSessionManager(getApplicationContext());
         String token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
 
         JWT jwt = new JWT(token);

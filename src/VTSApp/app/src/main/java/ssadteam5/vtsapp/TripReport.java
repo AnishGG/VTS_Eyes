@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -18,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,12 +24,11 @@ import java.util.Objects;
 
 
 public class TripReport extends Fragment {
-    private View view;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.trip_report, container, false);
+        View view = inflater.inflate(R.layout.trip_report, container, false);
         TableLayout list = view.findViewById(R.id.tripreport);
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -39,9 +36,9 @@ public class TripReport extends Fragment {
                 JSONArray jsonArray = new JSONArray(getArguments().getString("resp"));
                 int counti = 0, diffdate;
                 int k = 1, l = 0, flagi = 0, i, dist = 0, speed = 0, Radius = 6371, kmInDec = 0, meterInDec = 0;
-                double lat1, lat2, lon1, lon2, dLat, dLon, a, c, valueResult = 0, km, meter, distance = 0;
-                long millis = 0, second, minute, hour = 0, differ;
-                String engst, Starttime = "", Endtime = "", locstart = "0.000000" + "," + "0.000000", locend = "0.000000" + "," + "0.000000", time1, time2, timedur, st = "", et = "", datea, dateb;
+                double lat1, lat2, lon1, lon2, dLat, dLon, a, c, valueResult, km, meter, distance = 0;
+                long millis, second, minute, hour, differ;
+                String engst, Starttime = "", Endtime, locstart = "0.000000" + "," + "0.000000", locend, time1, time2, timedur, st, et, datea, dateb;
                 for (i = 0; i < jsonArray.length(); i++) {
                     TableRow tr1 = new TableRow(getActivity());
                     TextView tv1 = new TextView(getActivity());
@@ -110,39 +107,39 @@ public class TripReport extends Fragment {
                         tv1.setText(String.valueOf(k));
                         tv1.setBackgroundResource(R.drawable.cellborder);
                         tv1.setHeight(75);
-                        tv1.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv1.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv2.setText(ob.getString("DeviceId"));
                         tv2.setBackgroundResource(R.drawable.cellborder);
                         tv2.setHeight(75);
-                        tv2.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv2.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv3.setText(st);
                         tv3.setBackgroundResource(R.drawable.cellborder);
                         tv3.setHeight(75);
-                        tv3.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv3.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv4.setText(et);
                         tv4.setBackgroundResource(R.drawable.cellborder);
                         tv4.setHeight(75);
-                        tv4.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv4.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv5.setText(locstart);
                         tv5.setBackgroundResource(R.drawable.cellborder);
                         tv5.setHeight(75);
-                        tv5.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv5.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv6.setText(locend);
                         tv6.setBackgroundResource(R.drawable.cellborder);
                         tv6.setHeight(75);
-                        tv6.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv6.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv7.setText(timedur);
                         tv7.setBackgroundResource(R.drawable.cellborder);
                         tv7.setHeight(75);
-                        tv7.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv7.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv8.setText(String.valueOf((distance)));
                         tv8.setBackgroundResource(R.drawable.cellborder);
                         tv8.setHeight(75);
-                        tv8.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv8.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv9.setText(String.valueOf(speed));
                         tv9.setBackgroundResource(R.drawable.cellborder);
                         tv9.setHeight(75);
-                        tv9.setTextAppearance(android.R.style.TextAppearance_Small);
+                        tv9.setTextAppearance(getContext(),android.R.style.TextAppearance_Small);
                         tv1.setGravity(Gravity.CENTER_HORIZONTAL);
                         tv2.setGravity(Gravity.CENTER_HORIZONTAL);
                         tv3.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -228,9 +225,7 @@ public class TripReport extends Fragment {
                     tr1.addView(tv9);
                     list.addView(tr1);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
+            } catch (JSONException | ParseException e) {
                 e.printStackTrace();
             }
         }

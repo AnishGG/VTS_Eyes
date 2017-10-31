@@ -13,11 +13,9 @@ import java.util.HashMap;
 
 class UserData
 {
-    private SharedPreferences pref;
-    private Editor editor;
-    private Context _context;
-    private int PRIVATE_MODE = 0;
-    private UserSessionManager session;
+    private final SharedPreferences pref;
+    private final Editor editor;
+    private final Context _context;
     // Sharedpref file name
     private static final String PREFER_NAME = "UserData";
 
@@ -29,6 +27,7 @@ class UserData
     public UserData(Context context)
     {
         this._context = context;
+        int PRIVATE_MODE = 0;
         pref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = pref.edit();
 //        editor.putBoolean(DATA_FETCHED, false);
@@ -36,11 +35,11 @@ class UserData
     }
 
     public void fetchData(){
-        session = new UserSessionManager(_context);
+        UserSessionManager session = new UserSessionManager(_context);
         String mToken = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
         HttpURLConnection conn;
         try {
-            String response = "";
+            StringBuilder response = new StringBuilder();
             URL url = new URL("http://eyedentifyapps.com:8080/api/auth/device/all/");
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -53,10 +52,10 @@ class UserData
             {
                 char current = (char) inputStreamData;
                 inputStreamData = inputStreamReader.read();
-                response += current;
+                response.append(current);
             }
-            Log.d("resp", response);
-            editor.putString(KEY_RESPONSE, response);
+            Log.d("resp", response.toString());
+            editor.putString(KEY_RESPONSE, response.toString());
             editor.putBoolean(DATA_FETCHED, true);
             editor.commit();
         } catch (Exception e)

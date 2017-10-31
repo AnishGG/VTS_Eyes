@@ -3,77 +3,61 @@ package ssadteam5.vtsapp;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 public class    ReportsFragment extends Fragment {
     public static ReportsFragment newInstance() {
-        ReportsFragment r = new ReportsFragment();
-        return r;
+        return new ReportsFragment();
     }
 
-    View view;
+    private View view;
     private String token;
     private String response;
-    private FetchDevNo mFetchTask;
     private Spinner spinner;
-    Context cont;
-    List<String> list = new ArrayList<String>();
+    private final List<String> list = new ArrayList<>();
     private String[] vehicle_list;
 
-    private TextView tvDisplayDate1;
-    private TextView tvDisplayDate2;
-    private Button btnChangeDate1;
-    private Button btnChangeDate2;
-    private Button btnsub;
+    private EditText tvDisplayDate1;
+    private EditText tvDisplayDate2;
 
     private int year;
     private int month;
     private int day;
-    Boolean flag1 = false;
-    Boolean flag2 = false;
+    private Boolean flag1 = false;
+    private Boolean flag2 = false;
     private String startdate = "";
     private String enddate = "";
-    private String vehicle = "";
     private String spres = "";
-    static final int DATE_DIALOG_ID = 999;
-    UserData userData;
+    private InputMethodManager inputMethodManager;
+    private static final int DATE_DIALOG_ID = 999;
+    private UserData userData;
     private StringBuilder sdate;
     Bundle bund;
     ViewPager viewPager;
@@ -125,44 +109,62 @@ public class    ReportsFragment extends Fragment {
 //            }
 //        });
 
-        cont = getActivity();
-        mFetchTask = new FetchDevNo(token);
+        Context cont = getActivity();
+        FetchDevNo mFetchTask = new FetchDevNo(token);
         mFetchTask.execute((Void) null);
         setCurrentDateOnView();
         addListenerOnButton();
-        btnsub = (Button) view.findViewById(R.id.btnsub);
+        Button btnsub = view.findViewById(R.id.btnsub);
+        EditText changeDate2 = view.findViewById(R.id.e2);
+        changeDate2.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent)
+            {
+                if (id == R.id.btnsub || id == EditorInfo.IME_NULL) {
+                    InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    getReports();
+                    return true;
+                }
+                return false;
+            }
+        });
         btnsub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                vehicle = spinner.getSelectedItem().toString();
-                Fragment fragment;
-                Bundle bundle = new Bundle();
-                bundle.putString("token",token);
-                bundle.putString("vehicle",vehicle);
-                bundle.putString("startdate",startdate);
-                bundle.putString("enddate",enddate);
-                fragment = new Reports();
-                fragment.setArguments(bundle);
-                FragmentTransaction tx = getActivity().getSupportFragmentManager().beginTransaction();
-                tx.replace(R.id.content_frame, fragment);
-                tx.addToBackStack(null);
-
-                tx.commit();
-
-
-
+                InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                getReports();
                 //showTables();
             }
         });
         return view;
     }
 
+    private void getReports()
+    {
+        String vehicle = spinner.getSelectedItem().toString();
+        Fragment fragment;
+        Bundle bundle = new Bundle();
+        bundle.putString("token",token);
+        bundle.putString("vehicle", vehicle);
+        startdate = tvDisplayDate1.getText().toString();
+        enddate = tvDisplayDate2.getText().toString();
+        bundle.putString("startdate",startdate);
+        bundle.putString("enddate",enddate);
+        fragment = new Reports();
+        fragment.setArguments(bundle);
+        FragmentTransaction tx = getActivity().getSupportFragmentManager().beginTransaction();
+        tx.replace(R.id.content_frame, fragment);
+        tx.addToBackStack(null);
+        tx.commit();
+    }
 
+    private void setCurrentDateOnView() {
 
-    public void setCurrentDateOnView() {
-
-        tvDisplayDate1 = (TextView) view.findViewById(R.id.e1);
-        tvDisplayDate2 = (TextView) view.findViewById(R.id.e2);
+        tvDisplayDate1 = view.findViewById(R.id.e1);
+        tvDisplayDate2 = view.findViewById(R.id.e2);
         final Calendar c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
@@ -196,10 +198,10 @@ public class    ReportsFragment extends Fragment {
 
     }
 
-    public void addListenerOnButton() {
+    private void addListenerOnButton() {
 
-        btnChangeDate1 = (Button) view.findViewById(R.id.btnChangeDate1);
-        btnChangeDate2 = (Button) view.findViewById(R.id.btnChangeDate2);
+        Button btnChangeDate1 = view.findViewById(R.id.btnChangeDate1);
+        Button btnChangeDate2 = view.findViewById(R.id.btnChangeDate2);
 
 
         btnChangeDate1.setOnClickListener(new View.OnClickListener() {
@@ -208,7 +210,7 @@ public class    ReportsFragment extends Fragment {
             public void onClick(View v) {
                 flag1 = true;
                 flag2 = false;
-                onCreateDialog(DATE_DIALOG_ID).show();
+                onCreateDialog().show();
             }
 
 
@@ -219,7 +221,7 @@ public class    ReportsFragment extends Fragment {
             public void onClick(View v) {
                 flag2 = true;
                 flag1 = false;
-                onCreateDialog(DATE_DIALOG_ID).show();
+                onCreateDialog().show();
 //                showDialog(DATE_DIALOG_ID);
 
             }
@@ -228,8 +230,8 @@ public class    ReportsFragment extends Fragment {
 
     }
 
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
+    private Dialog onCreateDialog() {
+        switch (ReportsFragment.DATE_DIALOG_ID) {
             case DATE_DIALOG_ID:
                 // set date picker as current date
                 return new DatePickerDialog(getActivity(), datePickerListener,
@@ -238,7 +240,7 @@ public class    ReportsFragment extends Fragment {
         return null;
     }
 
-    private DatePickerDialog.OnDateSetListener datePickerListener
+    private final DatePickerDialog.OnDateSetListener datePickerListener
             = new DatePickerDialog.OnDateSetListener() {
 
         // when dialog box is closed, below method will be called.
@@ -308,7 +310,7 @@ public class    ReportsFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             Log.d("something", "something");
-            spinner = (Spinner) view.findViewById(R.id.spinner);
+            spinner = view.findViewById(R.id.spinner);
 
         }
 
@@ -317,12 +319,12 @@ public class    ReportsFragment extends Fragment {
             try {
                 if (!userData.isDataFetched()) {
                     userData.fetchData();
-
                 }
                 String response = userData.getResponse().get(UserData.KEY_RESPONSE);
                 JSONObject obj = new JSONObject(response);
                 JSONArray arr = obj.getJSONArray("deviceDTOS");
                 Log.d("hellodakshsize", "" + arr.length());
+                list.clear();
                 for (int i = 0; i < arr.length(); i++) {
                     try {
                         JSONObject ob = arr.getJSONObject(i);
@@ -345,7 +347,7 @@ public class    ReportsFragment extends Fragment {
         }
 
         protected void onPostExecute(final Boolean success) {
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, list);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.simple_spinner_item, list);
             dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
             spinner.setAdapter(dataAdapter);
         }
