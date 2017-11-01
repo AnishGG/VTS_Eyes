@@ -66,10 +66,10 @@ public class Reports extends AppCompatActivity {
         });
         ReportsInfo mRepTask = new ReportsInfo(vehicle, startdate, enddate, token);
         mRepTask.execute((Void) null);
-        }
+    }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
@@ -81,6 +81,7 @@ public class Reports extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     public class ReportsInfo extends AsyncTask<Void, Void, String> {
 
         private final String mVehicleNo;
@@ -90,15 +91,15 @@ public class Reports extends AppCompatActivity {
 
         ReportsInfo(String vehicleNo, String startDate, String endDate, String token) {
             mVehicleNo = vehicleNo;
-            mStartDate = startDate + "T18:30:00Z";
-            mEndDate = endDate + "T18:30:00Z";
+            mStartDate = startDate + "T00:00:00Z";
+            mEndDate = endDate + "T23:59:59Z";
             mToken = token;
         }
+
         private final ProgressDialog Dialog = new ProgressDialog(Reports.this);
 
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             Dialog.setMessage("Loading");
             Dialog.show();
         }
@@ -107,7 +108,7 @@ public class Reports extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
             Log.d("Fragment", "Reports");
-            if(!userData.isReportFetched(mStartDate, mEndDate, mVehicleNo))
+            if (!userData.isReportFetched(mStartDate, mEndDate, mVehicleNo))
                 userData.fetchReports(mStartDate, mEndDate, mVehicleNo, mToken);
             String response = userData.getReports().get(UserData.KEY_REPORTS);
             return response;
@@ -143,4 +144,4 @@ public class Reports extends AppCompatActivity {
 
         }
     }
-    }
+}

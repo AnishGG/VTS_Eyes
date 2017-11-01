@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +37,7 @@ public class TripReport extends Fragment {
     private Context mContext;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
     }
@@ -57,30 +58,29 @@ public class TripReport extends Fragment {
         return view;
     }
 
-    public class ReportsFetchTask extends AsyncTask<Void, Void, Boolean>
-    {
+    public class ReportsFetchTask extends AsyncTask<Void, Void, Boolean> {
         final TableLayout list;
+
         ReportsFetchTask(TableLayout mylist) {
             list = mylist;
         }
 
         @Override
-        protected void onPreExecute(){
+        protected void onPreExecute() {
             Dialog = new ProgressDialog(mActivity);
             Dialog.setMessage("Finalising Data...");
             Dialog.show();
         }
 
         @Override
-        protected Boolean doInBackground(Void... params)
-        {
+        protected Boolean doInBackground(Void... params) {
             try {
                 JSONArray jsonArray = new JSONArray(getArguments().getString("resp"));
                 int counti = 0, diffdate;
-                int k = 1, l = 0, flagi = 0, i, dist = 0, speed = 0, Radius = 6371, kmInDec = 0, meterInDec = 0;
-                double lat1, lat2, lon1, lon2, dLat, dLon, a, c, valueResult, km, meter, distance = 0;
-                long millis, second, minute, hour, differ;
-                String engst, Starttime = "", Endtime, locstart = "0.000000" + "," + "0.000000", locend, time1, time2, timedur, st, et, datea, dateb;
+                int k = 1, l = 0, flagi = 0, i, speed = 0, Radius = 6371;
+                double lat1, lat2, lon1, lon2, dLat, dLon, a, c, valueResult, distance = 0;
+                long millis, second, minute, hour;
+                String engst, Starttime = "", Endtime, locstart = "0.000000" + "," + "0.000000", locend, timedur, st, et, sti, eti, temp;
                 for (i = 0; i < jsonArray.length(); i++) {
                     JSONObject ob = jsonArray.getJSONObject(i);
                     engst = ob.getString("EngineStatus");
@@ -92,8 +92,8 @@ public class TripReport extends Fragment {
                             locstart = ob.getString("Latitude") + "," + ob.getString("Longitude");
                             flagi = 1;
                         }
-                        if(l > 1) {
-                            JSONObject obj2 = jsonArray.getJSONObject(i-1);
+                        if (l > 1) {
+                            JSONObject obj2 = jsonArray.getJSONObject(i - 1);
                             lat1 = Double.parseDouble(ob.getString("Latitude"));
                             lat2 = Double.parseDouble(obj2.getString("Latitude"));
                             lon1 = Double.parseDouble(ob.getString("Longitude"));
@@ -115,26 +115,25 @@ public class TripReport extends Fragment {
                         l = 0;
                         JSONObject obj1 = jsonArray.getJSONObject(i - 1);
                         Endtime = obj1.getString("GPSTimestamp");
-                        time1 = Starttime.substring(Starttime.indexOf("T")+1, Starttime.indexOf("Z"));
-                        time2 = Endtime.substring(Endtime.indexOf("T")+1, Endtime.indexOf("Z"));
-                        datea = Starttime.substring(Starttime.indexOf(0)+1, Starttime.indexOf("T"));
-                        dateb = Endtime.substring(Endtime.indexOf(0)+1, Endtime.indexOf("T"));
-                        differ = java.lang.Math.abs((Long.parseLong(dateb.substring(8,10))-Long.parseLong(datea.substring(8,10))));
-                        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-                        Date date1 = format.parse(time1);
-                        Date date2 = format.parse(time2);
+                        sti = Starttime.substring(Starttime.indexOf(0) + 1, Starttime.indexOf("T")) + " " + Starttime.substring(Starttime.indexOf("T") + 1, Starttime.indexOf("Z"));
+                        eti = Endtime.substring(Endtime.indexOf(0) + 1, Endtime.indexOf("T")) + " " + Endtime.substring(Endtime.indexOf("T") + 1, Endtime.indexOf("Z"));
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date date1 = format.parse(sti);
+                        Date date2 = format.parse(eti);
                         millis = java.lang.Math.abs(date2.getTime() - date1.getTime());
-                        if(differ>1 && (date2.getTime() - date1.getTime())<0){
-                            differ -= 1;
-                        }
                         second = (millis / 1000) % 60;
                         minute = (millis / (1000 * 60)) % 60;
-                        hour = (24 * differ + (millis / (1000 * 60 * 60)));
+                        hour = (millis / (1000 * 60 * 60));
                         timedur = String.format("%02d:%02d:%02d", hour, minute, second);
                         locend = obj1.getString("Latitude") + "," + obj1.getString("Longitude");
-                        distance = Math.round(distance*100D)/100D;
-                        st  = Starttime.substring(Starttime.indexOf(0)+1, Starttime.indexOf("T"))+"   "+Starttime.substring(Starttime.indexOf("T")+1, Starttime.indexOf("Z"));
-                        et  = Endtime.substring(Endtime.indexOf(0)+1, Endtime.indexOf("T"))+"   "+Endtime.substring(Endtime.indexOf("T")+1, Endtime.indexOf("Z"));
+                        distance = Math.round(distance * 100D) / 100D;
+                        st = Starttime.substring(Starttime.indexOf(0) + 1, Starttime.indexOf("T")) + "   " + Starttime.substring(Starttime.indexOf("T") + 1, Starttime.indexOf("Z"));
+                        et = Endtime.substring(Endtime.indexOf(0) + 1, Endtime.indexOf("T")) + "   " + Endtime.substring(Endtime.indexOf("T") + 1, Endtime.indexOf("Z"));
+                        if ((date2.getTime() - date1.getTime()) < 0) {
+                            temp = st;
+                            st = et;
+                            et = temp;
+                        }
                         tableText mynewtext = new tableText();
                         mynewtext.setString(String.valueOf(k), 0);
                         mynewtext.setString(obj1.getString("DeviceId"), 1);
@@ -153,28 +152,28 @@ public class TripReport extends Fragment {
                         speed = 0;
                     }
                 }
-                if(flagi == 1){
+                if (flagi == 1) {
                     JSONObject obj1 = jsonArray.getJSONObject(i - 1);
                     Endtime = obj1.getString("GPSTimestamp");
-                    time1 = Starttime.substring(Starttime.indexOf("T")+1, Starttime.indexOf("Z"));
-                    time2 = Endtime.substring(Endtime.indexOf("T")+1, Endtime.indexOf("Z"));
-                    datea = Starttime.substring(Starttime.indexOf(0)+1, Starttime.indexOf("T"));
-                    dateb = Endtime.substring(Endtime.indexOf(0)+1, Endtime.indexOf("T"));
-                    differ = java.lang.Math.abs((Long.parseLong(dateb.substring(8,10))-Long.parseLong(datea.substring(8,10))));
-                    SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-                    Date date1 = format.parse(time1);
-                    Date date2 = format.parse(time2);
+                    sti = Starttime.substring(Starttime.indexOf(0) + 1, Starttime.indexOf("T")) + " " + Starttime.substring(Starttime.indexOf("T") + 1, Starttime.indexOf("Z"));
+                    eti = Endtime.substring(Endtime.indexOf(0) + 1, Endtime.indexOf("T")) + " " + Endtime.substring(Endtime.indexOf("T") + 1, Endtime.indexOf("Z"));
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date date1 = format.parse(sti);
+                    Date date2 = format.parse(eti);
                     millis = java.lang.Math.abs(date2.getTime() - date1.getTime());
-                    if(differ>1 && (date2.getTime() - date1.getTime())<0){
-                        differ -= 1;
-                    }
                     second = (millis / 1000) % 60;
                     minute = (millis / (1000 * 60)) % 60;
-                    hour = (24 * differ + (millis / (1000 * 60 * 60)));
+                    hour = (millis / (1000 * 60 * 60));
                     timedur = String.format("%02d:%02d:%02d", hour, minute, second);
                     locend = obj1.getString("Latitude") + "," + obj1.getString("Longitude");
-                    st  = Starttime.substring(Starttime.indexOf(0)+1, Starttime.indexOf("T"))+"   "+Starttime.substring(Starttime.indexOf("T")+1, Starttime.indexOf("Z"));
-                    et  = Endtime.substring(Endtime.indexOf(0)+1, Endtime.indexOf("T"))+"   "+Endtime.substring(Endtime.indexOf("T")+1, Endtime.indexOf("Z"));
+                    distance = Math.round(distance * 100D) / 100D;
+                    st = Starttime.substring(Starttime.indexOf(0) + 1, Starttime.indexOf("T")) + "   " + Starttime.substring(Starttime.indexOf("T") + 1, Starttime.indexOf("Z"));
+                    et = Endtime.substring(Endtime.indexOf(0) + 1, Endtime.indexOf("T")) + "   " + Endtime.substring(Endtime.indexOf("T") + 1, Endtime.indexOf("Z"));
+                    if ((date2.getTime() - date1.getTime()) < 0) {
+                        temp = st;
+                        st = et;
+                        et = temp;
+                    }
                     tableText mynewtext = new tableText();
                     mynewtext.setString(String.valueOf(k), 0);
                     mynewtext.setString(obj1.getString("DeviceId"), 1);
@@ -194,25 +193,28 @@ public class TripReport extends Fragment {
             }
             return true;
         }
+
         @Override
         protected void onPostExecute(final Boolean success) {
             TextView[] tv = new TextView[9];
-            for(int i = 0;i < trip.size(); i++){
+            if (trip.size() == 0) {
+                Toast.makeText(getActivity(), "No data available for selected dates. Please select different dates", Toast.LENGTH_LONG).show();
+            }
+            for (int i = 0; i < trip.size(); i++) {
                 TableRow tr1 = new TableRow(mActivity);
-                if(i%2==0)
-                {
+                if (i % 2 == 0) {
                     tr1.setBackgroundColor(getResources().getColor(R.color.light_gray));
                 }
-                for(int j = 0; j < 9; j++){
+                for (int j = 0; j < 9; j++) {
                     tv[j] = new TextView(mActivity);
                     tv[j].setText(trip.get(i).getString(j));
                     tv[j].setBackgroundResource(R.drawable.cellborder);
                     tv[j].setHeight(75);
-                    tv[j].setTextAppearance(mContext,android.R.style.TextAppearance_Small);
+                    tv[j].setTextAppearance(mContext, android.R.style.TextAppearance_Small);
                     tv[j].setGravity(Gravity.CENTER_HORIZONTAL);
                     tr1.addView(tv[j]);
                 }
-                if(trip.get(i).getCount() == 1)
+                if (trip.get(i).getCount() == 1)
                     tr1.setPadding(0, 3, 0, 0);
                 list.addView(tr1);
             }
@@ -220,27 +222,34 @@ public class TripReport extends Fragment {
         }
     }
 
-    private class tableText{
+    private class tableText {
         private final String[] text = new String[9];
         private int flagi, counti;
-        public tableText(){}
 
-        public void setString(String s, int idx){
+        public tableText() {
+        }
+
+        public void setString(String s, int idx) {
             text[idx] = s;
         }
-        public void setFlagi(int flag){
+
+        public void setFlagi(int flag) {
             flagi = flag;
         }
-        public void setCounti(int count){
+
+        public void setCounti(int count) {
             counti = count;
         }
-        public String getString(int idx){
+
+        public String getString(int idx) {
             return text[idx];
         }
-        public int getFlag(){
+
+        public int getFlag() {
             return flagi;
         }
-        public int getCount(){
+
+        public int getCount() {
             return counti;
         }
     }
