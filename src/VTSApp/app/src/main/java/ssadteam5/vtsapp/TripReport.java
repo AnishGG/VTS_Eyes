@@ -48,6 +48,7 @@ public class TripReport extends Fragment {
         View view = inflater.inflate(R.layout.trip_report, container, false);
         mActivity = getActivity();
         mContext = getContext();
+        Dialog = new ProgressDialog(mActivity);
         TableLayout list = view.findViewById(R.id.tripreport);
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -56,6 +57,13 @@ public class TripReport extends Fragment {
             mFetchTask.execute((Void) null);
         }
         return view;
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        if(Dialog.isShowing()) Dialog.dismiss();
+        super.onDestroy();
     }
 
     public class ReportsFetchTask extends AsyncTask<Void, Void, Boolean> {
@@ -67,7 +75,7 @@ public class TripReport extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            Dialog = new ProgressDialog(mActivity);
+
             Dialog.setMessage("Finalising Data...");
             Dialog.show();
         }
@@ -203,7 +211,7 @@ public class TripReport extends Fragment {
             for (int i = 0; i < trip.size(); i++) {
                 TableRow tr1 = new TableRow(mActivity);
                 if (i % 2 == 0) {
-                    tr1.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                    tr1.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
                 }
                 for (int j = 0; j < 9; j++) {
                     tv[j] = new TextView(mActivity);
@@ -218,7 +226,9 @@ public class TripReport extends Fragment {
                     tr1.setPadding(0, 3, 0, 0);
                 list.addView(tr1);
             }
-            Dialog.dismiss();
+            if(Dialog.isShowing())
+                Dialog.hide();
+
         }
     }
 

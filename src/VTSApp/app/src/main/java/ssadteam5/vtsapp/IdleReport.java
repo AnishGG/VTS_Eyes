@@ -41,13 +41,20 @@ public class IdleReport extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
     }
-
+    @Override
+    public void onDestroy()
+    {
+        if(Dialog.isShowing()) Dialog.dismiss();
+        super.onDestroy();
+    }
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.idle_report, container, false);
         mActivity = getActivity();
         mContext = getContext();
+        Dialog = new ProgressDialog(mActivity);
+
         UserData userData = new UserData(getActivity().getApplicationContext());
         TableLayout list = view.findViewById(R.id.idlereport);
         Bundle bundle = getArguments();
@@ -68,7 +75,7 @@ public class IdleReport extends Fragment {
         @Override
         protected void onPreExecute() {
             Log.d("Fragment", "IdleReport");
-            Dialog = new ProgressDialog(mActivity);
+
             Dialog.setTitle("Finalising Data...");
             Dialog.show();
         }
@@ -169,7 +176,7 @@ public class IdleReport extends Fragment {
             for (int i = 0; i < trip.size(); i++) {
                 TableRow tr1 = new TableRow(mActivity);
                 if (i % 2 == 0) {
-                    tr1.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                    tr1.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
                 }
                 for (int j = 0; j < 6; j++) {
                     tv[j] = new TextView(mActivity);
@@ -184,7 +191,9 @@ public class IdleReport extends Fragment {
                     tr1.setPadding(0, 3, 0, 0);
                 list.addView(tr1);
             }
-            Dialog.dismiss();
+            if(Dialog.isShowing())
+                Dialog.hide();
+
         }
     }
 

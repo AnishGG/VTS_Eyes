@@ -17,6 +17,7 @@ public class Reports extends AppCompatActivity {
     private PagerAdapter adapter;
     private TabLayout tabLayout;
     private UserData userData;
+    private ProgressDialog Dialog;
 
 
     @Override
@@ -29,7 +30,7 @@ public class Reports extends AppCompatActivity {
 //        String enddate = getArguments().getString("enddate");
 //        String vehicle = getArguments().getString("vehicle");
 
-
+        Dialog = new ProgressDialog(Reports.this);
         String token = b.getString("token");
         String startdate = b.getString("startdate");
         String enddate = b.getString("enddate");
@@ -67,7 +68,12 @@ public class Reports extends AppCompatActivity {
         ReportsInfo mRepTask = new ReportsInfo(vehicle, startdate, enddate, token);
         mRepTask.execute((Void) null);
     }
-
+    @Override
+    public void onDestroy()
+    {
+        if(Dialog.isShowing()) Dialog.dismiss();
+        super.onDestroy();
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -96,8 +102,6 @@ public class Reports extends AppCompatActivity {
             mToken = token;
         }
 
-        private final ProgressDialog Dialog = new ProgressDialog(Reports.this);
-
         @Override
         protected void onPreExecute() {
             Dialog.setMessage("Loading");
@@ -116,7 +120,9 @@ public class Reports extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            Dialog.dismiss();
+            if(Dialog.isShowing())
+                Dialog.hide();
+
             bund = new Bundle();
             bund.putString("resp", response);
             Log.d("resp", response);

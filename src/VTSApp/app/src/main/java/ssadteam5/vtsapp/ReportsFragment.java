@@ -37,6 +37,7 @@ public class    ReportsFragment extends Fragment {
     private String token;
     private Spinner spinner;
     private final List<String> list = new ArrayList<>();
+    private final List<String> listVal = new ArrayList<>();
 
     private EditText tvDisplayDate1;
     private EditText tvDisplayDate2;
@@ -92,7 +93,9 @@ public class    ReportsFragment extends Fragment {
 
     private void getReports()
     {
-        String vehicle = spinner.getSelectedItem().toString();
+//        String vehicle = spinner.getSelectedItem().toString();
+        String vehicle = listVal.get(spinner.getSelectedItemPosition());
+
         Intent intent = new Intent(getActivity(), Reports.class);
         intent.putExtra("token", token);
         intent.putExtra("vehicle", vehicle);
@@ -257,11 +260,15 @@ public class    ReportsFragment extends Fragment {
                         JSONObject ob = arr.getJSONObject(i);
                         JSONObject hello = new JSONObject(ob.getString("vehicleDetailsDO"));
                         String number = hello.getString("vehicleNumber");
+
                         list.add(number);
-                    } catch (Exception e) {
-                        JSONObject obn = arr.getJSONObject(i);
-                        String name = obn.getString("name");
-                        list.add(name);
+                        listVal.add(ob.getString("name"));
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+//                        JSONObject obn = arr.getJSONObject(i);
+//                        String name = obn.getString("name");
+//                        list.add(name);
                     }
                 }
             } catch (Exception e) {
