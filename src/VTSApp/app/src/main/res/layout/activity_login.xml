@@ -28,17 +28,15 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:weightSum="1">
 
             <ImageView
-                android:id="@+id/imageView4"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_weight="0.18"
+                android:contentDescription="@string/eyedentify_icon"
                 android:src="@drawable/eyedentify_logo" />
 
             <android.support.design.widget.TextInputLayout

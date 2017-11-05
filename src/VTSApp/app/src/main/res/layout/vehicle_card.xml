@@ -15,14 +15,15 @@
         android:layout_height="wrap_content">
 
             <ImageView
-            android:id="@+id/vehicle_thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:padding="2dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:contentDescription="@string/thumbnail_device"
-            android:src="@drawable/ic_card_vehicle"/>
+                android:id="@+id/vehicle_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:padding="2dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/thumbnail_device"
+                android:src="@drawable/ic_card_vehicle"
+                android:focusable="true"/>
 
             <TextView
                 android:id="@+id/vehicle_name"

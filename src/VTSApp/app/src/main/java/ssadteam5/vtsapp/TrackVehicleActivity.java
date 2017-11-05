@@ -19,8 +19,6 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.auth0.android.jwt.Claim;
@@ -38,21 +36,20 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-public class TrackVehicleActivity extends AppCompatActivity implements OnMapReadyCallback
+public class TrackVehicleActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener
 {
     // DEFAULT DISPLAY VALUES
     private final String UNAVAILABLE = "N/A";
 
     private SlidingUpPanelLayout mLayout;
     private String deviceName;
-    private String token;
+    private android.support.v7.app.ActionBar actionBar;
 
     // Add handles to display real-time information
     private Switch ignitionStatusSwitch;
@@ -60,29 +57,36 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
 
     // User specific variables
     UserSessionManager session;
-    UserData userData;
+    private UserData userData;
     String organisationId;
 
     // Map specific variables
-    GoogleMap mGoogleMap;
+    private GoogleMap mGoogleMap;
     SupportMapFragment mapFrag;
     private Marker marker = null;
     boolean isMarkerRotating = false;
 
     // Websocket connection to consume real-time information
-    StompClient mStompClient;
+    private StompClient mStompClient;
 
     /**
      * INIT on activity page load
      */
-    public void init(){
+    private void init(){
         // Initialize sliding pane layout
-        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout = findViewById(R.id.sliding_layout);
         mLayout.setDragView(null);
+        mLayout.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
+        actionBar = getSupportActionBar();
 
         // Initialize display elements
-        gpsTimestampTextView = (TextView) findViewById(R.id.gpsTimestampView);
-        ignitionStatusSwitch = (Switch) findViewById(R.id.ignitionStatusSwitch);
+        gpsTimestampTextView = findViewById(R.id.gpsTimestampView);
+        ignitionStatusSwitch = findViewById(R.id.ignitionStatusSwitch);
         ignitionStatusSwitch.setClickable(false);
     }
 
@@ -103,12 +107,12 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         setContentView(R.layout.activity_track_vehicle);
         init();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
-        session = new UserSessionManager(getApplicationContext());
+        SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
+        UserSessionManager session = new UserSessionManager(getApplicationContext());
         userData = new UserData(getApplicationContext());
         mapFrag.getMapAsync(this);
 
-        token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN); //fetching from the UserSessionManager
+        String token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
         deviceName = getIntent().getExtras().getString("deviceName");
 
         // FIXME Update title of the map to show vehicle license plate number
@@ -119,9 +123,9 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
 
         JWT jwt = new JWT(token);
         Claim claim = jwt.getClaim("organisationId");
-        organisationId = claim.asString();
+        String organisationId = claim.asString();
 
-        mStompClient = Stomp.over(WebSocket.class,getString(R.string.websocket));
+        mStompClient = Stomp.over(WebSocket.class,getString(R.string.web_socket));
         mStompClient.connect();
         mStompClient.topic("/device/message" + organisationId).subscribe(topicMessage -> {
 
@@ -213,6 +217,18 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
         });
     }
 
+    @Override
+    public void onMapClick(LatLng point){
+        if(actionBar.isShowing()){
+            actionBar.hide();
+            /*** Can not implement hidePanel() due to buggy google map view ***/
+        }
+        else{
+            actionBar.show();
+        }
+        Log.d("ThePointIs", point.toString());
+    }
+
     /**
      * Invoked when google map is loaded.
      *
@@ -271,6 +287,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
                 return info;
             }
         });
+        mGoogleMap.setOnMapClickListener(this);
     }
 
     /**
@@ -394,7 +411,7 @@ public class TrackVehicleActivity extends AppCompatActivity implements OnMapRead
      * @param destination
      * @return
      */
-    public static float getAngle(LatLng source, LatLng destination) {
+    private static float getAngle(LatLng source, LatLng destination) {
 
         // calculate the angle theta from the deltaY and deltaX values
         // (atan2 returns radians values from [-PI,PI])

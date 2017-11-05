@@ -11,9 +11,6 @@ import static java.lang.StrictMath.sqrt;
 import static java.lang.StrictMath.toDegrees;
 import static java.lang.StrictMath.toRadians;
 
-/**
- * Created by anish on 23/10/17.
- */
 
 public interface LatLngInterpolator {
     LatLng interpolate(float fraction, LatLng a, LatLng b);

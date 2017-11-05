@@ -41,26 +41,27 @@ import okhttp3.WebSocket;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener
 {
     private GoogleMap mGoogleMap;
-    private SupportMapFragment mapFrag;
     private StompClient mStompClient;
-    private ArrayList<Marker> markerList = new ArrayList<>();
-    private UserSessionManager session;
+    private final ArrayList<Marker> markerList = new ArrayList<>();
     private Float courseOverGround = null;
     private int flag;
+    private android.support.v7.app.ActionBar actionBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        actionBar = getSupportActionBar();
         getSupportActionBar().setTitle("Map");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
 
-        session = new UserSessionManager(getApplicationContext());
+        UserSessionManager session = new UserSessionManager(getApplicationContext());
         String token = session.getUserDetails().get(UserSessionManager.KEY_TOKEN);
 
         JWT jwt = new JWT(token);
@@ -152,6 +153,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
+    @Override
+    public void onMapClick(LatLng point){
+        if(actionBar.isShowing()){
+            actionBar.hide();
+            /*** Can not implement hidePanel() due to buggy google map view ***/
+        }
+        else{
+            actionBar.show();
+        }
+        Log.d("ThePointIs", point.toString());
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
@@ -202,6 +216,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return info;
             }
         });
+        mGoogleMap.setOnMapClickListener(this);
     }
 
     @Override

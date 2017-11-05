@@ -76,8 +76,8 @@ public class NavDrawerActivity extends AppCompatActivity
             menu = new String[4];
             menu[0] = "Dashboard";
             menu[1] = "Devices";
-            //menu[2] = "Reports";
-            menu[2] = "Logout";
+            menu[2] = "Reports";
+            menu[3] = "Logout";
             for (int i = 0; i < menu.length-1; i++)
             {
                 navMenu.add(Menu.NONE, i, i, menu[i]);

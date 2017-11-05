@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 class VehicleCard
 {
-    private String name;
+    private final String name;
     private String id;
     private String account;
     private String description;

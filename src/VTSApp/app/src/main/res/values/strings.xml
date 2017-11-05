@@ -16,7 +16,6 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password </string>
     <string name="tenantId">TenantID</string>
-    <string name="action_sign_in">Login</string>
     <string name="action_sign_in_short">Login</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -40,6 +39,7 @@
     <string name="end_date">End Date</string>
     <string name="change_date">Change Date</string>
     <string name="get_reports">Get Reports</string>
-    <string name="title_activity_reports">ReportsActivity</string>
+
+    <string name="hint_date_box">YYYY-MM-DD</string>
 
 </resources>

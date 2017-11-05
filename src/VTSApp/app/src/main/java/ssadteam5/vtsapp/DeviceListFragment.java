@@ -21,10 +21,8 @@ import java.util.List;
 
 public class DeviceListFragment extends Fragment
 {
-    private View view;
     private SwipeRefreshLayout swipeLayout;
     private DeviceFetchTask mFetchTask;
-    private RecyclerView recyclerView;
     private DeviceListAdapter DeviceListAdapter;
     private List<VehicleCard> vehicleCardList;
     private UserData userData;
@@ -33,11 +31,11 @@ public class DeviceListFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        view = inflater.inflate(R.layout.fragment_device_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_device_list, container, false);
         userData = new UserData(getActivity().getApplicationContext());
 
 
-        recyclerView = view.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         vehicleCardList = new ArrayList<>();
         DeviceListAdapter = new DeviceListAdapter(getContext(),vehicleCardList);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
