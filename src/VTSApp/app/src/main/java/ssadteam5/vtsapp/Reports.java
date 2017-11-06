@@ -112,8 +112,8 @@ public class Reports extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
             Log.d("Fragment", "Reports");
-            if (!userData.isReportFetched(mStartDate, mEndDate, mVehicleNo))
-                userData.fetchReports(mStartDate, mEndDate, mVehicleNo, mToken);
+            /*if (!userData.isReportFetched(mStartDate, mEndDate, mVehicleNo))*/
+            userData.fetchReports(mStartDate, mEndDate, mVehicleNo, mToken);
             String response = userData.getReports().get(UserData.KEY_REPORTS);
             return response;
         }
