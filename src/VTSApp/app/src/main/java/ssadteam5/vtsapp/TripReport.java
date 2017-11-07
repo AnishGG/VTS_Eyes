@@ -13,7 +13,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,31 +28,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import ssadteam5.vtsapp.SortableTables.TripTableDataAdapter;
+import ssadteam5.vtsapp.SortableTables.SortableTripTable;
+
 
 public class TripReport extends Fragment {
-    private final List<tableText> trip = new ArrayList<>();
+    private List<tableText> trip = new ArrayList<>();
     private ProgressDialog Dialog;
     private Activity mActivity;
     private Context mContext;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
+    View view;
+    private TripTableDataAdapter tripTableDataAdapter;
+    private SortableTripTable sortableTripTable;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.trip_report, container, false);
+        view = inflater.inflate(R.layout.trip_report, container, false);
+        sortableTripTable = (SortableTripTable) view.findViewById(R.id.sortableTrip);
         mActivity = getActivity();
         mContext = getContext();
         Dialog = new ProgressDialog(mActivity);
-        TableLayout list = view.findViewById(R.id.tripreport);
         Bundle bundle = getArguments();
         if (bundle != null) {
             Log.d("Why", "Again");
-            ReportsFetchTask mFetchTask = new ReportsFetchTask(list);
+            ReportsFetchTask mFetchTask = new ReportsFetchTask();
             mFetchTask.execute((Void) null);
         }
         return view;
@@ -67,12 +66,7 @@ public class TripReport extends Fragment {
     }
 
     public class ReportsFetchTask extends AsyncTask<Void, Void, Boolean> {
-        final TableLayout list;
-
-        ReportsFetchTask(TableLayout mylist) {
-            list = mylist;
-        }
-
+        ReportsFetchTask(){}
         @Override
         protected void onPreExecute() {
 
@@ -204,27 +198,13 @@ public class TripReport extends Fragment {
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            TextView[] tv = new TextView[9];
             if (trip.size() == 0) {
-                Toast.makeText(getActivity(), "No data available for selected dates. Please select different dates", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "No Trips available for selected dates. Please select different dates", Toast.LENGTH_LONG).show();
             }
-            for (int i = 0; i < trip.size(); i++) {
-                TableRow tr1 = new TableRow(mActivity);
-                if (i % 2 == 0) {
-                    tr1.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
-                }
-                for (int j = 0; j < 9; j++) {
-                    tv[j] = new TextView(mActivity);
-                    tv[j].setText(trip.get(i).getString(j));
-                    tv[j].setBackgroundResource(R.drawable.cellborder);
-                    tv[j].setHeight(75);
-                    tv[j].setTextAppearance(mContext, android.R.style.TextAppearance_Small);
-                    tv[j].setGravity(Gravity.CENTER_HORIZONTAL);
-                    tr1.addView(tv[j]);
-                }
-                if (trip.get(i).getCount() == 1)
-                    tr1.setPadding(0, 3, 0, 0);
-                list.addView(tr1);
+            if(sortableTripTable != null){
+                tripTableDataAdapter = new TripTableDataAdapter(getContext(), trip);
+                tripTableDataAdapter.notifyDataSetChanged();
+                sortableTripTable.setDataAdapter(tripTableDataAdapter);
             }
             if(Dialog.isShowing())
                 Dialog.hide();
@@ -232,7 +212,7 @@ public class TripReport extends Fragment {
         }
     }
 
-    private class tableText {
+    public class tableText {
         private final String[] text = new String[9];
         private int flagi, counti;
 
@@ -263,4 +243,5 @@ public class TripReport extends Fragment {
             return counti;
         }
     }
+
 }

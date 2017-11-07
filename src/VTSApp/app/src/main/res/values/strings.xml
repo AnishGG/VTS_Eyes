@@ -42,4 +42,16 @@
 
     <string name="hint_date_box">YYYY-MM-DD</string>
 
+    <!-- Strings related to reports table -->
+    <string name="registration">Reg No.</string>
+    <string name="startTime">Start time</string>
+    <string name="endTime">End time</string>
+    <string name="startLocation">Start Location</string>
+    <string name="endLocation">End Location</string>
+    <string name="duration">Duration(hours)</string>
+    <string name="distance">Distance(km)</string>
+    <string name="maxSpeed">Max Speed(Km/h)</string>
+    <string name="hash"> # </string>
+    <string name="location">location</string>
+
 </resources>
