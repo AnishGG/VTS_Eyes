@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class    ReportsFragment extends Fragment {
+public class ReportsFragment extends Fragment {
     public static ReportsFragment newInstance() {
         return new ReportsFragment();
     }
@@ -101,6 +102,44 @@ public class    ReportsFragment extends Fragment {
         intent.putExtra("vehicle", vehicle);
         startdate = tvDisplayDate1.getText().toString();
         enddate = tvDisplayDate2.getText().toString();
+        String start = startdate.substring(5);
+        String end = enddate.substring(5);
+        String yearstart = startdate.substring(0, 4);
+        String yearend = enddate.substring(0, 4);
+        String monthstart = start.substring(0,start.indexOf("-"));
+        String monthend = end.substring(0,end.indexOf("-"));
+        String datestart = start.substring(start.indexOf("-") + 1);
+        String dateend = end.substring(end.indexOf("-") + 1);
+        String finalmonthstart;
+        if(monthstart.length()==1) {
+            finalmonthstart = "0" + monthstart;
+        }
+        else {
+            finalmonthstart = monthstart;
+        }
+        String finalmonthend;
+        if(monthend.length()==1) {
+            finalmonthend = "0" + monthend;
+        }
+        else {
+            finalmonthend = monthend;
+        }
+        String finaldatestart;
+        if(datestart.length()==1) {
+            finaldatestart = "0" + datestart;
+        }
+        else {
+            finaldatestart = datestart;
+        }
+        String finaldateend;
+        if(dateend.length()==1) {
+            finaldateend = "0" + dateend;
+        }
+        else {
+            finaldateend = dateend;
+        }
+        startdate = yearstart+"-"+ finalmonthstart +"-"+ finaldatestart;
+        enddate = yearend+"-"+ finalmonthend +"-"+ finaldateend;
         intent.putExtra("startdate", startdate);
         intent.putExtra("enddate", enddate);
         startActivity(intent);
@@ -265,10 +304,11 @@ public class    ReportsFragment extends Fragment {
                         listVal.add(ob.getString("name"));
                     }
                     catch (Exception e) {
-                        e.printStackTrace();
-//                        JSONObject obn = arr.getJSONObject(i);
-//                        String name = obn.getString("name");
-//                        list.add(name);
+//                        e.printStackTrace();
+                        JSONObject obn = arr.getJSONObject(i);
+                        String name = obn.getString("name");
+                        list.add(name);
+                        listVal.add(obn.getString("name"));
                     }
                 }
             } catch (Exception e) {
