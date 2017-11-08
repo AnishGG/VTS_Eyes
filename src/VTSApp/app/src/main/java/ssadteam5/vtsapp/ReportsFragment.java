@@ -20,6 +20,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -102,47 +103,54 @@ public class ReportsFragment extends Fragment {
         intent.putExtra("vehicle", vehicle);
         startdate = tvDisplayDate1.getText().toString();
         enddate = tvDisplayDate2.getText().toString();
-        String start = startdate.substring(5);
-        String end = enddate.substring(5);
-        String yearstart = startdate.substring(0, 4);
-        String yearend = enddate.substring(0, 4);
-        String monthstart = start.substring(0,start.indexOf("-"));
-        String monthend = end.substring(0,end.indexOf("-"));
-        String datestart = start.substring(start.indexOf("-") + 1);
-        String dateend = end.substring(end.indexOf("-") + 1);
-        String finalmonthstart;
-        if(monthstart.length()==1) {
-            finalmonthstart = "0" + monthstart;
+        try
+        {
+            String start = startdate.substring(5);
+            String end = enddate.substring(5);
+            String yearstart = startdate.substring(0, 4);
+            String yearend = enddate.substring(0, 4);
+            String monthstart = start.substring(0,start.indexOf("-"));
+            String monthend = end.substring(0,end.indexOf("-"));
+            String datestart = start.substring(start.indexOf("-") + 1);
+            String dateend = end.substring(end.indexOf("-") + 1);
+            String finalmonthstart;
+            if(monthstart.length()==1) {
+                finalmonthstart = "0" + monthstart;
+            }
+            else {
+                finalmonthstart = monthstart;
+            }
+            String finalmonthend;
+            if(monthend.length()==1) {
+                finalmonthend = "0" + monthend;
+            }
+            else {
+                finalmonthend = monthend;
+            }
+            String finaldatestart;
+            if(datestart.length()==1) {
+                finaldatestart = "0" + datestart;
+            }
+            else {
+                finaldatestart = datestart;
+            }
+            String finaldateend;
+            if(dateend.length()==1) {
+                finaldateend = "0" + dateend;
+            }
+            else {
+                finaldateend = dateend;
+            }
+            startdate = yearstart+"-"+ finalmonthstart +"-"+ finaldatestart;
+            enddate = yearend+"-"+ finalmonthend +"-"+ finaldateend;
+            intent.putExtra("startdate", startdate);
+            intent.putExtra("enddate", enddate);
+            startActivity(intent);
         }
-        else {
-            finalmonthstart = monthstart;
+        catch (Exception e)
+        {
+            Toast.makeText(getActivity(), "Invalid Date Format", Toast.LENGTH_LONG).show();
         }
-        String finalmonthend;
-        if(monthend.length()==1) {
-            finalmonthend = "0" + monthend;
-        }
-        else {
-            finalmonthend = monthend;
-        }
-        String finaldatestart;
-        if(datestart.length()==1) {
-            finaldatestart = "0" + datestart;
-        }
-        else {
-            finaldatestart = datestart;
-        }
-        String finaldateend;
-        if(dateend.length()==1) {
-            finaldateend = "0" + dateend;
-        }
-        else {
-            finaldateend = dateend;
-        }
-        startdate = yearstart+"-"+ finalmonthstart +"-"+ finaldatestart;
-        enddate = yearend+"-"+ finalmonthend +"-"+ finaldateend;
-        intent.putExtra("startdate", startdate);
-        intent.putExtra("enddate", enddate);
-        startActivity(intent);
     }
 
     private void setCurrentDateOnView() {
